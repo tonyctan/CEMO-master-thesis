@@ -1,0 +1,173 @@
+\documentclass[a4paper,11pt,UKenglish,twoside,openright]{report}
+
+\usepackage{uiothesis}
+
+\title{Identifying School Climate Variables Associated with Students' Financial Literacy Outcomes}
+\subtitle{A Cross-Country Comparison\\Using {PISA} 2018 Data}
+\author{Tony C. A. Tan}
+
+\begin{document}
+
+% Input faculty etc info
+\duoforside[
+    fac={Faculty of Educational Sciences},
+    dept={Centre for Educational Measurement},
+    program={Assessment, Measurement and Evaluation},
+    date={Spring 2021},
+%  printer={X-press printing house},
+    short
+]
+
+% Change page numbering to roman
+\pagenumbering{roman}
+
+% Create an acknowledgement page
+\thispagestyle{empty}
+
+% This is where I generated the Chinese characters
+%//ref http://www.akuziti.com/mb/
+% I used font 24.Huawen Xingkai and 100 pixel
+\vspace*{\fill}
+\begin{figure*}[h]
+    \includegraphics[width=\textwidth]{./Figures/To-parents.png}
+\end{figure*}
+\begin{flushright}
+To my parents
+\end{flushright}
+\vspace*{\fill}
+%\newpage
+\clearpage
+\thispagestyle{empty}
+
+\vspace*{3cm}
+
+\begin{quote}
+    \calligra\huge      % Changes the font to caligraphy and huge size.
+\hyphenchar\font=-1     % Stops LaTeX from splitting/hyphenating words
+Study hard what interests you the most in the most undisciplined, irreverent and original manner possible.
+\end{quote}
+
+\begin{figure*}[h]
+    \flushright
+    \includegraphics[width=0.50\textwidth]{./Figures/Feynman-Signature.jpg}
+\end{figure*}
+\vspace*{-1cm}
+
+%\begin{flushright}
+%--- Richard P. Feynman
+%\end{flushright}
+
+% Set 1.5-spacing or 2-spacing from here on.
+\onehalfspacing
+%\doublespacing
+
+\setcounter{page}{0}
+% End of acknowledgement page
+
+% Put Table of Content here
+\tableofcontents
+
+% Put a List of Tables here
+\cleardoublepage
+\listoftables
+
+% Put a List of Figures here
+\cleardoublepage
+\listoffigures
+
+% Change page numbering back to arabic
+\cleardoublepage
+\pagenumbering{arabic}
+
+
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+opts_chunk$set(fig.path = 'Figures/Rnw-')
+options(formatR.comment = TRUE, formatR.blank = TRUE, formatR.arrow = FALSE, formatR.indent = 4, formatR.brace.newline=FALSE)
+render_listings()
+@
+
+% Acknowledgement
+%<<child="Chapters/Acknowledgement.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
+
+% Popular Abstract
+%<<child="Chapters/Abstract0.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
+
+% Abstract
+%<<child="Chapters/Abstract1.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
+
+% Chapter 1 Introduction
+<<child="Chapters/Ch1.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+@
+
+% Chapter 2 Theoretical framework
+<<child="Chapters/Ch2.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+@
+
+% Chapter 3 Methods
+<<child="Chapters/Ch3.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+@
+
+% Chapter 4 Analyses
+<<child="Chapters/Ch4.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+@
+
+% Chapter 5 Results
+<<child="Chapters/Ch5.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+@
+
+% Chapter 6 Discussion
+%<<child="Chapters/Ch6.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
+
+% Chapter 7 Conclusion
+%<<child="Chapters/Ch7.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
+
+% Put Reference here
+\newpage
+\begin{singlespace}
+    \printbibliography[title=References]
+\end{singlespace}
+
+% New CEMO policy: leave tables and figures close to the paragraphs that discussed them.
+
+% Tables
+%\newpage
+%<<child="Tables/tab.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
+
+% Figures
+%\newpage
+%<<child="Figures/fig.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
+
+%\newpage
+
+% Insert appendices
+\begin{appendices}
+%    \include{Appendices/A}
+%    \include{Appendices/B}
+%    \include{Appendices/C}
+%    \include{Appendices/D}
+%    \include{Appendices/E}
+%    \include{Appendices/F}
+\end{appendices}
+
+% Put Index here
+%\begin{multicols}{2}
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Name Index}
+\printindex[a]
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Subject Index}
+\printindex
+%\end{multicols}
+
+\end{document}

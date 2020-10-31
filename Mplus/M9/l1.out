@@ -1,0 +1,121 @@
+Mplus VERSION 8.3
+MUTHEN & MUTHEN
+10/29/2020   3:17 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+      Financial literacy 3-level: L3 with FKI
+
+
+  DATA:
+      file = "M:/pc/Dokumenter/MSc/Thesis/Data/Mplus/implist.dat";
+
+      type = imputation;
+
+
+  VARIABLE:
+      names =
+          W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU
+          MATH READ FLIT              ! Financial literacy (1 plausible value)
+          MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
+          FCFMLRTY FLCONFIN           ! Mediators
+          PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
+          DISCRIM BELONG              ! Lat var "Safety"
+          FLFAMILY! CURSUPP           ! Lat var "Community"
+          W_SCH PRIVATE STRATIO EDUST STAFFST    ! School var
+          ;
+
+      usev =
+          CNTRYID CNTSCHID            ! Level labels
+          FLIT                        ! Regressant
+          FKI                         ! L3 regressor
+                                      ! L1 regressors:
+          PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
+          DISCRIM BELONG              !   Lat var "Safety"
+          FLFAMILY                    !   Financial socialisation
+          FCFMLRTY FLCONFIN           !   Mediators
+          MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
+          MATH READ                   !   Control: numeracy and literacy
+          ;
+
+      cluster = CNTRYID CNTSCHID;
+
+      between = (CNTRYID) FKI;
+
+      within =
+          PERFEED TEACHINT FLSCHOOL
+          DISCRIM BELONG
+          FLFAMILY
+          FCFMLRTY FLCONFIN
+          MALE IMMI1GEN IMMI2GEN ESCS
+          MATH READ
+          ;
+
+      missing = all (-99);
+
+
+
+      weight = W_STU;
+  !    wtscale = cluster;
+
+  !    b2weight = W_SCH;
+
+
+  ANALYSIS:
+      process = 8;
+
+      type = threelevel;
+
+
+  MODEL:
+  %Between CNTRYID%
+      FLIT on FKI;
+
+  %Between CNTSCHID%
+      FLIT;
+
+  %Within%
+
+      ! Lat var ACADEMIC
+      ACADEMIC by PERFEED TEACHINT FLSCHOOL;
+      ! Lat var SAFTY
+      SAFETY by DISCRIM BELONG;
+
+      ! Total effect
+      FLIT on
+          ACADEMIC SAFETY FLFAMILY        ! Input variables
+          FCFMLRTY FLCONFIN               ! Mediators
+          MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
+          MATH READ                       ! Control: numeracy and literacy
+          ;
+
+      ! Onto mediator FAMILIARITY
+      FCFMLRTY on ACADEMIC SAFETY FLFAMILY;
+
+      ! Onto mediator CONFIDENCE
+      FLCONFIN on ACADEMIC SAFETY;
+      FLCONFIN on FLFAMILY;
+
+  MODEL INDIRECT:
+
+      ! Indirect effects
+      FLIT ind ACADEMIC SAFETY FLFAMILY;
+
+  OUTPUT:
+      sampstat tech1 tech8;
+
+*** ERROR
+  MODEL INDIRECT is not available for TYPE=THREELEVEL.
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2019 Muthen & Muthen

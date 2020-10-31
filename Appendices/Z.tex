@@ -1,0 +1,204 @@
+\chapter{Review of Matrix Calculus}
+
+\section{Notations}
+
+Let us first establish the notation. This is important because bad notation is a serious obstacle to elegant mathematics and coherent exposition and it can be misleading.
+
+Unless specified otherwise, $\phi$ denotes a scalar function; $\m{f}$ a vector function and $\m{F}$ a matrix function. Also, $x$ denotes a scalar argument, $\m{x}$ a vector argument and $\m{X}$ a matrix argument. For example, we write
+
+\begin{table*}[h]
+  \begin{center}
+  \begin{tabular}{lll}
+    $\phi(x)=x^2$     &$\phi(\m{x})=\T{a}\m{x}$       &$\phi(\m{X})=\tr{\T{X}\m{X}}$\\
+    $\m{f}(x)=
+      \begin{pmatrix}
+        x\\
+        x^2
+      \end{pmatrix}$    &$\m{f}(\m{x})=\m{Ax}$    &$\m{f}(\m{X})=\m{Xa}$\\
+      $\m{F}(x)=x^2\Id{m}$  &$\m{F}(\m{x})=\m{x}\T{x}$  &$\m{F}(\m{X})=\T{X}$
+  \end{tabular}
+\end{center}
+\end{table*}
+
+Since the prime notation $'$ may easily cause confusion between derivatives and transposes, preference is given to the Leibniz notation $\frac{\dd}{\dd x}$ for derivatives and $\T{}$ for transposes---unless this system becomes too cumbersome, in which case $\m{f}'(\m{x})$ will denote derivatives and $\m{f}(\m{x})'$ for transposes.
+
+\section{Derivatives and differentials}
+
+\subsection{Derivative}
+
+\theoremstyle{definition}
+\begin{definition}[Derivatives]\label{Def.D}
+  If $\m{f}$ is an $m\times 1$ vector function of an $n\times 1$ vector $\m{x}$, then the \emph{derivative} (or \emph{Jacobian matrix}) of $\m{f}$ is the $m\times n$ matrix
+  \begin{equation}\label{Eq.Def.D}
+    \D\m{f}(\m{x}):=\frac{\partial\m{f}(\m{x})}{\partial\T{x}},
+  \end{equation}
+  whose elements are the partial derivatives
+  \begin{equation*}
+    \frac{\partial f_i(\m{x})}{\partial x_j},\ \text{for}\ %
+    \begin{aligned}
+      i&=1,\cdots,m,\\
+      j&=1,\cdots,n.
+    \end{aligned}
+  \end{equation*}
+\end{definition}
+
+\subsection{Differential}
+
+In the one dimensional case, the equation
+\begin{equation}\label{Eq.D}
+  \lim_{u\to 0}\frac{\phi(x+u)-\phi(x)}{u}=\phi'(x)
+\end{equation}
+defines the derivative of $\phi$ at $x$. Rewriting \cref{Eq.D} gives
+\begin{equation}\label{Eq.d}
+  \phi(x+u)=\phi(x)+\phi'(x)u+O(u),
+\end{equation}
+where the remainder term $O(u)$ quickly vanishes as $u$ approaches $0$.
+
+\theoremstyle{definition}
+\begin{definition}[Differential]
+  We define the (first) \emph{differential} of $\phi$ at $x$ (with increment $u$) as
+  \begin{equation}
+    \dd\phi(x;u)=\phi'(x)u.
+  \end{equation}
+\end{definition}
+
+For example, for $\phi(x)=x^2$, we have $\dd\phi(x;u)=2xu$. In practice, we write $\dd x$ instead of $u$, so that $\dd\phi(x)=\phi'(x)\dd x=2x\dd x.$
+
+In the vector case, similar to \cref{Eq.d}, we have
+\begin{equation}
+  \m{f}(\m{x}+\m{u})=\m{f}(\m{x})+[\D\m{f}(x)]\m{u}+O(\m{u}),
+\end{equation}
+and the (first) differential is defined as
+\begin{equation}
+  \dd\m{f}(\m{x};\m{u})=[\D\m{f}(x)]\m{u}.
+\end{equation}
+
+Although rarely used in econometrics, for completeness, the matrix case can be obtained from the vector case by writing $\m{f}:=\vec{F}$ and $\m{x}:=\vec{X}$.
+
+\subsection{Which to use?}
+
+For practical rather than theoretical reasons, the treatment of matrix calculus is based on differentials ($\dd\m{f}$) rather than derivatives ($\D\m{f}$) because the former yields a result with the same dimension as $\m{f}$. For example, consider $\md{f}{m}{1}(\md{x}{n}{1})$ (reading ``$\m{f}$ being an $m\times 1$ vector function of an $n\times 1$ vector $\m{x}$''), $\D\m{f}(\m{x})$ is an $m\times n$ matrix (due to \cref{Def.D}) whereas $\dd\m{f}(\m{x})$ remains an $m\times 1$ vector (same as $\m{f}$). The advantage is even larger for matrices: for $\md{F}{m}{p}(\md{X}{n}{q})$, $\dd\m{F}(\m{X})$ has the same dimension as $\m{F}$ irrespective of the dimension of $\m{X}$, but $\D\m{F}(\m{X})$ is going to be a horrendous $mp\times nq$ matrix.
+
+\section{Layout convention}\label{S.layout}
+
+Under the \emph{numerator layout}, when we differentiate a scalar function $\phi$ \wrt a column vector $\md{x}{n}{1}$, we get a \emph{row} vector of dimension $1\times n$. If we want our result to be in the column form, we must differentiate $\phi$ \wrt a row vector to start with. This is why the denominator in \cref{Eq.Def.D} contains a transpose.
+
+\section{Application in OLS}
+
+\subsection{Background}
+
+Imagine we are interested in learning the return on education. We might propose a rather simple model
+\begin{equation}
+  \texttt{inc}=\beta_0+\beta_1\texttt{edu}+\beta_2\texttt{exp}+\epsilon
+\end{equation}
+where \texttt{inc} is one's income, \texttt{edu} and \texttt{exp} denote years of formal education and years spent in the labour market, respectively.
+
+We managed to collect survey data from $n$ respondents and organised this information in the following system of equations:
+\begin{equation}
+  \left\{
+    \begin{aligned}
+      \texttt{inc}_1 &= \beta_0+\beta_1\texttt{edu}_1+\beta_2\texttt{exp}_1+\epsilon_1\\
+      \texttt{inc}_2 &= \beta_0+\beta_1\texttt{edu}_2+\beta_2\texttt{exp}_2+\epsilon_2\\
+      \cdots\\
+      \texttt{inc}_n &= \beta_0+\beta_1\texttt{edu}_n+\beta_2\texttt{exp}_n+\epsilon_n\\
+    \end{aligned}
+  \right.
+\end{equation}
+
+This system of linear equations can be represented in the matrix notation using
+\begin{equation}
+  \md{y}{n}{1}=
+    \begin{pmatrix}
+      \texttt{inc}_1\\
+      \texttt{inc}_2\\
+      \cdots\\
+      \texttt{inc}_2\\
+    \end{pmatrix},\ %
+  \md{X}{n}{3}=
+    \begin{pmatrix}
+      1     &\texttt{edu}_1     &\texttt{exp}_1\\
+      1     &\texttt{edu}_2     &\texttt{exp}_2\\
+      \cdots\\
+      1     &\texttt{edu}_n     &\texttt{exp}_n\\
+    \end{pmatrix},\ %
+  \md{\beta}{3}{1}=
+    \begin{pmatrix}
+      \beta_0\\
+      \beta_1\\
+      \beta_2\\
+    \end{pmatrix},\ \text{and}\ %
+  \md{\epsilon}{n}{1}=
+    \begin{pmatrix}
+      \epsilon_1\\
+      \epsilon_2\\
+      \cdots\\
+      \epsilon_n\\
+    \end{pmatrix}
+  \end{equation}
+as
+\begin{equation}\label{Eq.setup}
+  \m{y}=\m{X\beta}+\m{\epsilon}.
+\end{equation}
+
+\subsection{Ordinary least squares}
+
+The objective of OLS is to minimise the \emph{sum of squared} error terms. A handy way of representing sum of squared $\epsilon$ is
+\begin{equation}
+  \text{SSE}=\sum_{i=1}^n\epsilon_i^2=\epsilon_1^2+\epsilon_2^2+\cdots+\epsilon_n^2=
+  \begin{pmatrix}
+    \epsilon_1      &\epsilon_2     &\cdots      &\epsilon_n
+  \end{pmatrix}
+  \begin{pmatrix}
+    \epsilon_1\\
+    \epsilon_2\\
+    \cdots\\
+    \epsilon_n
+  \end{pmatrix}
+  =\T{\epsilon}\m{\epsilon}.
+\end{equation}
+In fact, $\T{x}\m{x}$ is the mathematical translation of ``sum of squared'' of $\m{x}$.
+
+Now we are ready to continue. We want to carefully choose a combination of $\beta_0$, $\beta_1$ and $\beta_2$ in order to make SSE as small as possible, ie
+\begin{equation}\label{Eq.min}
+  \min{\T{\epsilon}\m{\epsilon}}{\m{\beta}}=\min{\left(\m{y}-\m{X\beta}\right)\Ts\left(\m{y}-\m{X\beta}\right)}{\m{\beta}}
+\end{equation}
+(the equal sign is due to \cref{Eq.setup}).
+
+Two observations can be made from the minimisation problem in \cref{Eq.min}:
+\begin{enumerate}
+  \item both $\m{y}$ and $\m{X}$ are collected data therefore can no longer be changed by the researcher; but we are free to adjust $\m{\beta}$ in whatever way we want, meaning $\m{\beta}$ is the ``independent variable'' and SSE is a function of $\m{\beta}$, and
+  \item $\T{\epsilon}\m{\epsilon}$ is a scalar function (please verify).
+\end{enumerate}
+Then,
+\begin{equation}
+  \begin{aligned}
+    \phi(\m{\beta})=\T{\epsilon}\m{\epsilon}&=\left(\m{y}-\m{X\beta}\right)\Ts\left(\m{y}-\m{X\beta}\right)\\
+  &=\left(\T{y}-\T{\beta}\T{X}\right)\left(\m{y}-\m{X\beta}\right)\\
+  &=\T{y}\m{y}-\T{y}\m{X\beta}-\T{\beta}\T{X}\m{y}+\T{\beta}\T{X}\m{X\beta}
+  \end{aligned}
+\end{equation}
+
+We now differentiate $\phi(\m{\beta})$ \wrt $\m{\beta}$:
+\begin{equation}\label{Eq.normal}
+  \begin{aligned}
+    \frac{\dd \phi(\m{\beta})}{\dd\m{\beta}}&=-\T{y}\m{X}-\frac{\dd}{\dd\m{\beta}}\left[\left(\T{\beta}\T{X}\m{y}\right)\Ts\right]+\T{\beta}\T{X}\m{X}+\frac{\dd}{\dd\m{\beta}}\left[\left(\T{\beta}\T{X}\m{X\beta}\right)\Ts\right]\\
+    &=-\T{y}\m{X}-\frac{\dd}{\dd\m{\beta}}\left[\T{y}\m{X}\m{\beta}\right]+\T{\beta}\T{X}\m{X}+\frac{\dd}{\dd\m{\beta}}\left[\T{\beta}\T{X}\m{X}\m{\beta}\right]\\
+    &=-\T{y}\m{X}-\T{y}\m{X}+\T{\beta}\T{X}\m{X}+\T{\beta}\T{X}\m{X}\\
+    &=-2\T{y}\m{X}+2\T{\beta}\T{X}\m{X}
+  \end{aligned}
+\end{equation}
+(We were able to liberally apply transpose to terms containing $\T{\beta}$ and not to others because $\phi$ is a scalar function and each term in it must also be $1\times 1$ in dimension, whose transpose must be equal to itself.)
+
+Apply first order condition to \cref{Eq.normal}. An optimal $\hat{\beta}$ must satisfy
+\begin{equation}\label{Eq.FOC}
+  \begin{aligned}
+    -2\T{y}\m{X}+2\hat{\beta}\Ts\T{X}\m{X}&=\Z\\
+    2\hat{\beta}\Ts\T{X}\m{X}&=2\T{y}\m{X}\\
+    \hat{\beta}\Ts\T{X}\m{X}&=\T{y}\m{X}\\
+    \left(\hat{\beta}\Ts\T{X}\m{X}\right)\Ts&=\left(\T{y}\m{X}\right)\Ts\\
+    \T{X}\m{X}\hat{\beta}&=\T{X}\m{y}\\
+    \hat{\beta}&=\inv{\T{X}\m{X}}\T{X}\m{y}
+  \end{aligned}
+\end{equation}
+
+Notice that another transpose was applied to Line 4 of \cref{Eq.FOC} in order to correct $\hat{\beta}\Ts$ (due to \cref{S.layout}) back to its column form $\hat{\beta}$. In fact, it would be better to do $\frac{\dd\phi(\m{\beta})}{\dd\T{\beta}}$ in \cref{Eq.normal} to avoid this later flipping. But the downside of this approach is a pedagogical one: most students would find differentiating \wrt $\T{\beta}$ out of blue while \wrt $\m{\beta}$ is much more natural. In further derivations, $\frac{\dd\phi(\m{\beta})}{\dd\T{\beta}}$ will be used.

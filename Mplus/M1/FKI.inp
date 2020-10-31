@@ -1,0 +1,57 @@
+TITLE:
+    Financial literacy 3-level: L3 with FKI
+
+
+DATA:
+    file = "C:/Users/Tony/implist.dat";
+
+    type = imputation;
+
+
+VARIABLE:
+    names =
+        W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU
+        MATH READ FLIT              ! Financial literacy (1 plausible value)
+        MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
+        FCFMLRTY FLCONFIN           ! Mediators
+        PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
+        DISCRIM BELONG BULLY        ! Lat var "Safety"
+        FLFAMILY CURSUPP PASCHPOL   ! Lat var "Community"
+        W_SCH PRIVATE STRATIO       ! School character
+        EDUST STAFFST               ! School resource shortage
+        ;
+
+    usev =
+        CNTRYID CNTSCHID FLIT FKI;
+
+    cluster = CNTRYID CNTSCHID;
+
+    between = (CNTRYID) FKI;
+
+    missing = all (-99);
+
+    weight = W_STU;
+!    wtscale = cluster;
+
+!    b2weight = W_SCH;
+
+
+ANALYSIS:
+    process = 8;
+
+    type = threelevel;
+
+
+MODEL:
+%Between CNTRYID%
+    FLIT on FKI;
+
+%Between CNTSCHID%
+    FLIT;
+
+%Within%
+    FLIT;
+
+
+OUTPUT:
+    sampstat tech1;

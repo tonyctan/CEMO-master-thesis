@@ -1,0 +1,60 @@
+\chapter{Derivation of Country-level Financial Knowledge Indices}
+
+%\epigraph{There are two things you are better off not watching in the making: sausages and\\ econometric estimates.}{Edward Leamer}
+
+\section{Theoretical Foundation}
+
+PISA 2018 financial literacy dataset \parencite{FLdata} provides rich information about students and schools. For the purpose of cross-country comparison, however, the country-level data must be addressed separately by the researchers. \textcite{morenoherrero:2018a}, for instance, introduced a variable ``quality of math and science education'' to control for country-level differences since consensus is yet to emerge about the most appropriate measure for ``countries' financial knowledge''. Inspired by the UN's approach to forming Human Development Indices, a recent publication \textcite{olivermarquez:2020} highlighted four aspects of countries' macroeconomic practices in their attempt to develop country-level financial knowledge indices (FKI).
+
+Oliver-M{\'a}rquez and colleagues consider a country's economic capability, represented by its GDP per capita, to be a key dimension in bringing about its FKI. Secondly, literature converges on the importance of education training for a country's financial knowledge capability \parencite{oecd:2005}. Thirdly, countries with regular engagement with sophisticated financial products and financial markets should possess higher FKI. Lastly, countries with higher aggregate consumption levels and with ageing populations are likely to possess higher FKI due to more frequent exposure and pressure in retirement provision, respetively.
+
+More specifically, \textcite{olivermarquez:2020} suggests using the logarithm of GDP per capital in current international dollars (purchasing power parity adjusted) as a measure for the \texttt{Economic Capability} sub-index. For the \texttt{Education Training} sub-index, the authors consider postgraduate-to-total-tertiary-graduation ratios as a reflection of ``highly skilled'' workforce and the mean years of schooling as a measure of countries' general education levels. For the \texttt{Use} sub-index, gross portfolio equity assets (GPEA) and insurance company assets (ICA) are considered sophisticated financial products countries engage themselves in. Additionally, in order to capture the central role of technology in amplifying the proliferation and use of financial assets, the proportion of Internet users (\textsc{IUS}) enters the definition via
+\[ \texttt{Use} = ( \text{GPEA} + \text{ICA} ) ^ \text{IUS}. \]
+For the final sub-index \texttt{Need}, the authors define
+\[ \texttt{Need} = ( \text{PFA} + \text{AC} ) ^ \text{AGEING}, \]
+where \textsc{PFA} is the pension-fund-assets-to-\textsc{GDP} ratio. Aggregate consumption is defined as:
+\[ \text{AC} = \frac{2\% \times \text{household final consumption expenditure}}{\text{GDP}}, \]
+where the ``$2\%$ rule'' is drawn from \textcite{caliendo:2013} and the proportion of ageing population is computed as
+\[ \text{AGEING} = \frac{ \left[ \frac{\text{population}(>65)}{\text{population}(20 \sim 64)} \right]_{2018} - \left[ \frac{\text{population}(>65)}{\text{population}(20 \sim 64)} \right]_{2009} }{ \left[ \frac{\text{population}(>65)}{\text{population}(20 \sim 64)} \right]_{2009} }. \]
+
+\section{Data Collection and Missing Data Treatment}
+
+The data sources for FKI computation are documented in \cref{tab:FKIsource} and its associated notes. The sub-indices \texttt{Educational Training} and \texttt{Use} both contain missing observations for the year 2018. Majority of such missing data appear to be the result of administrative delay, with historic observations available until 2017. It is therefore feasible to conduct time-series forecasts using prior year observations to best approximate 2018 values.
+
+\input{./Tables/FKIsource}
+
+\subsection{Sub-index \texttt{Educational Training}}
+
+The 2018 archive for the number of master (ISCED 7), PhD (ISCED 8), and total tertiary graduates are incomplete for all participating countries except Georgia, Indonesia and Serbia. \cref{fig:skilled} presents a time series plot of
+\[ \texttt{highly skilled} = \frac{\text{number of masters} + \text{number of PhDs}}{\text{total number of tertiary graduates}} \]
+and suggests that this ratio is likely to be stable over time, especially between adjacent years. A ``naive forecast'', where the nearest available year's data are to be duplicated for 2018, is applied for \texttt{highly skilled}.
+
+\pfigure{fig:skilled}{Proportion of Postgraduates to Total Tertiary Graduations}{1}{~/uio/pc/Dokumenter/MSc/Thesis/Figures/skilled.pdf}{``Postgraduate'' is defined as master (ISCED 7) and PhD (ISCED 8) graduates. Countries not shown: GEO, IDN and SRB (2018 data available) and RUS (consult other sources)}{1.75}{1.25}
+
+\subsection{Sub-index \texttt{Use}}
+
+All series involved in calculating this sub-index, GPEA, ICA and IUS, contain missing data. When time series data contain only exponential growth but no underlying trend, a simple exponential smoothing would suffice \parencite{garder:1985}; if trend is present, Holt-Winters method is superior \parencite{chatfield:1978}. \cref{fig:use} facilitates this decision making by plotting both the original and log-transformed versions of GPEA and ICA series. Since curves after log-transformations have slopes, it is prudent to apply the Holt-Winters forecasting method in order to account for possible trends contained in the original series.
+
+\pfigure{fig:use}{Time Series Trend Test}{1}{~/uio/pc/Dokumenter/MSc/Thesis/Figures/use.pdf}{The time series plots after natural logarithm transformations (bottom panels) are not flat, suggesting the original series (top panels) contain trends. Holt-Winters method therefore is preferred over simple exponential smoothing for 2018 forecasts.}{0.5}{0.85}
+
+The IUS series contains missing data for Canada, Chile and the United States. Similar Holt-Winters procedure is applied to recover 2018 IUS data.
+
+\input{./Tables/FKIraw}
+
+\subsection{Other Items with Data Concerns}
+
+Russia reported 67.96\% and 61.01\% of its total university degree receipients to be postgraduates for the year 2013 and 2015 respectively (2014 missing). This figure rapidly declines to 41.6\% in 2016 and further down to 25.69\% in 2017. Such volatility goes against the stable patterns shared by most countries in \cref{fig:skilled}, casting doubt on data reliability. Separate investigation is therefore conducted using Russian government archive (Notes c to g in \cref{tab:FKIsource}).
+
+Georgia underwent pension reform in 2018 with fund balance gradually transitioning to State Pension Agency for its official resumption of duty on 1 January 2019. Resultantly, 2018 pension balance for this country is unavailable but to be best appoximated using 2019 official data (Notes h, i and * of \cref{tab:FKIsource}).
+
+\cref{tab:FKIraw} documents the results of the abovementioned data recovery process.
+
+\section{Standardisation, Weights and FKI}
+
+Following \textcite{olivermarquez:2020}'s procedure, all series in \cref{tab:FKIraw} undergo min-max normalisation such that the smallest entry receives a new score of $0.01$ and the biggest number is re-coded to $0.99$. This slight deviation from the original paper (where the min-max normalisation yields $0$ to $1$) is to avoid multiplying a series by zero or raising a base to the power of zero.
+
+Variable weights are calculated following \textcite{olivermarquez:2020}'s recipe to be the inverses of each series' standard deviations. Whereas a sub-index combines more than one series, each weight is further divided by the sum of the constituent weights so that total weights add to one.
+
+FKI is finally computed by taking the geometric mean of all four sub-indices, subject to sub-index-weights similar to variable weights above, as presented in \cref{tab:FKI}.
+
+\input{./Tables/FKI}

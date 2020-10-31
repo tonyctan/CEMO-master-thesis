@@ -1,0 +1,1135 @@
+Mplus VERSION 8.3
+MUTHEN & MUTHEN
+10/29/2020   9:15 AM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+      Financial literacy 3-level: L1 with control variables
+
+
+  DATA:
+      file = "C:/Users/Tony/implist.dat";
+
+      type = imputation;
+
+
+  VARIABLE:
+      names =
+          W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU
+          MATH READ FLIT              ! Financial literacy (1 plausible value)
+          MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
+          FCFMLRTY FLCONFIN           ! Mediators
+          PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
+          DISCRIM BELONG BULLY        ! Lat var "Safety"
+          FLFAMILY CURSUPP PASCHPOL   ! Lat var "Community"
+          W_SCH PRIVATE STRATIO       ! School character
+          EDUST STAFFST               ! School resource shortage
+          ;
+
+      usev =
+          CNTRYID CNTSCHID            ! Level labels
+          FLIT                        ! Regressant
+  		FKI							! L3 regressor
+                                      ! L1 regressors:
+          MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
+          MATH READ                   !   Control: numeracy and literacy
+          ;
+
+      cluster = CNTRYID CNTSCHID;
+
+  	between = (CNTRYID) FKI;
+
+      within =
+          MALE IMMI1GEN IMMI2GEN ESCS
+          MATH READ
+          ;
+
+      missing = all (-99);
+
+      weight = W_STU;
+  !    wtscale = cluster;
+
+  !    b2weight = W_SCH;
+
+
+  ANALYSIS:
+      process = 8;
+
+      type = threelevel;
+
+
+  MODEL:
+  %Between CNTRYID%
+      FLIT FKI;
+
+  %Between CNTSCHID%
+      FLIT;
+
+  %Within%
+
+      ! Total effect
+      FLIT on
+          MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
+          MATH READ                       ! Control: numeracy and literacy
+          ;
+
+  OUTPUT:
+      sampstat tech1; !tech8;
+
+
+
+*** WARNING in MODEL command
+  Variable is uncorrelated with all other variables: FKI
+*** WARNING in MODEL command
+  At least one variable is uncorrelated with all other variables in the model.
+  Check that this is what is intended.
+   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Financial literacy 3-level: L1 with control variables
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Average number of observations                              102801
+
+Number of replications
+    Requested                                                   10
+    Completed                                                   10
+
+Number of dependent variables                                    2
+Number of independent variables                                  6
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   FLIT        FKI
+
+Observed independent variables
+   MALE        IMMI1GEN    IMMI2GEN    ESCS        MATH        READ
+
+Variables with special functions
+
+  Cluster variables     CNTRYID   CNTSCHID
+  Weight variable (cluster-size scaling)
+    W_STU
+
+  Within variables
+   MALE        IMMI1GEN    IMMI2GEN    ESCS        MATH        READ
+
+  Level 3 between variables
+   FKI
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                   100
+Convergence criterion                                    0.100D-05
+Maximum number of EM iterations                                500
+Convergence criteria for the EM algorithm
+  Loglikelihood change                                   0.100D-02
+  Relative loglikelihood change                          0.100D-05
+  Derivative                                             0.100D-03
+Minimum variance                                         0.100D-03
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-02
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  Multiple data files from
+    C:/Users/Tony/implist.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA FOR THE FIRST DATA SET
+
+     Number of missing data patterns             1
+     Number of CNTSCHID clusters              6616
+     Number of CNTRYID clusters                 20
+
+     Average cluster size for CNTSCHID level       15.538
+
+     Estimated Intraclass Correlations for the Y Variables for CNTSCHID level
+
+                Intraclass
+     Variable  Correlation
+
+     FLIT         0.006
+
+     Average cluster size for CNTRYID level     5140.050
+
+     Estimated Intraclass Correlations for the Y Variables for CNTRYID level
+
+                Intraclass
+     Variable  Correlation
+
+     FLIT         0.011
+
+
+SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
+
+
+     MISSING DATA PATTERNS (x = not missing)
+
+           1
+ FLIT      x
+ FKI       x
+ MALE      x
+ IMMI1GEN  x
+ IMMI2GEN  x
+ ESCS      x
+ MATH      x
+ READ      x
+
+
+     MISSING DATA PATTERN FREQUENCIES
+
+    Pattern   Frequency
+          1      102801
+
+
+COVARIANCE COVERAGE OF DATA FOR THE FIRST DATA SET
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+ FLIT           1.000
+ FKI            1.000         1.000
+ MALE           1.000         1.000         1.000
+ IMMI1GEN       1.000         1.000         1.000         1.000
+ IMMI2GEN       1.000         1.000         1.000         1.000         1.000
+ ESCS           1.000         1.000         1.000         1.000         1.000
+ MATH           1.000         1.000         1.000         1.000         1.000
+ READ           1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              ESCS          MATH          READ
+              ________      ________      ________
+ ESCS           1.000
+ MATH           1.000         1.000
+ READ           1.000         1.000         1.000
+
+
+SAMPLE STATISTICS
+
+NOTE:  The sample statistics for within and between refer to the
+       maximum-likelihood estimated within and between covariance
+       matrices, respectively.
+
+NOTE:  These are average results over 10 data sets.
+
+
+     ESTIMATED SAMPLE STATISTICS FOR WITHIN
+
+
+           Means
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.500         0.029         0.043
+
+
+           Means
+              ESCS          MATH          READ
+              ________      ________      ________
+               -0.237       470.543       467.894
+
+
+           Covariances
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+ FLIT        9900.334
+ FKI            0.000         0.000
+ MALE           0.236         0.000         0.250
+ IMMI1GEN      -0.099         0.000         0.000         0.029
+ IMMI2GEN       0.466         0.000         0.001        -0.001         0.041
+ ESCS          46.372         0.000         0.008         0.000         0.003
+ MATH        8503.926         0.000         1.712        -0.050         0.520
+ READ        8741.975         0.000        -6.703        -0.201         0.557
+
+
+           Covariances
+              ESCS          MATH          READ
+              ________      ________      ________
+ ESCS           1.178
+ MATH          48.845      9271.076
+ READ          46.658      8213.018     10577.709
+
+
+           Correlations
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+ FLIT           1.000
+ FKI          999.000       999.000
+ MALE           0.005       999.000         1.000
+ IMMI1GEN      -0.006       999.000         0.006         1.000
+ IMMI2GEN       0.023       999.000         0.005        -0.037         1.000
+ ESCS           0.429       999.000         0.015         0.003         0.013
+ MATH           0.888       999.000         0.036        -0.003         0.027
+ READ           0.854       999.000        -0.130        -0.012         0.027
+
+
+           Correlations
+              ESCS          MATH          READ
+              ________      ________      ________
+ ESCS           1.000
+ MATH           0.467         1.000
+ READ           0.418         0.829         1.000
+
+
+     ESTIMATED SAMPLE STATISTICS FOR BETWEEN CNTSCHID
+
+
+           Means
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           Means
+              ESCS          MATH          READ
+              ________      ________      ________
+                0.000         0.000         0.000
+
+
+           Covariances
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+ FLIT          56.886
+ FKI            0.000         0.000
+ MALE           0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           Covariances
+              ESCS          MATH          READ
+              ________      ________      ________
+ ESCS           0.000
+ MATH           0.000         0.000
+ READ           0.000         0.000         0.000
+
+
+           Correlations
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+ FLIT           1.000
+ FKI          999.000       999.000
+ MALE           0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           Correlations
+              ESCS          MATH          READ
+              ________      ________      ________
+ ESCS           0.000
+ MATH           0.000         0.000
+ READ           0.000         0.000         0.000
+
+
+     ESTIMATED SAMPLE STATISTICS FOR BETWEEN CNTRYID
+
+
+           Means
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+              481.182         0.550         0.000         0.000         0.000
+
+
+           Means
+              ESCS          MATH          READ
+              ________      ________      ________
+                0.000         0.000         0.000
+
+
+           Covariances
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+ FLIT         111.043
+ FKI            0.396         0.044
+ MALE           0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           Covariances
+              ESCS          MATH          READ
+              ________      ________      ________
+ ESCS           0.000
+ MATH           0.000         0.000
+ READ           0.000         0.000         0.000
+
+
+           Correlations
+              FLIT          FKI           MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+ FLIT           1.000
+ FKI            0.179         1.000
+ MALE           0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           Correlations
+              ESCS          MATH          READ
+              ________      ________      ________
+ ESCS           0.000
+ MATH           0.000         0.000
+ READ           0.000         0.000         0.000
+
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       12
+
+Loglikelihood
+
+    H0 Value
+
+        Mean                           -527940.279
+        Std Dev                            373.040
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      -528808.083    -528706.150
+           0.980       1.000      -528706.392    -528706.150
+           0.950       0.900      -528553.893    -528706.150
+           0.900       0.900      -528418.368    -528706.150
+           0.800       0.900      -528254.230    -528706.150
+           0.700       0.800      -528135.901    -528114.658
+           0.500       0.500      -527940.279    -528032.875
+           0.300       0.200      -527744.657    -527841.543
+           0.200       0.200      -527626.328    -527831.550
+           0.100       0.100      -527462.191    -527549.641
+           0.050       0.100      -527326.665    -527549.641
+           0.020       0.000      -527174.166    -527549.641
+           0.010       0.000      -527072.475    -527549.641
+
+    H1 Value
+
+        Mean                           -527939.945
+        Std Dev                            373.018
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      -528807.696    -528705.784
+           0.980       1.000      -528706.012    -528705.784
+           0.950       0.900      -528553.522    -528705.784
+           0.900       0.900      -528418.005    -528705.784
+           0.800       0.900      -528253.877    -528705.784
+           0.700       0.800      -528135.556    -528114.390
+           0.500       0.500      -527939.945    -528032.570
+           0.300       0.200      -527744.334    -527841.239
+           0.200       0.200      -527626.013    -527831.198
+           0.100       0.100      -527461.885    -527549.389
+           0.050       0.100      -527326.368    -527549.389
+           0.020       0.000      -527173.878    -527549.389
+           0.010       0.000      -527072.194    -527549.389
+
+Information Criteria
+
+    Akaike (AIC)
+
+        Mean                           1055904.558
+        Std Dev                            746.081
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      1054168.951    1054469.123
+           0.980       1.000      1054372.332    1054469.123
+           0.950       0.900      1054677.330    1054469.123
+           0.900       0.900      1054948.381    1054469.123
+           0.800       0.800      1055276.657    1054469.123
+           0.700       0.800      1055513.313    1055687.100
+           0.500       0.500      1055904.558    1055734.522
+           0.300       0.200      1056295.803    1056212.118
+           0.200       0.100      1056532.460    1056253.315
+           0.100       0.100      1056860.735    1056332.982
+           0.050       0.100      1057131.786    1056332.982
+           0.020       0.000      1057436.784    1056332.982
+           0.010       0.000      1057640.165    1056332.982
+
+    Bayesian (BIC)
+
+        Mean                           1056019.045
+        Std Dev                            746.081
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      1054283.437    1054583.610
+           0.980       1.000      1054486.819    1054583.610
+           0.950       0.900      1054791.817    1054583.610
+           0.900       0.900      1055062.868    1054583.610
+           0.800       0.800      1055391.143    1054583.610
+           0.700       0.800      1055627.800    1055801.586
+           0.500       0.500      1056019.045    1055849.009
+           0.300       0.200      1056410.289    1056326.605
+           0.200       0.100      1056646.946    1056367.802
+           0.100       0.100      1056975.222    1056447.469
+           0.050       0.100      1057246.273    1056447.469
+           0.020       0.000      1057551.270    1056447.469
+           0.010       0.000      1057754.652    1056447.469
+
+    Sample-Size Adjusted BIC (n* = (n + 2) / 24)
+
+        Mean                           1055980.908
+        Std Dev                            746.081
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      1054245.301    1054545.473
+           0.980       1.000      1054448.683    1054545.473
+           0.950       0.900      1054753.680    1054545.473
+           0.900       0.900      1055024.731    1054545.473
+           0.800       0.800      1055353.007    1054545.473
+           0.700       0.800      1055589.664    1055763.450
+           0.500       0.500      1055980.908    1055810.873
+           0.300       0.200      1056372.153    1056288.469
+           0.200       0.100      1056608.810    1056329.665
+           0.100       0.100      1056937.085    1056409.332
+           0.050       0.100      1057208.136    1056409.332
+           0.020       0.000      1057513.134    1056409.332
+           0.010       0.000      1057716.516    1056409.332
+
+Chi-Square Test of Model Fit
+
+        Degrees of freedom                       1
+
+        Mean                                 0.548
+        Std Dev                              0.136
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.000          0.382
+           0.980       1.000            0.001          0.382
+           0.950       1.000            0.004          0.382
+           0.900       1.000            0.016          0.382
+           0.800       1.000            0.064          0.382
+           0.700       1.000            0.148          0.456
+           0.500       0.800            0.455          0.512
+           0.300       0.000            1.074          0.568
+           0.200       0.000            1.642          0.587
+           0.100       0.000            2.706          0.592
+           0.050       0.000            3.841          0.592
+           0.020       0.000            5.412          0.592
+           0.010       0.000            6.635          0.592
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+        Mean                                 0.000
+        Std Dev                              0.000
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       0.000            0.000          0.000
+           0.980       0.000            0.000          0.000
+           0.950       0.000            0.000          0.000
+           0.900       0.000            0.000          0.000
+           0.800       0.000            0.000          0.000
+           0.700       0.000            0.000          0.000
+           0.500       0.000            0.000          0.000
+           0.300       0.000            0.000          0.000
+           0.200       0.000            0.000          0.000
+           0.100       0.000            0.000          0.000
+           0.050       0.000            0.000          0.000
+           0.020       0.000            0.000          0.000
+           0.010       0.000            0.000          0.000
+
+CFI/TLI
+
+    CFI
+
+        Mean                                 1.000
+        Std Dev                              0.000
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       0.000            1.000          1.000
+           0.980       0.000            1.000          1.000
+           0.950       0.000            1.000          1.000
+           0.900       0.000            1.000          1.000
+           0.800       0.000            1.000          1.000
+           0.700       0.000            1.000          1.000
+           0.500       0.000            1.000          1.000
+           0.300       0.000            1.000          1.000
+           0.200       0.000            1.000          1.000
+           0.100       0.000            1.000          1.000
+           0.050       0.000            1.000          1.000
+           0.020       0.000            1.000          1.000
+           0.010       0.000            1.000          1.000
+
+    TLI
+
+        Mean                                 1.000
+        Std Dev                              0.000
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            1.000          1.000
+           0.980       0.900            1.000          1.000
+           0.950       0.900            1.000          1.000
+           0.900       0.900            1.000          1.000
+           0.800       0.900            1.000          1.000
+           0.700       0.800            1.000          1.000
+           0.500       0.500            1.000          1.000
+           0.300       0.200            1.000          1.000
+           0.200       0.200            1.000          1.000
+           0.100       0.100            1.000          1.000
+           0.050       0.100            1.000          1.000
+           0.020       0.000            1.000          1.000
+           0.010       0.000            1.000          1.000
+
+SRMR (Standardized Root Mean Square Residual) for the WITHIN level
+
+        Mean                                 0.000
+        Std Dev                              0.000
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.000          0.000
+           0.980       1.000            0.000          0.000
+           0.950       1.000            0.000          0.000
+           0.900       1.000            0.000          0.000
+           0.800       1.000            0.000          0.000
+           0.700       0.800            0.000          0.000
+           0.500       0.300            0.000          0.000
+           0.300       0.200            0.000          0.000
+           0.200       0.200            0.000          0.000
+           0.100       0.100            0.000          0.000
+           0.050       0.100            0.000          0.000
+           0.020       0.100            0.000          0.000
+           0.010       0.100            0.000          0.000
+
+SRMR (Standardized Root Mean Square Residual) for the BETWEEN level 2
+
+        Mean                                 0.000
+        Std Dev                              0.000
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.000          0.000
+           0.980       1.000            0.000          0.000
+           0.950       1.000            0.000          0.000
+           0.900       1.000            0.000          0.000
+           0.800       1.000            0.000          0.000
+           0.700       0.600            0.000          0.000
+           0.500       0.200            0.000          0.000
+           0.300       0.200            0.000          0.000
+           0.200       0.100            0.000          0.000
+           0.100       0.100            0.000          0.000
+           0.050       0.100            0.000          0.000
+           0.020       0.100            0.000          0.000
+           0.010       0.100            0.000          0.000
+
+SRMR (Standardized Root Mean Square Residual) for the BETWEEN level 3
+
+        Mean                                 0.080
+        Std Dev                              0.008
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.062          0.067
+           0.980       1.000            0.064          0.067
+           0.950       0.900            0.067          0.067
+           0.900       0.900            0.070          0.067
+           0.800       0.800            0.074          0.067
+           0.700       0.800            0.076          0.077
+           0.500       0.500            0.080          0.080
+           0.300       0.200            0.084          0.081
+           0.200       0.100            0.087          0.083
+           0.100       0.100            0.090          0.085
+           0.050       0.100            0.093          0.085
+           0.020       0.100            0.096          0.085
+           0.010       0.100            0.098          0.085
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Within Level
+
+ FLIT       ON
+    MALE               7.296      1.397      5.223      0.000      0.096
+    IMMI1GEN           0.054      3.647      0.015      0.988      0.206
+    IMMI2GEN          -1.254      2.169     -0.578      0.563      0.271
+    ESCS               0.300      0.533      0.563      0.573      0.162
+    MATH               0.574      0.013     42.874      0.000      0.045
+    READ               0.384      0.015     25.404      0.000      0.020
+
+ Residual Variances
+    FLIT            1645.188     52.948     31.072      0.000      0.066
+
+Between CNTSCHID Level
+
+ Variances
+    FLIT              56.888     12.274      4.635      0.000      0.164
+
+Between CNTRYID Level
+
+ Means
+    FLIT              27.797      4.606      6.035      0.000      0.040
+    FKI                0.551      0.047     11.750      0.000      0.000
+
+ Variances
+    FLIT             110.966     36.571      3.034      0.002      0.022
+    FKI                0.044      0.014      3.108      0.002      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Average Condition Number for the Information Matrix      0.159E-07
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION FOR WITHIN
+
+
+           NU
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           NU
+              MATH          READ
+              ________      ________
+                    0             0
+
+
+           LAMBDA
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT               0             0             0             0             0
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           LAMBDA
+              MATH          READ
+              ________      ________
+ FLIT               0             0
+ MALE               0             0
+ IMMI1GEN           0             0
+ IMMI2GEN           0             0
+ ESCS               0             0
+ MATH               0             0
+ READ               0             0
+
+
+           THETA
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT               0
+ MALE               0             0
+ IMMI1GEN           0             0             0
+ IMMI2GEN           0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           THETA
+              MATH          READ
+              ________      ________
+ MATH               0
+ READ               0             0
+
+
+           ALPHA
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           ALPHA
+              MATH          READ
+              ________      ________
+                    0             0
+
+
+           BETA
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT               0             1             2             3             4
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           BETA
+              MATH          READ
+              ________      ________
+ FLIT               5             6
+ MALE               0             0
+ IMMI1GEN           0             0
+ IMMI2GEN           0             0
+ ESCS               0             0
+ MATH               0             0
+ READ               0             0
+
+
+           PSI
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT               7
+ MALE               0             0
+ IMMI1GEN           0             0             0
+ IMMI2GEN           0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           PSI
+              MATH          READ
+              ________      ________
+ MATH               0
+ READ               0             0
+
+
+     PARAMETER SPECIFICATION FOR BETWEEN CNTSCHID
+
+
+           NU
+              FLIT
+              ________
+                    0
+
+
+           LAMBDA
+              FLIT
+              ________
+ FLIT               0
+
+
+           THETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           ALPHA
+              FLIT
+              ________
+                    0
+
+
+           BETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           PSI
+              FLIT
+              ________
+ FLIT               8
+
+
+     PARAMETER SPECIFICATION FOR BETWEEN CNTRYID
+
+
+           NU
+              FLIT          FKI
+              ________      ________
+                    0             9
+
+
+           LAMBDA
+              FLIT
+              ________
+ FLIT               0
+ FKI                0
+
+
+           THETA
+              FLIT          FKI
+              ________      ________
+ FLIT               0
+ FKI                0            10
+
+
+           ALPHA
+              FLIT
+              ________
+                   11
+
+
+           BETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           PSI
+              FLIT
+              ________
+ FLIT              12
+
+
+     STARTING VALUES FOR WITHIN
+
+
+           NU
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              MATH          READ
+              ________      ________
+                0.000         0.000
+
+
+           LAMBDA
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT           1.000         0.000         0.000         0.000         0.000
+ MALE           0.000         1.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         1.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         1.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         1.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              MATH          READ
+              ________      ________
+ FLIT           0.000         0.000
+ MALE           0.000         0.000
+ IMMI1GEN       0.000         0.000
+ IMMI2GEN       0.000         0.000
+ ESCS           0.000         0.000
+ MATH           1.000         0.000
+ READ           0.000         1.000
+
+
+           THETA
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT           0.000
+ MALE           0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              MATH          READ
+              ________      ________
+ MATH           0.000
+ READ           0.000         0.000
+
+
+           ALPHA
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              MATH          READ
+              ________      ________
+                0.000         0.000
+
+
+           BETA
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              MATH          READ
+              ________      ________
+ FLIT           0.000         0.000
+ MALE           0.000         0.000
+ IMMI1GEN       0.000         0.000
+ IMMI2GEN       0.000         0.000
+ ESCS           0.000         0.000
+ MATH           0.000         0.000
+ READ           0.000         0.000
+
+
+           PSI
+              FLIT          MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT        5102.428
+ MALE           0.000         0.125
+ IMMI1GEN       0.000         0.000         0.014
+ IMMI2GEN       0.000         0.000         0.000         0.020
+ ESCS           0.000         0.000         0.000         0.000         0.589
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              MATH          READ
+              ________      ________
+ MATH        4620.669
+ READ           0.000      5290.345
+
+
+     STARTING VALUES FOR BETWEEN CNTSCHID
+
+
+           NU
+              FLIT
+              ________
+                0.000
+
+
+           LAMBDA
+              FLIT
+              ________
+ FLIT           1.000
+
+
+           THETA
+              FLIT
+              ________
+ FLIT           0.000
+
+
+           ALPHA
+              FLIT
+              ________
+                0.000
+
+
+           BETA
+              FLIT
+              ________
+ FLIT           0.000
+
+
+           PSI
+              FLIT
+              ________
+ FLIT        5102.428
+
+
+     STARTING VALUES FOR BETWEEN CNTRYID
+
+
+           NU
+              FLIT          FKI
+              ________      ________
+                0.000         0.532
+
+
+           LAMBDA
+              FLIT
+              ________
+ FLIT           1.000
+ FKI            0.000
+
+
+           THETA
+              FLIT          FKI
+              ________      ________
+ FLIT           0.000
+ FKI            0.000         0.024
+
+
+           ALPHA
+              FLIT
+              ________
+              480.117
+
+
+           BETA
+              FLIT
+              ________
+ FLIT           0.000
+
+
+           PSI
+              FLIT
+              ________
+ FLIT        5102.428
+
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for multilevel analysis.
+  No diagram output was produced.
+
+
+     Beginning Time:  09:15:57
+        Ending Time:  09:23:00
+       Elapsed Time:  00:07:03
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2019 Muthen & Muthen
