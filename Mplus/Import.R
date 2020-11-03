@@ -25,9 +25,9 @@ finlit <- pisa.select.merge(
         "BELONG", # Sense of belonging to school (WLE)
         "BEINGBULLIED", # Student's experience of being bullied (WLE)
     # Community
-        "FLFAMILY", # Parental involvement in matters of Financial Literacy (WLE)
-        "CURSUPP", # Current parental support for learning at home (WLE)
-        "PASCHPOL" # School policies for parental involvement (WLE)
+        "FLFAMILY"#, # Parental involvement in matters of Financial Literacy (WLE)
+        # "CURSUPP", # Current parental support for learning at home (WLE)
+        # "PASCHPOL" # School policies for parental involvement (WLE)
     ),
     school = c(
         "PRIVATESCH", # School type (public, private, missing)
@@ -36,8 +36,6 @@ finlit <- pisa.select.merge(
         "STAFFSHORT" # Shortage of educational staff (WLE)
     )
 )
-
-finlit$FLFAMILY
 
 # How big is the data set?
 dim(finlit)
@@ -108,26 +106,26 @@ FKI <- recode(finlit$CNT, "
 # ")
 
 W_CNT <- recode(finlit$CNT, "
-    'BRA' = 7.755;
-    'BGR' = 3.835;
-    'CAN' = 7.242;
-    'CHL' = 4.185;
-    'EST' = 3.888;
-    'FIN' = 4.038;
-    'GEO' = 4.032;
-    'IDN' = 6.656;
-    'ITA' = 8.567;
-    'LVA' = 2.940;
-    'LTU' = 3.803;
-    'NLD' = 2.838;
-    'PER' = 4.417;
-    'POL' = 4.008;
-    'PRT' = 4.262;
-    'RUS' = 8.514;
-    'SRB' = 3.615;
-    'SVK' = 3.183;
-    'ESP' = 8.734;
-    'USA' = 3.488
+    'BRA' = 12.895;
+    'BGR' = 26.076;
+    'CAN' = 13.808;
+    'CHL' = 23.896;
+    'EST' = 25.720;
+    'FIN' = 24.763;
+    'GEO' = 24.803;
+    'IDN' = 15.025;
+    'ITA' = 11.672;
+    'LVA' = 34.013;
+    'LTU' = 26.294;
+    'NLD' = 35.231;
+    'PER' = 22.639;
+    'POL' = 24.953;
+    'PRT' = 23.462;
+    'RUS' = 11.745;
+    'SRB' = 27.665;
+    'SVK' = 31.420;
+    'ESP' = 11.449;
+    'USA' = 28.671
 ")
 
 # Recode PRIVATESCH from texts to numbers
@@ -157,16 +155,16 @@ IMMI2GEN <- recode(finlit$IMMIG, "
 # Stitch new variables to data frame
 names(finlit) # in order to know where to insert
 
-finlit_1 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(87, 97, 107)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_2 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(88, 98, 108)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_3 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(89, 99, 109)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_4 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(90, 100, 110)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_5 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(91, 101, 111)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_6 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(92, 102, 112)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_7 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(93, 103, 113)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_8 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(94, 104, 114)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_9 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(95, 105, 115)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
-finlit_10 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(96, 106, 116)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:135)])
+finlit_1 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(87, 97, 107)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_2 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(88, 98, 108)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_3 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(89, 99, 109)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_4 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(90, 100, 110)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_5 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(91, 101, 111)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_6 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(92, 102, 112)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_7 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(93, 103, 113)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_8 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(94, 104, 114)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_9 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(95, 105, 115)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
+finlit_10 <- cbind(W_CNT, FKI, finlit[, c(2:6)], finlit[, c(96, 106, 116)], finlit[, 117], IMMI1GEN, IMMI2GEN, finlit[, c(119:133)])
 
 # This is where the imputation files are to be written to
 setwdOS(

@@ -1,15 +1,15 @@
 Mplus VERSION 8.3
 MUTHEN & MUTHEN
-10/31/2020  11:12 PM
+11/03/2020  12:29 AM
 
 INPUT INSTRUCTIONS
 
   TITLE:
-      Financial literacy 3-level: L3 with FKI
+      Financial literacy 2-level: L1 full model
 
 
   DATA:
-      file = "M:/pc/Dokumenter/MSc/Thesis/Data/Mplus/implist.dat";
+      file = "C:/Users/Tony/implist.dat";
 
       type = imputation;
 
@@ -17,35 +17,34 @@ INPUT INSTRUCTIONS
   VARIABLE:
       names =
           W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU
-          MATH READ FLIT              ! Financial literacy (1 plausible value)
+          MATH READ FLIT              ! Numeracy, literacy, finlit
           MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
           FCFMLRTY FLCONFIN           ! Mediators
           PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-          DISCRIM BELONG              ! Lat var "Safety"
-          FLFAMILY! CURSUPP           ! Lat var "Community"
-          W_SCH PRIVATE STRATIO EDUST STAFFST    ! School var
+          DISCRIM BELONG BULLY        ! Lat var "Safety"
+          FLFAMILY                    ! Lat var "Community"
+          W_SCH PRIVATE STRATIO       ! School character
+          EDUST STAFFST               ! School resource shortage
           ;
 
       usev =
-          CNTRYID CNTSCHID            ! Level labels
-          FLIT                        ! Regressant
-          FKI                         ! L3 regressor
-                                      ! L1 regressors:
+          CNTSCHID                    ! Level label
+  !        FLIT                        ! Regressant
           PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
-          DISCRIM BELONG              !   Lat var "Safety"
+          DISCRIM BELONG BULLY        !   Lat var "Safety"
           FLFAMILY                    !   Financial socialisation
           FCFMLRTY FLCONFIN           !   Mediators
           MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
           MATH READ                   !   Control: numeracy and literacy
           ;
 
-      cluster = CNTRYID CNTSCHID;
+      cluster = CNTSCHID;
 
-      between = (CNTRYID) FKI;
+  !	between = (CNTRYID) FKI;
 
       within =
           PERFEED TEACHINT FLSCHOOL
-          DISCRIM BELONG
+          DISCRIM BELONG BULLY
           FLFAMILY
           FCFMLRTY FLCONFIN
           MALE IMMI1GEN IMMI2GEN ESCS
@@ -53,8 +52,6 @@ INPUT INSTRUCTIONS
           ;
 
       missing = all (-99);
-
-
 
       weight = W_STU;
   !    wtscale = cluster;
@@ -65,14 +62,12 @@ INPUT INSTRUCTIONS
   ANALYSIS:
       process = 8;
 
-      type = threelevel;
+      type = twolevel;
 
 
   MODEL:
-  %Between CNTRYID%
-      FLIT on FKI;
 
-  %Between CNTSCHID%
+  %Between%
       FLIT;
 
   %Within%
@@ -80,7 +75,7 @@ INPUT INSTRUCTIONS
       ! Lat var ACADEMIC
       ACADEMIC by PERFEED TEACHINT FLSCHOOL;
       ! Lat var SAFTY
-      SAFETY by DISCRIM BELONG;
+      SAFETY by DISCRIM BELONG BULLY;
 
       ! Total effect
       FLIT on
@@ -94,19 +89,22 @@ INPUT INSTRUCTIONS
       FCFMLRTY on ACADEMIC SAFETY FLFAMILY;
 
       ! Onto mediator CONFIDENCE
-      FLCONFIN on ACADEMIC SAFETY;
-      FLCONFIN on FLFAMILY;
+      FLCONFIN on ACADEMIC SAFETY FLFAMILY;
 
   MODEL INDIRECT:
 
       ! Indirect effects
-      FLIT ind ACADEMIC SAFETY FLFAMILY;
+      FLIT ind ACADEMIC;
+      FLIT ind SAFETY;
+      FLIT ind FLFAMILY;
+
 
   OUTPUT:
-      sampstat tech1 tech8;
+      sampstat tech1; !tech8;
 
-*** ERROR
-  MODEL INDIRECT is not available for TYPE=THREELEVEL.
+*** ERROR in MODEL command
+  Unknown variables: FLIT
+  in line: FLIT
 
 
 MUTHEN & MUTHEN

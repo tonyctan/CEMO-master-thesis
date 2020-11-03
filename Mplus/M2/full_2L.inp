@@ -1,0 +1,97 @@
+TITLE:
+    Financial literacy 2-level: L1 full model
+
+
+DATA:
+    file = "C:/Users/Tony/implist.dat";
+
+    type = imputation;
+
+
+VARIABLE:
+    names =
+        W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU 
+        MATH READ FLIT              ! Numeracy, literacy, finlit
+        MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
+        FCFMLRTY FLCONFIN           ! Mediators
+        PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
+        DISCRIM BELONG BULLY        ! Lat var "Safety"
+        FLFAMILY                    ! Lat var "Community"
+        W_SCH PRIVATE STRATIO       ! School character
+        EDUST STAFFST               ! School resource shortage
+        ;
+
+    usev =
+        CNTSCHID                    ! Level label
+        FLIT                        ! Regressant
+        PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
+        DISCRIM BELONG BULLY        !   Lat var "Safety"
+        FLFAMILY                    !   Financial socialisation
+        FCFMLRTY FLCONFIN           !   Mediators
+        MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
+        MATH READ                   !   Control: numeracy and literacy
+        ;
+
+    cluster = CNTSCHID;
+
+!	between = (CNTRYID) FKI;
+
+    within =
+        PERFEED TEACHINT FLSCHOOL
+        DISCRIM BELONG BULLY
+        FLFAMILY
+        FCFMLRTY FLCONFIN
+        MALE IMMI1GEN IMMI2GEN ESCS
+        MATH READ
+        ;
+
+    missing = all (-99);
+
+    weight = W_STU;
+!    wtscale = cluster;
+
+!    b2weight = W_SCH;
+
+
+ANALYSIS:
+    process = 8;
+
+    type = twolevel;
+
+
+MODEL:
+
+%Between%
+    FLIT;
+
+%Within%
+
+    ! Lat var ACADEMIC
+    ACADEMIC by PERFEED TEACHINT FLSCHOOL;
+    ! Lat var SAFTY
+    SAFETY by DISCRIM BELONG BULLY;
+
+    ! Total effect
+    FLIT on
+        ACADEMIC SAFETY FLFAMILY        ! Input variables
+        FCFMLRTY FLCONFIN               ! Mediators
+        MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
+        MATH READ                       ! Control: numeracy and literacy
+        ;
+
+    ! Onto mediator FAMILIARITY
+    FCFMLRTY on ACADEMIC SAFETY FLFAMILY;
+
+    ! Onto mediator CONFIDENCE
+    FLCONFIN on ACADEMIC SAFETY FLFAMILY;
+
+MODEL INDIRECT:
+
+    ! Indirect effects
+    FLIT ind ACADEMIC;
+    FLIT ind SAFETY;
+    FLIT ind FLFAMILY;
+
+
+OUTPUT:
+    sampstat tech1; !tech8;
