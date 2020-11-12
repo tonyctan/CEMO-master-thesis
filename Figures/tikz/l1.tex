@@ -1,0 +1,121 @@
+\ltikz{fig:l1}{Path Diagram: Student-level ($L1$)}{
+\begin{tikzpicture}[
+    latvar/.style={ellipse,draw=black,minimum width=3.3cm,minimum height=1cm},
+    manvar/.style={rectangle,draw=black,minimum width=2.5cm},
+    ->,>=stealth',semithick,
+    bend angle=-45,
+    decoration={
+        zigzag,
+        amplitude=1pt,
+        segment length=1mm,
+        post=lineto,
+        post length=4pt
+    }
+]
+
+
+%%%%%%%%%%%%%%%%%%
+% Measurement part
+%%%%%%%%%%%%%%%%%%
+
+% Lat var "Academic"
+    \node[manvar] (A1) at (0,0) {$\texttt{PERFEED}_1$};
+    \node[manvar] (A2) at (0,-1) {$\texttt{TEACHINT}_1$};
+    \node[manvar] (A3) at (0,-2) {$\texttt{FLSCHOOL}_1$};
+
+    \node[latvar] (A) at (5,-1) {$\texttt{Academic}_1$};
+    % Variance arrow
+    %\draw[gray,decorate,->] (6,0)--(5.5,-0.5);
+
+    \draw[gray,->] (A.west)--(A1.east);
+    \draw[gray,->] (A.west)--(A2.east);
+    \draw[gray,->] (A.west)--(A3.east);
+
+    % Residual arrows
+    \draw[gray,->] (-1.75,0)--(-1.25,0);
+    \draw[gray,->] (-1.75,-1)--(-1.25,-1);
+    \draw[gray,->] (-1.75,-2)--(-1.25,-2);
+
+% Lat var "Safety"
+    \node[manvar] (S1) at (0,-3) {$\texttt{DISCRIM}_1$};
+    \node[manvar] (S2) at (0,-4) {$\texttt{BELONG}_1$};
+    \node[manvar] (S3) at (0,-5) {$\texttt{BULLY}_1$};
+
+    \node[latvar] (S) at (5,-4) {$\texttt{Safety}_1$};
+    % Variance arrow
+    %\draw[gray,decorate,->] (6,-3)--(5.5,-3.5);
+
+    \draw[gray,->] (S.west)--(S1.east);
+    \draw[gray,->] (S.west)--(S2.east);
+    \draw[gray,->] (S.west)--(S3.east);
+
+    % Residual arrows
+    \draw[gray,->] (-1.75,-3)--(-1.25,-3);
+    \draw[gray,->] (-1.75,-4)--(-1.25,-4);
+    \draw[gray,->] (-1.75,-5)--(-1.25,-5);
+
+% Financial socialisation
+    \node[latvar] (C) at (5,-7) {$\texttt{FLFAMILY}_1$};
+
+    % Covariances between input variables
+    \draw[dashed,<->] (A.south) to [bend left] (S.north);
+    \draw[dashed,<->] (S.south) to [bend left] (C.north);
+    \draw[dashed,<->] (A.south) to [bend left] (C.north);
+
+
+%%%%%%%%%%%%%%%%%
+% Structural part
+%%%%%%%%%%%%%%%%%
+
+% Mediators
+    \node[manvar] (familiarity) at (10,-1) {\texttt{FCFMLRTY}};
+
+    \draw[blue,->] (A.east)--(familiarity.west);
+    \draw[blue,->] (S.east)--(familiarity.west);
+    \draw[blue,->] (C.east)--(familiarity.west);
+
+    \node[manvar] (confidence) at (10,-7) {\texttt{FLCONFIN}};
+
+    \draw[blue,->] (A.east)--(confidence.west);
+    \draw[blue,->] (S.east)--(confidence.west);
+    \draw[blue,->] (C.east)--(confidence.west);
+
+    % Residual arrows
+    \draw[blue,->] (11.75,-1)--(11.25,-1);
+    \draw[blue,->] (11.75,-7)--(11.25,-7);
+
+    % Covariance between mediators
+    \draw[dashed,<->] (familiarity.south) to [bend left] (confidence.north);
+
+% Outcome variable
+    \node[manvar] (finlit) at (14,-4) {$\texttt{FLIT}_1$};
+
+    % Residual arrow
+    \draw[->] (15.75,-4)--(15.25,-4);
+
+% Indirect paths
+    \draw[blue,->] (familiarity.east)--(finlit.west);
+    \draw[blue,->] (confidence.east)--(finlit.west);
+% Direct paths
+    \draw[red,->] (A.east)--(finlit.west);
+    \draw[red,->] (S.east)--(finlit.west);
+    \draw[red,->] (C.east)--(finlit.west);
+
+% Control variables
+    \node[manvar] (ses) at (17,0) {\texttt{ESCS}};
+    \node[manvar] (immi1) at (17,-1) {\texttt{IMMI1GEN}};
+    \node[manvar] (immi2) at (17,-2) {\texttt{IMMI2GEN}};
+    \node[manvar] (sex) at (17,-3) {\texttt{MALE}};
+
+    \draw[->] (ses.west)--(finlit.north);
+    \draw[->] (immi1.west)--(finlit.north);
+    \draw[->] (immi2.west)--(finlit.north);
+    \draw[->] (sex.west)--(finlit.north);
+
+    \node[manvar] (num) at (17,-6) {\texttt{MATH}};
+    \node[manvar] (lit) at (17,-7) {\texttt{READ}};
+
+    \draw[->] (num.west)--(finlit.south);
+    \draw[->] (lit.west)--(finlit.south);
+\end{tikzpicture}
+}{Measurement models are coloured in gray. The direct and indirect paths of the structural component are represented in red and blue respectively.}

@@ -1,0 +1,105 @@
+\ptikz{fig:l2}{Path Diagram: School-level ($L2$)}{
+\begin{tikzpicture}[
+    latvar/.style={ellipse,draw=black,minimum width=3.3cm,minimum height=1cm},
+    manvar/.style={rectangle,draw=black,minimum width=2.5cm},
+    ->,>=stealth',semithick,
+    bend angle=-45,
+    decoration={
+        zigzag,
+        amplitude=1pt,
+        segment length=1mm,
+        post=lineto,
+        post length=4pt
+    }
+]
+
+
+%%%%%%%%%%%%%%%%%%
+% Measurement part
+%%%%%%%%%%%%%%%%%%
+
+% Lat var "Academic"
+    \node[latvar] (A1) at (0,0) {$\texttt{PERFEED}_2$};
+    \node[latvar] (A2) at (0,-1) {$\texttt{TEACHINT}_2$};
+    \node[latvar] (A3) at (0,-2) {$\texttt{FLSCHOOL}_2$};
+
+    \node[latvar] (A) at (5,-1) {$\texttt{Academic}_2$};
+    % Variance arrow
+    %\draw[gray,decorate,->] (6,0)--(5.5,-0.5);
+
+    \draw[gray,->] (A.west)--(A1.east);
+    \draw[gray,->] (A.west)--(A2.east);
+    \draw[gray,->] (A.west)--(A3.east);
+
+    % Residual arrows
+    \draw[gray,->] (-2.15,0)--(-1.65,0);
+    \draw[gray,->] (-2.15,-1)--(-1.65,-1);
+    \draw[gray,->] (-2.15,-2)--(-1.65,-2);
+
+% Lat var "Safety"
+    \node[latvar] (S1) at (0,-3) {$\texttt{DISCRIM}_2$};
+    \node[latvar] (S2) at (0,-4) {$\texttt{BELONG}_2$};
+    \node[latvar] (S3) at (0,-5) {$\texttt{BULLY}_2$};
+
+    \node[latvar] (S) at (5,-4) {\texttt{Safety}$_2$};
+    % Variance arrow
+    %\draw[gray,decorate,->] (6,-3)--(5.5,-3.5);
+
+    \draw[gray,->] (S.west)--(S1.east);
+    \draw[gray,->] (S.west)--(S2.east);
+    \draw[gray,->] (S.west)--(S3.east);
+
+    % Residual arrows
+    \draw[gray,->] (-2.15,-3)--(-1.65,-3);
+    \draw[gray,->] (-2.15,-4)--(-1.65,-4);
+    \draw[gray,->] (-2.15,-5)--(-1.65,-5);
+
+% Financial socialisation
+    \node[latvar] (C) at (5,-6) {$\texttt{FLFAMILY}_2$};
+
+% Lat var "Resource"
+    \node[manvar] (R1) at (0,-7) {\texttt{EDUST}};
+    \node[manvar] (R2) at (0,-8) {\texttt{STAFFST}};
+
+    \node[latvar] (R) at (5,-7.5) {\texttt{Resource}};
+    % Variance arrow
+    %\draw[gray,decorate,->] (6,-6.5)--(5.5,-7);
+
+    \draw[gray,->] (R.west)--(R1.east);
+    \draw[gray,->] (R.west)--(R2.east);
+
+    % Residual arrows
+    \draw[gray,->] (-1.75,-7)--(-1.25,-7);
+    \draw[gray,->] (-1.75,-8)--(-1.25,-8);
+
+% Covariances between input variables
+    \draw[dashed,<->] (A.south west) to [bend left] (S.north west);
+    \draw[dashed,<->] (S.south west) to [bend left] (C.north west);
+    \draw[dashed,<->] (C.south west) to [bend left] (R.north west);
+    \draw[dashed,<->] (A.south west) to [bend left] (C.north west);
+    \draw[dashed,<->] (A.south west) to [bend left] (R.north west);
+    \draw[dashed,<->] (S.south west) to [bend left] (R.north west);
+
+
+%%%%%%%%%%%%%%%%%
+% Structural part
+%%%%%%%%%%%%%%%%%
+
+% Outcome variable
+    \node[latvar] (finlit) at (10,-4) {$\texttt{FLIT}_2$};
+
+    \draw[->] (A.east)--(finlit.west);
+    \draw[->] (S.east)--(finlit.west);
+    \draw[->] (C.east)--(finlit.west);
+    \draw[->] (R.east)--(finlit.west);
+
+    % Residual arrows
+    \draw[->] (12.15,-4)--(11.65,-4);
+
+% Control variable
+    \node[manvar] (st) at (10,-2) {\texttt{STRATIO}};
+
+    \draw[->] (st.south)--(finlit.north);
+
+\end{tikzpicture}
+}{Manifest variables are surrounded by rectangles and latent variables by ovals. Covariances between variables are represented by dashed arcs. Error variances are shown as short arrows.}

@@ -35,7 +35,6 @@ library(intsvy)
 
 library(data.table); setDTthreads(0) # 0 means all the availabe cores
 
-
 var.names <- fread("Var_lab.txt", header=T, nThread=4)
 var.names <- as.character(unlist(var.names[which(var.names$Source=="QQQ_student")][ , 2]))
 country <- c("BGR", "BRA", "CAN", "CHL", "ESP", "EST", "FIN", "GEO", "IDN", "ITA", "LTU", "LVA", "NLD", "PER", "POL", "PRT", "QMR", "QRT", "RUS", "SRB", "SVK", "USA")
