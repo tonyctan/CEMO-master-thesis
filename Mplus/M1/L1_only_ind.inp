@@ -10,20 +10,21 @@ DATA:
 
 VARIABLE:
     names =
-        W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU
-        MATH READ FLIT              ! Financial literacy (1 plausible value)
-        MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
+        W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT              ! Achievement var
+        MALE IMMI1GEN IMMI2GEN ESCS ! Control var
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        DISCRIM                     ! Lat var "Safety"
+        BELONG BULLY                ! Lat var "Safety"
         FLFAMILY                    ! "Community": financial socialisation
-        W_SCH PRIVATE STRATIO EDUST STAFFST    ! School var
+        W_SCH PRIVATE STRATIO       ! School character
+        EDUSHT STAFFSHT             ! School resource shortage
         ;
 
     usev =
         FLIT                        ! Regressant
         PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
-        DISCRIM BELONG BULLY        !   Lat var "Safety"
+        BELONG BULLY                !   Lat var "Safety"
         FLFAMILY                    !   Financial socialisation
         FCFMLRTY FLCONFIN           !   Mediators
         MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
@@ -45,7 +46,13 @@ MODEL:
     ! Lat var ACADEMIC
     ACADEMIC by PERFEED TEACHINT FLSCHOOL;
     ! Lat var SAFTY
-    SAFETY by DISCRIM BELONG BULLY;
+    SAFETY by BELONG BULLY;
+
+    ! Covariances
+    ACADEMIC with SAFETY;
+    ACADEMIC with FLFAMILY;
+    SAFETY with FLFAMILY;
+    FCFMLRTY with FLCONFIN;
 
     ! Total effect
     FLIT on

@@ -1,16 +1,14 @@
-######
 # Section 0: Housekeeping
 library(Orcs) # Set working directory depending on operating system
 setwdOS(lin = "~/uio/", win = "M:/", ext = "pc/Dokumenter/MSc/Thesis/Data/L3/")
 
 # Set up a "bookshelf" to hold variables nessary to compute FKI
 fki_raw <- matrix(NA,
-    nrow = 20, ncol = 10, dimnames = list(
+    nrow = 13, ncol = 10, dimnames = list(
         c(
-            "BRA", "BGR", "CAN", "CHL", "EST",
-            "FIN", "GEO", "IDN", "ITA", "LVA",
-            "LTU", "NLD", "PER", "POL", "PRT",
-            "RUS", "SRB", "SVK", "ESP", "USA"
+            "BRA", "CHL", "EST", "GEO", "IDN",
+            "ITA", "LTU", "PER", "POL", "PRT",
+            "SVK", "ESP", "USA"
         ), # row names
         c(
             "gdp_per_capita", # economic capability (sub_ind_ec)
@@ -21,10 +19,12 @@ fki_raw <- matrix(NA,
     ) # End list()
 ) # End matrix()
 
-######
+
 # Section 1: Economic capacity
 
 gdp_per_capita <- read.csv("gdp_per_capita.csv", header = T, sep = "\t")
+# Only keep "the 13 countries"
+gdp_per_capita <- gdp_per_capita[-c(2, 3, 6, 10, 12, 16, 17), ]
 
 fki_raw[, 1] <- log(gdp_per_capita[, 2])
 
@@ -37,12 +37,15 @@ rm(gdp_per_capita)
 
 # Masters
 isced_7 <- read.csv("isced_7.csv", header = T, sep = "\t")
+isced_7 <- isced_7[, -c(2, 3, 6, 10, 12, 16, 17)]
 
 # PhDs
 isced_8 <- read.csv("isced_8.csv", header = T, sep = "\t")
+isced_8 <- isced_8[, -c(2, 3, 6, 10, 12, 16, 17), ]
 
 # Total tertiary
 total_tertiary <- read.csv("total_tertiary.csv", header = T, sep = "\t")
+total_tertiary <- total_tertiary[, -c(2, 3, 6, 10, 12, 16, 17)]
 
 # Compute highly skilled (master + PhD) to total tertiary ratio
 highly_skilled <- ts(
@@ -50,39 +53,33 @@ highly_skilled <- ts(
     start = 2013, end = 2018, frequency = 1
 )
 
-pdf("../../Figures/skilled.pdf")
-# Visualise these ratios. Turn off GEO, IDN, SRB and RUS
-ts.plot(100 * highly_skilled[, -c(7, 8, 16, 17)],
-    type = "b", col = 1:16,
-    xlab = "Year", ylab = "Percent"
-)
-legend("topright", colnames(highly_skilled[, -c(7, 8, 16, 17)]),
-    col = 1:16, lty = 1, cex = 0.65
-)
-dev.off()
+# pdf("../../Figures/skilled.pdf")
+# # Visualise these ratios. Turn off GEO, IDN, SRB and RUS
+# ts.plot(100 * highly_skilled[, -c(7, 8, 16, 17)],
+#     type = "b", col = 1:16,
+#     xlab = "Year", ylab = "Percent"
+# )
+# legend("topright", colnames(highly_skilled[, -c(7, 8, 16, 17)]),
+#     col = 1:16, lty = 1, cex = 0.65
+# )
+# dev.off()
 
 # Decision: naive forcasts, i.e., copy-paste nearest available year
 library(forecast)
 # Create a placeholder matrix
-placeholder <- matrix(NA, nrow = 20, ncol = 1)
+placeholder <- matrix(NA, nrow = 13, ncol = 1)
 
 data.frame(unlist(naive(highly_skilled[, 1], h = 1)[5])[6])[1, 1]
 
 # Run a loop to foreecast all 20 countries, using naive method
-for (.i in 1:20) {
+for (.i in 1:13) {
     m_naive_i <- naive(highly_skilled[, .i], h = 1)
     placeholder[.i] <- data.frame(unlist(m_naive_i[5])[6])[1, 1]
 }
 # [5] = fitted values; [6] = 2018; [1,1] = only the numeric value
 
-# GEO, IDN and SRB do have 2018 data, plug actual numbers back
-placeholder[c(7, 8, 17)] <- highly_skilled[6, c(7, 8, 17)]
-
-# Compute ratio for Russia
-## PhD (Type 1) = 15465, PhD (Type 2) = 330
-## Master (Type 1) = 101766, Master (Type 2) = 170437
-## Total tertiary WITHOUT PhD = 933153
-placeholder[16] <- (15465 + 330 + 101766 + 170437) / (933153 + 15465 + 330)
+# GEO and IDN have 2018 data, plug actual numbers back
+placeholder[c(4, 5)] <- highly_skilled[6, c(4, 5)]
 
 # Save results to "bookshelf"
 fki_raw[, 2] <- placeholder * 100
@@ -93,81 +90,79 @@ rm(isced_7, isced_8, total_tertiary, highly_skilled, placeholder, m_naive_i)
 mean_year_of_schooling <- read.csv("mean_year_of_schooling.csv",
     header = F, sep = "\t"
 )
-fki_raw[, 3] <- mean_year_of_schooling[, 2]
+fki_raw[, 3] <- mean_year_of_schooling[-c(2, 3, 6, 10, 12, 16, 17), 2]
 
 rm(mean_year_of_schooling)
 
-######
+
 # Section 3: Use
 
 ## Import data
 
 gpea <- read.csv("gpea.csv", header = T, sep = "\t")
+gpea <- gpea[, -c(2, 3, 6, 10, 12, 16, 17)]
 gpea <- ts(gpea, start = 2011, end = 2017, frequency = 1)
 
-ica <- read.csv("ica.csv", header = T, sep = "\t")
-ica <- ts(ica, start = 2011, end = 2017, frequency = 1)
+# # Visualise data in both original and ln forms. Contain trend?
+# pdf("../../Figures/use.pdf", width = 12.94, height = 9.15)
 
-# Visualise data in both original and ln forms. Contain trend?
-pdf("../../Figures/use.pdf", width = 12.94, height = 9.15)
+# # Re-set canvas layout to 2x2
+# par(mfcol = c(2, 2))
 
-# Re-set canvas layout to 2x2
-par(mfcol = c(2, 2))
+# # Add extra space to the right of plot area
+# par(mar = c(5.1, 4.1, 4.1, 2.1), xpd = TRUE)
 
-# Add extra space to the right of plot area
-par(mar = c(5.1, 4.1, 4.1, 2.1), xpd = TRUE)
+# # Plot GPEA in original form
+# ts.plot(gpea,
+#     type = "b", col = 1:20,
+#     xlab = "Year", ylab = "Percent", main = "GPEA to GDP ratio"
+# )
+# # Add the legend
+# #legend("topright",
+# #    inset = c(-0.2, 0), colnames(gpea),
+# #    col = 1:20, lty = 1, cex = 0.65
+# #)
 
-# Plot GPEA in original form
-ts.plot(gpea,
-    type = "b", col = 1:20,
-    xlab = "Year", ylab = "Percent", main = "GPEA to GDP ratio"
-)
-# Add the legend
-#legend("topright",
-#    inset = c(-0.2, 0), colnames(gpea),
-#    col = 1:20, lty = 1, cex = 0.65
-#)
+# # Remove extra gap between the two graphs
+# par(mar = c(5.1, 4.1, 0, 2.1), xpd = TRUE)
 
-# Remove extra gap between the two graphs
-par(mar = c(5.1, 4.1, 0, 2.1), xpd = TRUE)
+# # Repeat GPEA, but for the ln() version
+# ts.plot(log(gpea),
+#     type = "b", col = 1:20,
+#     xlab = "Year", ylab = "ln( percent )"
+# )
+# # Add the legend
+# #legend("topright",
+# #    inset = c(-0.2, 0), colnames(gpea),
+# #    col = 1:20, lty = 1, cex = 0.65
+# #)
 
-# Repeat GPEA, but for the ln() version
-ts.plot(log(gpea),
-    type = "b", col = 1:20,
-    xlab = "Year", ylab = "ln( percent )"
-)
-# Add the legend
-#legend("topright",
-#    inset = c(-0.2, 0), colnames(gpea),
-#    col = 1:20, lty = 1, cex = 0.65
-#)
+# # Plot ICA in original form
+# par(mar = c(5.1, 4.1, 4.1, 6.1), xpd = TRUE)
+# ts.plot(ica,
+#     type = "b", col = 1:20,
+#     xlab = "Year", ylab = "Percent", main = "ICA to GDP ratio"
+# )
+# # Add the legend
+# legend("topright",
+#     inset = c(-0.2, 0), colnames(ica),
+#     col = 1:20, lty = 1, cex = 0.875
+# )
 
-# Plot ICA in original form
-par(mar = c(5.1, 4.1, 4.1, 6.1), xpd = TRUE)
-ts.plot(ica,
-    type = "b", col = 1:20,
-    xlab = "Year", ylab = "Percent", main = "ICA to GDP ratio"
-)
-# Add the legend
-legend("topright",
-    inset = c(-0.2, 0), colnames(ica),
-    col = 1:20, lty = 1, cex = 0.875
-)
+# # Remove extra gap between the two graphs
+# par(mar = c(5.1, 4.1, 0, 6.1), xpd = TRUE)
 
-# Remove extra gap between the two graphs
-par(mar = c(5.1, 4.1, 0, 6.1), xpd = TRUE)
-
-# Repeat, but for the ln()
-ts.plot(log(ica),
-    type = "b", col = 1:20,
-    xlab = "Year", ylab = "ln( percent )"
-)
-# Add the legend
-legend("topright",
-    inset = c(-0.2, 0), colnames(ica),
-    col = 1:20, lty = 1, cex = 1.07
-)
-dev.off()
+# # Repeat, but for the ln()
+# ts.plot(log(ica),
+#     type = "b", col = 1:20,
+#     xlab = "Year", ylab = "ln( percent )"
+# )
+# # Add the legend
+# legend("topright",
+#     inset = c(-0.2, 0), colnames(ica),
+#     col = 1:20, lty = 1, cex = 1.07
+# )
+# dev.off()
 
 # Decision: since the ln() version is not flat, original time series contain
 # trend. Use Holt method rather than simple expential smoothing.
@@ -175,10 +170,10 @@ dev.off()
 # Run a time series forecast using Holt method
 
 # Create a placeholder matrix
-placeholder <- matrix(NA, nrow = 20, ncol = 1)
+placeholder <- matrix(NA, nrow = 13, ncol = 1)
 
 # Run a loop to forecast all 20 countries, using Holt method
-for (.i in 1:20) {
+for (.i in 1:13) {
     m_holt_i <- holt(gpea[, .i], h = 1)
     placeholder[.i] <- m_holt_i[2]
 }
@@ -187,9 +182,9 @@ for (.i in 1:20) {
 placeholder <- unlist(placeholder)
 
 # Run a separate one for PER (#13) because it misses both 2017 and 2018 data
-m_holt_PER <- holt(gpea[, 13], h = 2)
+m_holt_PER <- holt(gpea[, 8], h = 2)
 summary(m_holt_PER)
-placeholder[13] <- 16.02698
+placeholder[8] <- 16.02698
 
 # Push placeholder to fki_raw
 fki_raw[, 4] <- placeholder
@@ -199,25 +194,25 @@ rm(gpea, placeholder, m_holt_i, m_holt_PER)
 ## Sub-section 3.2: Insurance company assets (ica)
 
 ica <- read.csv("ica.csv", header = T, sep = "\t")
+ica <- ica[, -c(2, 3, 6, 10, 12, 16, 17)]
 ica <- ts(ica, start = 2011, end = 2017, frequency = 1)
 
-placeholder <- matrix(NA, nrow = 20, ncol = 1)
+placeholder <- matrix(NA, nrow = 13, ncol = 1)
 
-for (.i in 1:20) {
+for (.i in 1:13) {
     m_holt_i <- holt(ica[, .i], h = 1)
     placeholder[.i] <- m_holt_i[2]
 }
 
 placeholder <- unlist(placeholder)
 
-m_holt_CAN <- holt(ica[, 3], h = 2); summary(m_holt_CAN)
-m_holt_IND <- holt(ica[, 8], h = 2); summary(m_holt_IND)
-m_holt_ITA <- holt(ica[, 9], h = 2); summary(m_holt_ITA)
-m_holt_POL <- holt(ica[, 14], h = 2); summary(m_holt_POL)
-m_holt_USA <- holt(ica[, 20], h = 2); summary(m_holt_USA)
+m_holt_IND <- holt(ica[, 5], h = 2); summary(m_holt_IND)
+m_holt_ITA <- holt(ica[, 6], h = 2); summary(m_holt_ITA)
+m_holt_POL <- holt(ica[, 9], h = 2); summary(m_holt_POL)
+m_holt_USA <- holt(ica[, 13], h = 2); summary(m_holt_USA)
 
-placeholder[c(3, 8, 9, 14, 20)] <- c(
-    77.72768, 4.611597, 51.2596, 9.534750, 30.18295
+placeholder[c(5, 6, 9, 13)] <- c(
+    4.611597, 51.2596, 9.534750, 30.18295
 )
 
 fki_raw[, 5] <- placeholder
@@ -227,81 +222,33 @@ rm(ica, placeholder, list = ls(pattern = "^m.holt"))
 ## Sub-section 3.3: Individuals using the Internet (ius)
 
 ius <- read.csv("ius.csv", header = T, sep = "\t")
-# Split dataset into training and test
-ius_training <- ius[-10, ]
-ius_test <- ius[10, ]
-rm(ius)
-ius_training <- ts(ius_training, start = 2009, end = 2017, frequency = 1)
+ius <- ius[, -c(2, 3, 6, 10, 12, 16, 17)]
+ius <- ts(ius, start = 2009, end = 2018, frequency = 1)
 
-placeholder <- matrix(NA, nrow = 20, ncol = 1)
-for (.i in 1:20) {
-    m_holt_i <- holt(ius_training[, .i], h = 1)
-    summary(m_holt_i)
-    placeholder[.i] <- m_holt_i[2]
-}
+m_holt_CHL <- holt(ius[1:9, 2], h = 1); summary(m_holt_CHL)
+m_holt_USA <- holt(ius[1:9, 13], h = 1); summary(m_holt_USA)
 
-ius_forecasted <- data.frame(unlist(placeholder)) # Only want 2018 forecasts
-ius_test <- t(ius_test) # Transpose ius_test to portrait
-row.names(ius_forecasted) <- row.names(ius_test)
+ius_2018 <- ius[10, ] # Only want 2018 data
+ius_2018[2] <- 89.5309 # CHL
+ius_2018[13] <- 84.88108 # USA
 
-verify <- cbind(
-    ius_test,
-    ius_forecasted,
-    (ius_forecasted - ius_test) / ius_test * 100
-)
-colnames(verify) <- c("Actual", "Forecasted", "Inaccuracy")
-verify
+fki_raw[, 6] <- ius_2018
 
-barplot(verify[, 3],
-    names.arg = rownames(verify),
-    xlab = "Country", las = 2,
-    ylab = "Percentage", ylim = c(-15, 10),
-    main = "Forecast error for 2018 Internet usage"
-)
+rm(list = ls(pattern = "^ius"))
+rm(list = ls(pattern= "^m_holt_")
 
-# Some countries have sizable over-prediction and others have under-prediction.
-# Could the level of over/under-prediction related to the actual levels?
-# Run a linear regression:
-m_verify <- lm(verify[, 3] ~ verify[, 1])
-summary(m_verify)
-# The relationship fails to reach 0.05 statistical significance
-# but the trend is definitely there.
 
-plot(verify[, 1], verify[, 3],
-    xlab = "Actual 2018 IUS (% of population)",
-    ylab = "Forecast error (%)",
-    main = "Relationship between forecast error and actual 2018 IUS",
-    col = "white"
-)
-abline(m_verify, col = "red", lwd = 1)
-text(verify[, 3] ~ verify[, 1],
-    labels = rownames(verify),
-    cex = 0.9, font = 1
-)
-
-# Countries whose actual 2018 IUS between 80 and 90 tend to sit somewhere
-# near forsub_ind_ecast error = 0.
-# In 2017, CAN=91, CHL=82.3275, USA=87.2661. Their actual 2018 IUS shouldn't
-# be too far off from [80, 90] interval, which gives good confidence in the
-# forecasted figures.
-
-ius <- verify[, 1]
-ius[c(3, 4, 20)] <- verify[c(3, 4, 20), 2]
-fki_raw[, 6] <- ius
-
-rm(list = ls(pattern = "^ius"), m_holt_i, m_verify, placeholder, verify)
-
-######
 # Section 4: Need
 
 # Subsection 4.1: Pension fund assets (pfa)
 pfa <- read.csv("pfa.csv", header = T, sep = "\t")
-# Delete GEO (#7) due to all missing
-pfa <- ts(pfa[, -7], start = 2008, end = 2017, frequency = 1)
+pfa <- pfa[, -c(2, 3, 6, 10, 12, 16, 17)]
+# Delete GEO (#4) due to all missing
+pfa <- ts(pfa[, -4], start = 2008, end = 2017, frequency = 1)
 
-placeholder <- matrix(NA, nrow = 19, ncol = 1)
+placeholder <- matrix(NA, nrow = 12, ncol = 1)
 
-for (.i in 1:19) {
+for (.i in 1:12) {
     m_holt_i <- holt(pfa[, .i], h = 1)
     placeholder[.i] <- m_holt_i[2]
 }
@@ -313,9 +260,9 @@ placeholder <- unlist(placeholder)
 # From GeoStat website: 2018 gdp = 44.6 billion GEL
 
 fki_raw[, 7] <- c(
-    placeholder[1:5],
+    placeholder[1:3],
     372113934 / 44600000000 * 100, # Insert GEO figure
-    placeholder[6:19]
+    placeholder[4:12]
 )
 
 rm(pfa, placeholder, m_holt_i)
@@ -323,9 +270,9 @@ rm(pfa, placeholder, m_holt_i)
 # Subsection 4.2: Aggregate consumption (ac)
 
 ac <- read.csv("ac.csv", header = F, row.names = 1, sep = "\t")
+ac <- ac[-c(2, 3, 6, 10, 12, 16, 17), ]
 gdp <- read.csv("gdp.csv", header = F, row.names = 1, sep = "\t")
-
-dim(ac * 0.02 / gdp * 100)
+gdp <- gdp[-c(2, 3, 6, 10, 12, 16, 17), ]
 
 fki_raw[, 8] <- unlist(ac * 0.02 / gdp * 100)
 
@@ -336,6 +283,7 @@ rm(ac, gdp)
 # Subsection 4.3: Ageing
 
 ageing <- read.csv("ageing.csv", header = T, sep = "\t")
+ageing <- ageing[-c(2, 3, 6, 10, 12, 16, 17, 22, 23, 26, 30, 32, 36, 37), ]
 attach(ageing)
 names(ageing)
 
@@ -355,12 +303,12 @@ pop20to64_m <- poptotal_m - pop0to19_m - pop65plus_m
 # Calculate 64+ / 20-to-64 ratio
 ageing_ratio <- (pop65plus_f + pop65plus_m) / (pop20to64_f + pop20to64_m)
 # Split data into 2018 [ , 1] and 2009 [ , 2] portions
-ageing <- cbind(ageing_ratio[1:20], ageing_ratio[21:40])
+ageing <- cbind(ageing_ratio[1:13], ageing_ratio[14:26])
 fki_raw[, 10] <- (ageing[, 1] - ageing[, 2]) / ageing[, 2]
 
 rm(ageing, ageing_ratio, list = ls(pattern = "^pop"))
 
-######
+
 # Section 5: FKI
 
 fki_raw <- fki_raw[, -9] # Throw away gdp (already in ac)
@@ -381,7 +329,7 @@ rm(fki_raw)
 fki_stand <- data.frame(fki_stand)
 attach(fki_stand)
 
-## Subsection 5.1: Eonomic capacity (sub_ind_ec)
+## Subsection 5.1: Economic capacity (sub_ind_ec)
 
 sub_ind_ec <- gdp_per_capita
 
@@ -439,6 +387,7 @@ l3
 # Sort FKI by country (highest to lowest)
 l3_ordered <- l3[order(-fki), ]
 l3_ordered
+write.csv(l3_ordered, "fki.csv")
 
 barplot(l3_ordered$fki,
     names.arg = rownames(l3_ordered),

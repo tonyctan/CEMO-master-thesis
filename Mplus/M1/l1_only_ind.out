@@ -1,0 +1,1495 @@
+Mplus VERSION 8.3
+MUTHEN & MUTHEN
+11/15/2020   8:55 AM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+      Financial literacy single-level only
+
+
+  DATA:
+      file = "C:/Users/Tony/implist.dat";
+
+      type = imputation;
+
+
+  VARIABLE:
+      names =
+          W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU
+          MATH READ FLIT              ! Achievement var
+          MALE IMMI1GEN IMMI2GEN ESCS ! Control var
+          FCFMLRTY FLCONFIN           ! Mediators
+          PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
+          BELONG BULLY                ! Lat var "Safety"
+          FLFAMILY                    ! "Community": financial socialisation
+          W_SCH PRIVATE STRATIO       ! School character
+          EDUSHT STAFFSHT             ! School resource shortage
+          ;
+
+      usev =
+          FLIT                        ! Regressant
+          PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
+          BELONG BULLY                !   Lat var "Safety"
+          FLFAMILY                    !   Financial socialisation
+          FCFMLRTY FLCONFIN           !   Mediators
+          MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
+          MATH READ                   !   Control: numeracy and literacy
+          ;
+
+      missing = all (-99);
+
+      weight = W_STU;
+
+
+  ANALYSIS:
+      process = 8;
+
+      estimator = MLR;
+
+  MODEL:
+
+      ! Lat var ACADEMIC
+      ACADEMIC by PERFEED TEACHINT FLSCHOOL;
+      ! Lat var SAFTY
+      SAFETY by BELONG BULLY;
+
+      ! Covariances
+      ACADEMIC with SAFETY;
+      ACADEMIC with FLFAMILY;
+      SAFETY with FLFAMILY;
+      FCFMLRTY with FLCONFIN;
+
+      ! Total effect
+      FLIT on
+          ACADEMIC SAFETY FLFAMILY        ! Input variables
+          FCFMLRTY FLCONFIN               ! Mediators
+          MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
+          MATH READ                       ! Control: numeracy and literacy
+          ;
+
+      ! Onto mediator FAMILIARITY
+      FCFMLRTY on ACADEMIC SAFETY FLFAMILY;
+
+      ! Onto mediator CONFIDENCE
+      FLCONFIN on ACADEMIC SAFETY FLFAMILY;
+
+  MODEL INDIRECT:
+
+      ! Indirect effects
+      FLIT ind ACADEMIC;
+      FLIT ind SAFETY;
+      FLIT ind FLFAMILY;
+
+
+  OUTPUT:
+      sampstat tech1;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+Financial literacy single-level only
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Average number of observations                               68949
+
+Number of replications
+    Requested                                                   10
+    Completed                                                   10
+
+Number of dependent variables                                    8
+Number of independent variables                                  7
+Number of continuous latent variables                            2
+
+Observed dependent variables
+
+  Continuous
+   FLIT        PERFEED     TEACHINT    FLSCHOOL    BELONG      BULLY
+   FCFMLRTY    FLCONFIN
+
+Observed independent variables
+   FLFAMILY    MALE        IMMI1GEN    IMMI2GEN    ESCS        MATH
+   READ
+
+Continuous latent variables
+   ACADEMIC    SAFETY
+
+Variables with special functions
+
+  Weight variable       W_STU
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  Multiple data files from
+    C:/Users/Tony/implist.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA FOR THE FIRST DATA SET
+
+     Number of missing data patterns           213
+
+
+SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
+
+
+     MISSING DATA PATTERNS (x = not missing)
+
+           1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+ FLIT      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ PERFEED   x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ TEACHINT  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ FLSCHOOL  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ BELONG    x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ BULLY     x  x  x  x  x  x  x  x                          x  x  x  x
+ FCFMLRTY  x  x  x  x              x  x  x  x              x  x  x  x
+ FLCONFIN  x  x        x  x        x  x        x  x        x  x
+ FLFAMILY  x     x     x     x     x     x     x     x     x     x
+ MALE      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI1GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI2GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ ESCS      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ MATH      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ READ      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+
+          21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40
+ FLIT      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ PERFEED   x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ TEACHINT  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ FLSCHOOL  x  x  x  x  x  x  x  x  x  x  x  x
+ BELONG                                        x  x  x  x  x  x  x  x
+ BULLY     x  x  x  x                          x  x  x  x  x  x  x  x
+ FCFMLRTY              x  x  x  x              x  x  x  x
+ FLCONFIN  x  x        x  x        x  x        x  x        x  x
+ FLFAMILY  x     x     x     x     x     x     x     x     x     x
+ MALE      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI1GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI2GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ ESCS      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ MATH      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ READ      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+
+          41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60
+ FLIT      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ PERFEED   x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ TEACHINT  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ FLSCHOOL
+ BELONG    x  x  x  x  x  x  x  x
+ BULLY                             x  x  x  x  x  x  x  x
+ FCFMLRTY  x  x  x  x              x  x  x  x              x  x  x  x
+ FLCONFIN  x  x        x  x        x  x        x  x        x  x
+ FLFAMILY  x     x     x     x     x     x     x     x     x     x
+ MALE      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI1GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI2GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ ESCS      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ MATH      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ READ      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+
+          61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80
+ FLIT      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ PERFEED   x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ TEACHINT  x  x  x  x
+ FLSCHOOL              x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ BELONG                x  x  x  x  x  x  x  x  x  x  x
+ BULLY                 x  x  x  x  x                    x  x  x  x
+ FCFMLRTY              x  x  x  x     x  x  x  x        x  x  x     x
+ FLCONFIN  x  x        x  x        x  x  x              x           x
+ FLFAMILY  x     x     x     x        x     x     x        x        x
+ MALE      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI1GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI2GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ ESCS      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ MATH      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ READ      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+
+          81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+ FLIT      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x   x
+ PERFEED   x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x   x
+ TEACHINT
+ FLSCHOOL  x  x
+ BELONG          x  x  x  x  x  x  x  x  x  x  x  x  x
+ BULLY           x  x  x  x  x  x                       x
+ FCFMLRTY  x  x  x  x  x           x  x  x  x              x  x  x   x
+ FLCONFIN        x        x        x  x        x           x  x
+ FLFAMILY  x        x     x  x     x     x        x        x     x
+ MALE      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x   x
+ IMMI1GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x   x
+ IMMI2GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x   x
+ ESCS      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x   x
+ MATH      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x   x
+ READ      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x   x
+
+          101 102 103 104 105 106 107 108 109 110 111 112 113 114 115
+ FLIT       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ PERFEED    x   x   x
+ TEACHINT               x   x   x   x   x   x   x   x   x   x   x   x
+ FLSCHOOL               x   x   x   x   x   x   x   x   x   x   x   x
+ BELONG                 x   x   x   x   x   x   x   x   x   x   x   x
+ BULLY                  x   x   x   x   x   x   x   x
+ FCFMLRTY               x   x   x   x                   x   x   x   x
+ FLCONFIN   x           x   x           x   x           x   x
+ FLFAMILY       x       x       x       x       x       x       x
+ MALE       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI1GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI2GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ ESCS       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ MATH       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ READ       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+
+          116 117 118 119 120 121 122 123 124 125 126 127 128 129 130
+ FLIT       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ PERFEED
+ TEACHINT   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ FLSCHOOL   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ BELONG     x   x   x
+ BULLY                  x   x   x   x   x   x   x
+ FCFMLRTY               x   x   x   x               x   x   x   x
+ FLCONFIN   x           x   x           x           x   x           x
+ FLFAMILY   x   x       x       x       x   x       x       x       x
+ MALE       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI1GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI2GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ ESCS       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ MATH       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ READ       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+
+          131 132 133 134 135 136 137 138 139 140 141 142 143 144 145
+ FLIT       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ PERFEED
+ TEACHINT   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ FLSCHOOL   x   x   x
+ BELONG                 x   x   x   x   x   x   x   x   x   x   x   x
+ BULLY                  x   x   x   x   x   x   x
+ FCFMLRTY               x   x   x   x               x   x   x   x
+ FLCONFIN   x           x   x           x           x   x
+ FLFAMILY       x       x       x           x       x       x       x
+ MALE       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI1GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI2GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ ESCS       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ MATH       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ READ       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+
+          146 147 148 149 150 151 152 153 154 155 156 157 158 159 160
+ FLIT       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ PERFEED
+ TEACHINT   x   x   x   x   x   x   x   x   x   x   x   x   x
+ FLSCHOOL                                                       x   x
+ BELONG     x                                                   x   x
+ BULLY          x   x   x   x   x                               x   x
+ FCFMLRTY       x   x   x           x   x   x   x               x   x
+ FLCONFIN       x           x       x   x           x           x   x
+ FLFAMILY       x   x               x       x       x   x       x
+ MALE       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI1GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI2GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ ESCS       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ MATH       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ READ       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+
+          161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+ FLIT       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ PERFEED
+ TEACHINT
+ FLSCHOOL   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ BELONG     x   x   x   x   x   x   x   x   x   x   x
+ BULLY      x   x   x   x   x                           x   x   x   x
+ FCFMLRTY   x   x               x   x   x   x           x   x   x   x
+ FLCONFIN           x   x       x   x           x       x   x
+ FLFAMILY   x       x       x   x       x       x       x       x
+ MALE       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI1GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI2GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ ESCS       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ MATH       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ READ       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+
+          176 177 178 179 180 181 182 183 184 185 186 187 188 189 190
+ FLIT       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ PERFEED
+ TEACHINT
+ FLSCHOOL   x   x   x   x   x   x   x   x   x   x
+ BELONG                                             x   x   x   x   x
+ BULLY      x   x                                   x   x   x   x   x
+ FCFMLRTY           x   x   x   x                   x   x   x   x
+ FLCONFIN           x   x           x   x           x   x           x
+ FLFAMILY   x       x       x       x       x       x       x       x
+ MALE       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI1GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI2GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ ESCS       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ MATH       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ READ       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+
+          191 192 193 194 195 196 197 198 199 200 201 202 203 204 205
+ FLIT       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ PERFEED
+ TEACHINT
+ FLSCHOOL
+ BELONG     x   x   x   x   x   x   x   x   x   x
+ BULLY      x   x                                   x   x   x   x   x
+ FCFMLRTY           x   x   x   x                   x   x   x   x
+ FLCONFIN           x   x           x   x           x   x           x
+ FLFAMILY   x       x       x       x       x       x       x
+ MALE       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI1GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ IMMI2GEN   x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ ESCS       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ MATH       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+ READ       x   x   x   x   x   x   x   x   x   x   x   x   x   x   x
+
+          206 207 208 209 210 211 212 213
+ FLIT       x   x   x   x   x   x   x   x
+ PERFEED
+ TEACHINT
+ FLSCHOOL
+ BELONG
+ BULLY      x
+ FCFMLRTY       x   x   x   x
+ FLCONFIN       x   x           x
+ FLFAMILY       x       x       x   x
+ MALE       x   x   x   x   x   x   x   x
+ IMMI1GEN   x   x   x   x   x   x   x   x
+ IMMI2GEN   x   x   x   x   x   x   x   x
+ ESCS       x   x   x   x   x   x   x   x
+ MATH       x   x   x   x   x   x   x   x
+ READ       x   x   x   x   x   x   x   x
+
+
+     MISSING DATA PATTERN FREQUENCIES
+
+    Pattern   Frequency     Pattern   Frequency     Pattern   Frequency
+          1       48169          72           6         143           3
+          2         177          73           6         144          23
+          3        1280          74           1         145           3
+          4         294          75           1         146          27
+          5         115          76           1         147           1
+          6          13          77           2         148           3
+          7          41          78           2         149           2
+          8          25          79           2         150           1
+          9        6224          80          28         151           2
+         10          79          81          14         152           2
+         11        1636          82          11         153           1
+         12         339          83           2         154           4
+         13          42          84           1         155          32
+         14          12          85          10         156           1
+         15          26          86           1         157           2
+         16          33          87           1         158          28
+         17         157          88           7         159          93
+         18          11          89           1         160          10
+         19          26          90           2         161           9
+         20          16          91           5         162           6
+         21           2          92           8         163           4
+         22           2          93           1         164           1
+         23           6          94           1         165           1
+         24           4          95          13         166          18
+         25        2449          96           1         167           2
+         26          30          97           4         168           4
+         27         972          98           3         169          12
+         28         393          99           4         170           1
+         29          12         100          28         171           5
+         30           5         101           1         172          13
+         31          15         102           2         173           5
+         32          21         103          39         174           5
+         33         115         104         346         175           2
+         34          61         105          11         176           1
+         35          81         106          25         177           1
+         36         492         107           3         178         117
+         37          18         108           2         179          12
+         38          15         109           1         180          63
+         39          28         110           2         181          38
+         40         972         111           2         182           3
+         41          63         112          61         183           1
+         42          35         113           5         184           3
+         43          68         114          18         185           8
+         44         425         115          10         186           1
+         45          14         116           1         187           3
+         46          17         117           1         188           4
+         47          35         118           3         189          10
+         48         600         119           7         190           2
+         49           8         120           3         191           2
+         50          12         121           1         192          10
+         51           7         122           1         193           3
+         52          30         123           1         194           5
+         53           2         124           2         195           3
+         54           5         125           1         196          21
+         55           4         126          41         197           1
+         56          36         127           4         198           2
+         57          16         128          21         199           2
+         58          28         129          13         200          27
+         59          33         130           1         201           1
+         60         477         131           1         202           3
+         61           8         132           2         203           4
+         62          13         133           1         204           9
+         63          15         134          10         205           1
+         64         459         135           1         206          10
+         65          83         136           7         207           4
+         66           5         137          10         208          10
+         67           8         138           3         209           8
+         68           4         139           1         210         218
+         69           1         140          13         211           2
+         70          23         141           6         212           8
+         71           5         142           3         213         201
+
+
+COVARIANCE COVERAGE OF DATA FOR THE FIRST DATA SET
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              FLIT          PERFEED       TEACHINT      FLSCHOOL      BELONG
+              ________      ________      ________      ________      ________
+ FLIT           1.000
+ PERFEED        0.974         0.974
+ TEACHINT       0.980         0.969         0.980
+ FLSCHOOL       0.926         0.911         0.917         0.926
+ BELONG         0.908         0.895         0.901         0.860         0.908
+ BULLY          0.769         0.759         0.764         0.740         0.763
+ FCFMLRTY       0.955         0.935         0.941         0.920         0.877
+ FLCONFIN       0.855         0.843         0.848         0.847         0.811
+ FLFAMILY       0.911         0.897         0.903         0.902         0.852
+ MALE           1.000         0.974         0.980         0.926         0.908
+ IMMI1GEN       1.000         0.974         0.980         0.926         0.908
+ IMMI2GEN       1.000         0.974         0.980         0.926         0.908
+ ESCS           1.000         0.974         0.980         0.926         0.908
+ MATH           1.000         0.974         0.980         0.926         0.908
+ READ           1.000         0.974         0.980         0.926         0.908
+
+
+           Covariance Coverage
+              BULLY         FCFMLRTY      FLCONFIN      FLFAMILY      MALE
+              ________      ________      ________      ________      ________
+ BULLY          0.769
+ FCFMLRTY       0.749         0.955
+ FLCONFIN       0.718         0.850         0.855
+ FLFAMILY       0.735         0.905         0.846         0.911
+ MALE           0.769         0.955         0.855         0.911         1.000
+ IMMI1GEN       0.769         0.955         0.855         0.911         1.000
+ IMMI2GEN       0.769         0.955         0.855         0.911         1.000
+ ESCS           0.769         0.955         0.855         0.911         1.000
+ MATH           0.769         0.955         0.855         0.911         1.000
+ READ           0.769         0.955         0.855         0.911         1.000
+
+
+           Covariance Coverage
+              IMMI1GEN      IMMI2GEN      ESCS          MATH          READ
+              ________      ________      ________      ________      ________
+ IMMI1GEN       1.000
+ IMMI2GEN       1.000         1.000
+ ESCS           1.000         1.000         1.000
+ MATH           1.000         1.000         1.000         1.000
+ READ           1.000         1.000         1.000         1.000         1.000
+
+
+SAMPLE STATISTICS
+
+NOTE:  These are average results over 10 data sets.
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              FLIT          PERFEED       TEACHINT      FLSCHOOL      BELONG
+              ________      ________      ________      ________      ________
+              448.121         0.214         0.259         0.088        -0.146
+
+
+           Means
+              BULLY         FCFMLRTY      FLCONFIN      FLFAMILY      MALE
+              ________      ________      ________      ________      ________
+                0.206         6.237        -0.164         0.119         0.495
+
+
+           Means
+              IMMI1GEN      IMMI2GEN      ESCS          MATH          READ
+              ________      ________      ________      ________      ________
+                0.026         0.062        -0.754       430.752       440.422
+
+
+           Covariances
+              FLIT          PERFEED       TEACHINT      FLSCHOOL      BELONG
+              ________      ________      ________      ________      ________
+ FLIT       11148.452
+ PERFEED       -6.585         1.009
+ TEACHINT       0.764         0.380         0.858
+ FLSCHOOL     -16.524         0.183         0.134         1.111
+ BELONG         7.144         0.103         0.150         0.063         0.862
+ BULLY        -15.976        -0.022        -0.068         0.090        -0.276
+ FCFMLRTY     163.917         0.216         0.283         1.354         0.580
+ FLCONFIN       4.673         0.087         0.061         0.246         0.084
+ FLFAMILY       2.890         0.123         0.080         0.270         0.111
+ MALE          -0.328         0.019        -0.004         0.029         0.020
+ IMMI1GEN       0.471         0.002         0.000        -0.006        -0.003
+ IMMI2GEN       3.174         0.000        -0.010        -0.015        -0.006
+ ESCS          70.873        -0.038        -0.031        -0.113         0.072
+ MATH        9177.471        -5.496        -0.428       -14.720         5.551
+ READ       10182.038        -7.162         1.718       -21.454         4.701
+
+
+           Covariances
+              BULLY         FCFMLRTY      FLCONFIN      FLFAMILY      MALE
+              ________      ________      ________      ________      ________
+ BULLY          1.191
+ FCFMLRTY      -0.303        27.517
+ FLCONFIN       0.047         1.280         1.014
+ FLFAMILY       0.066         1.083         0.238         1.134
+ MALE           0.048         0.071         0.066        -0.019         0.250
+ IMMI1GEN      -0.003        -0.011         0.001        -0.002         0.000
+ IMMI2GEN      -0.011        -0.013        -0.007        -0.001        -0.001
+ ESCS          -0.087         1.646         0.083         0.100         0.017
+ MATH         -13.081       136.045         2.124        -0.694         1.622
+ READ         -17.220       149.212        -2.940         0.528        -5.398
+
+
+           Covariances
+              IMMI1GEN      IMMI2GEN      ESCS          MATH          READ
+              ________      ________      ________      ________      ________
+ IMMI1GEN       0.025
+ IMMI2GEN      -0.002         0.058
+ ESCS           0.010         0.021         1.706
+ MATH           0.603         3.094        66.438      9494.164
+ READ           0.620         3.848        74.415      9213.338     12027.442
+
+
+           Correlations
+              FLIT          PERFEED       TEACHINT      FLSCHOOL      BELONG
+              ________      ________      ________      ________      ________
+ FLIT           1.000
+ PERFEED       -0.062         1.000
+ TEACHINT       0.008         0.408         1.000
+ FLSCHOOL      -0.148         0.172         0.137         1.000
+ BELONG         0.073         0.111         0.175         0.064         1.000
+ BULLY         -0.139        -0.020        -0.068         0.079        -0.272
+ FCFMLRTY       0.296         0.041         0.058         0.245         0.119
+ FLCONFIN       0.044         0.086         0.065         0.232         0.090
+ FLFAMILY       0.026         0.115         0.081         0.241         0.113
+ MALE          -0.006         0.037        -0.009         0.055         0.043
+ IMMI1GEN       0.028         0.010         0.003        -0.035        -0.023
+ IMMI2GEN       0.125        -0.002        -0.044        -0.059        -0.029
+ ESCS           0.514        -0.029        -0.026        -0.082         0.059
+ MATH           0.892        -0.056        -0.005        -0.143         0.061
+ READ           0.879        -0.065         0.017        -0.186         0.046
+
+
+           Correlations
+              BULLY         FCFMLRTY      FLCONFIN      FLFAMILY      MALE
+              ________      ________      ________      ________      ________
+ BULLY          1.000
+ FCFMLRTY      -0.053         1.000
+ FLCONFIN       0.043         0.242         1.000
+ FLFAMILY       0.057         0.194         0.222         1.000
+ MALE           0.087         0.027         0.131        -0.035         1.000
+ IMMI1GEN      -0.015        -0.014         0.008        -0.012         0.000
+ IMMI2GEN      -0.043        -0.011        -0.028        -0.004        -0.009
+ ESCS          -0.061         0.240         0.063         0.072         0.026
+ MATH          -0.123         0.266         0.022        -0.007         0.033
+ READ          -0.144         0.259        -0.027         0.005        -0.098
+
+
+           Correlations
+              IMMI1GEN      IMMI2GEN      ESCS          MATH          READ
+              ________      ________      ________      ________      ________
+ IMMI1GEN       1.000
+ IMMI2GEN      -0.042         1.000
+ ESCS           0.047         0.066         1.000
+ MATH           0.039         0.132         0.522         1.000
+ READ           0.036         0.145         0.519         0.862         1.000
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       44
+
+Loglikelihood
+
+    H0 Value
+
+        Mean                          -1174181.618
+        Std Dev                            734.793
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000     -1175890.966   -1174905.209
+           0.980       1.000     -1175690.662   -1174905.209
+           0.950       1.000     -1175390.278   -1174905.209
+           0.900       1.000     -1175123.328   -1174905.209
+           0.800       0.800     -1174800.019   -1174905.209
+           0.700       0.700     -1174566.943   -1174574.409
+           0.500       0.400     -1174181.618   -1174391.541
+           0.300       0.100     -1173796.293   -1174052.741
+           0.200       0.100     -1173563.216   -1174048.368
+           0.100       0.100     -1173239.908   -1174002.534
+           0.050       0.100     -1172972.957   -1174002.534
+           0.020       0.100     -1172672.574   -1174002.534
+           0.010       0.100     -1172472.270   -1174002.534
+
+    H1 Value
+
+        Mean                          -1162333.527
+        Std Dev                            713.595
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000     -1163993.562   -1163150.082
+           0.980       1.000     -1163799.036   -1163150.082
+           0.950       1.000     -1163507.319   -1163150.082
+           0.900       1.000     -1163248.070   -1163150.082
+           0.800       0.800     -1162934.088   -1163150.082
+           0.700       0.600     -1162707.736   -1162791.786
+           0.500       0.500     -1162333.527   -1162467.453
+           0.300       0.100     -1161959.318   -1162250.566
+           0.200       0.100     -1161732.966   -1162136.810
+           0.100       0.100     -1161418.984   -1162093.382
+           0.050       0.100     -1161159.735   -1162093.382
+           0.020       0.100     -1160868.017   -1162093.382
+           0.010       0.100     -1160673.491   -1162093.382
+
+Information Criteria
+
+    Akaike (AIC)
+
+        Mean                           2348451.236
+        Std Dev                           1469.585
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       0.900      2345032.539    2344464.529
+           0.980       0.900      2345433.148    2344464.529
+           0.950       0.900      2346033.915    2344464.529
+           0.900       0.900      2346567.815    2344464.529
+           0.800       0.900      2347214.433    2344464.529
+           0.700       0.900      2347680.585    2348184.735
+           0.500       0.600      2348451.236    2348533.408
+           0.300       0.300      2349221.886    2349154.386
+           0.200       0.200      2349688.039    2349236.819
+           0.100       0.000      2350334.656    2349882.431
+           0.050       0.000      2350868.557    2349882.431
+           0.020       0.000      2351469.323    2349882.431
+           0.010       0.000      2351869.932    2349882.431
+
+    Bayesian (BIC)
+
+        Mean                           2348853.445
+        Std Dev                           1469.585
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       0.900      2345434.749    2344866.739
+           0.980       0.900      2345835.358    2344866.739
+           0.950       0.900      2346436.124    2344866.739
+           0.900       0.900      2346970.025    2344866.739
+           0.800       0.900      2347616.642    2344866.739
+           0.700       0.900      2348082.795    2348586.945
+           0.500       0.600      2348853.445    2348935.618
+           0.300       0.300      2349624.096    2349556.595
+           0.200       0.200      2350090.248    2349639.028
+           0.100       0.000      2350736.866    2350284.641
+           0.050       0.000      2351270.766    2350284.641
+           0.020       0.000      2351871.533    2350284.641
+           0.010       0.000      2352272.142    2350284.641
+
+    Sample-Size Adjusted BIC (n* = (n + 2) / 24)
+
+        Mean                           2348713.612
+        Std Dev                           1469.585
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       0.900      2345294.916    2344726.906
+           0.980       0.900      2345695.525    2344726.906
+           0.950       0.900      2346296.291    2344726.906
+           0.900       0.900      2346830.191    2344726.906
+           0.800       0.900      2347476.809    2344726.906
+           0.700       0.900      2347942.961    2348447.112
+           0.500       0.600      2348713.612    2348795.785
+           0.300       0.300      2349484.263    2349416.762
+           0.200       0.200      2349950.415    2349499.195
+           0.100       0.000      2350597.033    2350144.808
+           0.050       0.000      2351130.933    2350144.808
+           0.020       0.000      2351731.700    2350144.808
+           0.010       0.000      2352132.309    2350144.808
+
+Chi-Square Test of Model Fit
+
+        Degrees of freedom                      64
+
+        Mean                              4074.567
+        Std Dev                             30.005
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000           40.649       4033.736
+           0.980       1.000           42.960       4033.736
+           0.950       1.000           46.595       4033.736
+           0.900       1.000           49.996       4033.736
+           0.800       1.000           54.336       4033.736
+           0.700       1.000           57.620       4044.052
+           0.500       1.000           63.335       4072.124
+           0.300       1.000           69.416       4086.564
+           0.200       1.000           73.276       4100.593
+           0.100       1.000           78.860       4102.843
+           0.050       1.000           83.675       4102.843
+           0.020       1.000           89.320       4102.843
+           0.010       1.000           93.217       4102.843
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+        Mean                                 0.030
+        Std Dev                              0.000
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.030          0.030
+           0.980       1.000            0.030          0.030
+           0.950       1.000            0.030          0.030
+           0.900       0.900            0.030          0.030
+           0.800       0.700            0.030          0.030
+           0.700       0.600            0.030          0.030
+           0.500       0.500            0.030          0.030
+           0.300       0.300            0.030          0.030
+           0.200       0.300            0.030          0.030
+           0.100       0.100            0.030          0.030
+           0.050       0.100            0.030          0.030
+           0.020       0.000            0.030          0.030
+           0.010       0.000            0.030          0.030
+
+CFI/TLI
+
+    CFI
+
+        Mean                                 0.869
+        Std Dev                              0.001
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.866          0.867
+           0.980       1.000            0.866          0.867
+           0.950       1.000            0.866          0.867
+           0.900       1.000            0.867          0.867
+           0.800       0.900            0.868          0.867
+           0.700       0.700            0.868          0.868
+           0.500       0.400            0.869          0.868
+           0.300       0.100            0.870          0.869
+           0.200       0.100            0.870          0.869
+           0.100       0.100            0.871          0.869
+           0.050       0.100            0.871          0.869
+           0.020       0.100            0.872          0.869
+           0.010       0.100            0.872          0.869
+
+    TLI
+
+        Mean                                 0.828
+        Std Dev                              0.002
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.823          0.826
+           0.980       1.000            0.824          0.826
+           0.950       1.000            0.825          0.826
+           0.900       1.000            0.825          0.826
+           0.800       0.900            0.826          0.826
+           0.700       0.700            0.827          0.827
+           0.500       0.400            0.828          0.827
+           0.300       0.100            0.829          0.828
+           0.200       0.100            0.830          0.829
+           0.100       0.100            0.830          0.829
+           0.050       0.100            0.831          0.829
+           0.020       0.100            0.832          0.829
+           0.010       0.100            0.832          0.829
+
+SRMR (Standardized Root Mean Square Residual)
+
+        Mean                                 0.076
+        Std Dev                              0.000
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.075          0.075
+           0.980       0.900            0.075          0.075
+           0.950       0.900            0.075          0.075
+           0.900       0.900            0.075          0.075
+           0.800       0.800            0.076          0.075
+           0.700       0.700            0.076          0.076
+           0.500       0.600            0.076          0.076
+           0.300       0.300            0.076          0.076
+           0.200       0.200            0.076          0.076
+           0.100       0.100            0.076          0.076
+           0.050       0.000            0.076          0.076
+           0.020       0.000            0.076          0.076
+           0.010       0.000            0.076          0.076
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+ ACADEMIC BY
+    PERFEED            1.000      0.000    999.000    999.000      0.000
+    TEACHINT           0.885      0.030     29.072      0.000      0.007
+    FLSCHOOL           0.504      0.033     15.459      0.000      0.002
+
+ SAFETY   BY
+    BELONG             1.000      0.000    999.000    999.000      0.000
+    BULLY             -0.075      0.082     -0.910      0.363      0.036
+
+ FLIT     ON
+    ACADEMIC          -2.539      1.344     -1.889      0.059      0.646
+    SAFETY             0.340      0.467      0.728      0.467      0.198
+
+ FCFMLRTY ON
+    ACADEMIC           0.766      0.131      5.859      0.000      0.002
+    SAFETY             0.089      0.107      0.829      0.407      0.035
+
+ FLCONFIN ON
+    ACADEMIC           0.202      0.026      7.689      0.000      0.001
+    SAFETY             0.012      0.013      0.950      0.342      0.037
+
+ FLIT     ON
+    FLFAMILY           1.461      0.522      2.798      0.005      0.477
+    FCFMLRTY           0.749      0.109      6.898      0.000      0.508
+    FLCONFIN           3.328      0.697      4.772      0.000      0.634
+    MALE               3.156      1.280      2.466      0.014      0.669
+    IMMI1GEN          -4.732      4.448     -1.064      0.287      0.634
+    IMMI2GEN          -1.798      2.342     -0.768      0.443      0.503
+    ESCS               1.325      0.575      2.304      0.021      0.646
+    MATH               0.541      0.012     45.437      0.000      0.591
+    READ               0.417      0.011     39.181      0.000      0.576
+
+ FCFMLRTY ON
+    FLFAMILY           0.855      0.051     16.933      0.000      0.001
+
+ FLCONFIN ON
+    FLFAMILY           0.184      0.010     18.402      0.000      0.000
+
+ ACADEMIC WITH
+    SAFETY             0.130      0.009     14.610      0.000      0.004
+    FLFAMILY           0.140      0.010     13.689      0.000      0.001
+
+ SAFETY   WITH
+    FLFAMILY           0.124      0.011     11.795      0.000      0.002
+
+ FCFMLRTY WITH
+    FLCONFIN           0.990      0.051     19.243      0.000      0.000
+
+ Means
+    FLFAMILY           0.118      0.010     12.143      0.000      0.000
+
+ Intercepts
+    FLIT              26.696      3.570      7.477      0.000      0.613
+    PERFEED            0.212      0.009     23.524      0.000      0.000
+    TEACHINT           0.260      0.008     31.980      0.000      0.000
+    FLSCHOOL           0.084      0.010      8.626      0.000      0.000
+    BELONG            -0.145      0.008    -17.368      0.000      0.000
+    BULLY              0.197      0.011     17.840      0.000      0.000
+    FCFMLRTY           6.175      0.047    132.617      0.000      0.001
+    FLCONFIN          -0.187      0.010    -19.479      0.000      0.001
+
+ Variances
+    FLFAMILY           1.134      0.015     77.076      0.000      0.000
+    ACADEMIC           0.407      0.018     22.401      0.000      0.004
+    SAFETY             3.787      4.601      0.823      0.411      0.023
+
+ Residual Variances
+    FLIT            1700.473     46.038     36.937      0.000      0.771
+    PERFEED            0.602      0.017     34.973      0.000      0.004
+    TEACHINT           0.539      0.014     37.461      0.000      0.005
+    FLSCHOOL           1.010      0.016     64.999      0.000      0.001
+    BELONG            -2.925      4.602     -0.636      0.525      0.023
+    BULLY              1.170      0.030     38.470      0.000      0.020
+    FCFMLRTY          26.193      0.261    100.506      0.000      0.001
+    FLCONFIN           0.947      0.014     68.111      0.000      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Average Condition Number for the Information Matrix      0.487E-07
+       (ratio of smallest to largest eigenvalue)
+
+
+TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Effects from ACADEMIC to FLIT
+
+  Total               -1.294      1.359     -0.952      0.341      0.666
+  Total indirect       1.245      0.221      5.641      0.000      0.289
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    ACADEMIC           0.574      0.131      4.388      0.000      0.205
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    ACADEMIC           0.671      0.167      4.025      0.000      0.453
+
+  Direct
+    FLIT
+    ACADEMIC          -2.539      1.344     -1.889      0.059      0.646
+
+
+Effects from SAFETY to FLIT
+
+  Total                0.447      0.579      0.772      0.440      0.158
+  Total indirect       0.107      0.123      0.873      0.382      0.037
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    SAFETY             0.067      0.081      0.823      0.410      0.041
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    SAFETY             0.040      0.044      0.926      0.354      0.048
+
+  Direct
+    FLIT
+    SAFETY             0.340      0.467      0.728      0.467      0.198
+
+
+Effects from FLFAMILY to FLIT
+
+  Total                2.715      0.508      5.344      0.000      0.468
+  Total indirect       1.254      0.154      8.139      0.000      0.543
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLFAMILY           0.641      0.100      6.442      0.000      0.444
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLFAMILY           0.612      0.133      4.595      0.000      0.593
+
+  Direct
+    FLIT
+    FLFAMILY           1.461      0.522      2.798      0.005      0.477
+
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              FLIT          PERFEED       TEACHINT      FLSCHOOL      BELONG
+              ________      ________      ________      ________      ________
+                  0             1             2             3             4
+
+
+           NU
+              BULLY         FCFMLRTY      FLCONFIN      FLFAMILY      MALE
+              ________      ________      ________      ________      ________
+                  5             0             0             0             0
+
+
+           NU
+              IMMI1GEN      IMMI2GEN      ESCS          MATH          READ
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           LAMBDA
+              ACADEMIC      SAFETY        FLIT          FCFMLRTY      FLCONFIN
+              ________      ________      ________      ________      ________
+ FLIT               0             0             0             0             0
+ PERFEED            0             0             0             0             0
+ TEACHINT           6             0             0             0             0
+ FLSCHOOL           7             0             0             0             0
+ BELONG             0             0             0             0             0
+ BULLY              0             8             0             0             0
+ FCFMLRTY           0             0             0             0             0
+ FLCONFIN           0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           LAMBDA
+              FLFAMILY      MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT               0             0             0             0             0
+ PERFEED            0             0             0             0             0
+ TEACHINT           0             0             0             0             0
+ FLSCHOOL           0             0             0             0             0
+ BELONG             0             0             0             0             0
+ BULLY              0             0             0             0             0
+ FCFMLRTY           0             0             0             0             0
+ FLCONFIN           0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           LAMBDA
+              MATH          READ
+              ________      ________
+ FLIT               0             0
+ PERFEED            0             0
+ TEACHINT           0             0
+ FLSCHOOL           0             0
+ BELONG             0             0
+ BULLY              0             0
+ FCFMLRTY           0             0
+ FLCONFIN           0             0
+ FLFAMILY           0             0
+ MALE               0             0
+ IMMI1GEN           0             0
+ IMMI2GEN           0             0
+ ESCS               0             0
+ MATH               0             0
+ READ               0             0
+
+
+           THETA
+              FLIT          PERFEED       TEACHINT      FLSCHOOL      BELONG
+              ________      ________      ________      ________      ________
+ FLIT               0
+ PERFEED            0             9
+ TEACHINT           0             0            10
+ FLSCHOOL           0             0             0            11
+ BELONG             0             0             0             0            12
+ BULLY              0             0             0             0             0
+ FCFMLRTY           0             0             0             0             0
+ FLCONFIN           0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           THETA
+              BULLY         FCFMLRTY      FLCONFIN      FLFAMILY      MALE
+              ________      ________      ________      ________      ________
+ BULLY             13
+ FCFMLRTY           0             0
+ FLCONFIN           0             0             0
+ FLFAMILY           0             0             0             0
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           THETA
+              IMMI1GEN      IMMI2GEN      ESCS          MATH          READ
+              ________      ________      ________      ________      ________
+ IMMI1GEN           0
+ IMMI2GEN           0             0
+ ESCS               0             0             0
+ MATH               0             0             0             0
+ READ               0             0             0             0             0
+
+
+           ALPHA
+              ACADEMIC      SAFETY        FLIT          FCFMLRTY      FLCONFIN
+              ________      ________      ________      ________      ________
+                  0             0            14            15            16
+
+
+           ALPHA
+              FLFAMILY      MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+                 17             0             0             0             0
+
+
+           ALPHA
+              MATH          READ
+              ________      ________
+                  0             0
+
+
+           BETA
+              ACADEMIC      SAFETY        FLIT          FCFMLRTY      FLCONFIN
+              ________      ________      ________      ________      ________
+ ACADEMIC           0             0             0             0             0
+ SAFETY             0             0             0             0             0
+ FLIT              18            19             0            20            21
+ FCFMLRTY          29            30             0             0             0
+ FLCONFIN          32            33             0             0             0
+ FLFAMILY           0             0             0             0             0
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           BETA
+              FLFAMILY      MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ ACADEMIC           0             0             0             0             0
+ SAFETY             0             0             0             0             0
+ FLIT              22            23            24            25            26
+ FCFMLRTY          31             0             0             0             0
+ FLCONFIN          34             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           BETA
+              MATH          READ
+              ________      ________
+ ACADEMIC           0             0
+ SAFETY             0             0
+ FLIT              27            28
+ FCFMLRTY           0             0
+ FLCONFIN           0             0
+ FLFAMILY           0             0
+ MALE               0             0
+ IMMI1GEN           0             0
+ IMMI2GEN           0             0
+ ESCS               0             0
+ MATH               0             0
+ READ               0             0
+
+
+           PSI
+              ACADEMIC      SAFETY        FLIT          FCFMLRTY      FLCONFIN
+              ________      ________      ________      ________      ________
+ ACADEMIC          35
+ SAFETY            36            37
+ FLIT               0             0            38
+ FCFMLRTY           0             0             0            39
+ FLCONFIN           0             0             0            40            41
+ FLFAMILY          42            43             0             0             0
+ MALE               0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           PSI
+              FLFAMILY      MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLFAMILY          44
+ MALE               0             0
+ IMMI1GEN           0             0             0
+ IMMI2GEN           0             0             0             0
+ ESCS               0             0             0             0             0
+ MATH               0             0             0             0             0
+ READ               0             0             0             0             0
+
+
+           PSI
+              MATH          READ
+              ________      ________
+ MATH               0
+ READ               0             0
+
+
+     STARTING VALUES
+
+
+           NU
+              FLIT          PERFEED       TEACHINT      FLSCHOOL      BELONG
+              ________      ________      ________      ________      ________
+                0.000         0.213         0.261         0.087        -0.141
+
+
+           NU
+              BULLY         FCFMLRTY      FLCONFIN      FLFAMILY      MALE
+              ________      ________      ________      ________      ________
+                0.196         0.000         0.000         0.000         0.000
+
+
+           NU
+              IMMI1GEN      IMMI2GEN      ESCS          MATH          READ
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              ACADEMIC      SAFETY        FLIT          FCFMLRTY      FLCONFIN
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         1.000         0.000         0.000
+ PERFEED        1.000         0.000         0.000         0.000         0.000
+ TEACHINT       1.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       1.000         0.000         0.000         0.000         0.000
+ BELONG         0.000         1.000         0.000         0.000         0.000
+ BULLY          0.000        -0.587         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         1.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         1.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              FLFAMILY      MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ PERFEED        0.000         0.000         0.000         0.000         0.000
+ TEACHINT       0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ BELONG         0.000         0.000         0.000         0.000         0.000
+ BULLY          0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       1.000         0.000         0.000         0.000         0.000
+ MALE           0.000         1.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         1.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         1.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         1.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              MATH          READ
+              ________      ________
+ FLIT           0.000         0.000
+ PERFEED        0.000         0.000
+ TEACHINT       0.000         0.000
+ FLSCHOOL       0.000         0.000
+ BELONG         0.000         0.000
+ BULLY          0.000         0.000
+ FCFMLRTY       0.000         0.000
+ FLCONFIN       0.000         0.000
+ FLFAMILY       0.000         0.000
+ MALE           0.000         0.000
+ IMMI1GEN       0.000         0.000
+ IMMI2GEN       0.000         0.000
+ ESCS           0.000         0.000
+ MATH           1.000         0.000
+ READ           0.000         1.000
+
+
+           THETA
+              FLIT          PERFEED       TEACHINT      FLSCHOOL      BELONG
+              ________      ________      ________      ________      ________
+ FLIT           0.000
+ PERFEED        0.000         0.504
+ TEACHINT       0.000         0.000         0.429
+ FLSCHOOL       0.000         0.000         0.000         0.557
+ BELONG         0.000         0.000         0.000         0.000         0.431
+ BULLY          0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              BULLY         FCFMLRTY      FLCONFIN      FLFAMILY      MALE
+              ________      ________      ________      ________      ________
+ BULLY          0.595
+ FCFMLRTY       0.000         0.000
+ FLCONFIN       0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              IMMI1GEN      IMMI2GEN      ESCS          MATH          READ
+              ________      ________      ________      ________      ________
+ IMMI1GEN       0.000
+ IMMI2GEN       0.000         0.000
+ ESCS           0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              ACADEMIC      SAFETY        FLIT          FCFMLRTY      FLCONFIN
+              ________      ________      ________      ________      ________
+                0.000         0.000       447.743         6.282        -0.158
+
+
+           ALPHA
+              FLFAMILY      MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+                0.125         0.495         0.026         0.062        -0.754
+
+
+           ALPHA
+              MATH          READ
+              ________      ________
+              430.931       440.432
+
+
+           BETA
+              ACADEMIC      SAFETY        FLIT          FCFMLRTY      FLCONFIN
+              ________      ________      ________      ________      ________
+ ACADEMIC       0.000         0.000         0.000         0.000         0.000
+ SAFETY         0.000         0.000         0.000         0.000         0.000
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              FLFAMILY      MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ ACADEMIC       0.000         0.000         0.000         0.000         0.000
+ SAFETY         0.000         0.000         0.000         0.000         0.000
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              MATH          READ
+              ________      ________
+ ACADEMIC       0.000         0.000
+ SAFETY         0.000         0.000
+ FLIT           0.000         0.000
+ FCFMLRTY       0.000         0.000
+ FLCONFIN       0.000         0.000
+ FLFAMILY       0.000         0.000
+ MALE           0.000         0.000
+ IMMI1GEN       0.000         0.000
+ IMMI2GEN       0.000         0.000
+ ESCS           0.000         0.000
+ MATH           0.000         0.000
+ READ           0.000         0.000
+
+
+           PSI
+              ACADEMIC      SAFETY        FLIT          FCFMLRTY      FLCONFIN
+              ________      ________      ________      ________      ________
+ ACADEMIC       0.050
+ SAFETY         0.000         0.050
+ FLIT           0.000         0.000      5563.453
+ FCFMLRTY       0.000         0.000         0.000        13.752
+ FLCONFIN       0.000         0.000         0.000         0.000         0.507
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MATH           0.000         0.000         0.000         0.000         0.000
+ READ           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              FLFAMILY      MALE          IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ FLFAMILY       0.567
+ MALE           0.000         0.250
+ IMMI1GEN       0.000         0.000         0.025
+ IMMI2GEN       0.000        -0.001        -0.002         0.058
+ ESCS           0.000         0.017         0.010         0.021         1.706
+ MATH           0.000         1.553         0.601         3.316        66.714
+ READ           0.000        -5.322         0.667         3.845        74.442
+
+
+           PSI
+              MATH          READ
+              ________      ________
+ MATH        9473.173
+ READ        9205.974     12008.669
+
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    m:\pc\dokumenter\msc\thesis\mplus\m1_ind\l1_only_ind.dgm
+
+     Beginning Time:  08:55:04
+        Ending Time:  08:56:03
+       Elapsed Time:  00:00:59
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2019 Muthen & Muthen

@@ -3,29 +3,29 @@ TITLE:
 
 
 DATA:
-    file = "C:/Users/Tony/implist.dat";
+    file = "M:/pc/Dokumenter/MSc/Thesis/Data/Mplus/implist.dat";
 
     type = imputation;
 
 
 VARIABLE:
     names =
-        W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU
-        MATH READ FLIT              ! Financial literacy (1 plausible value)
+        W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT              ! Achievement var
         MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        DISCRIM BELONG BULLY        ! Lat var "Safety"
+        BELONG BULLY                ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
         W_SCH PRIVATE STRATIO       ! School character
-        EDUST STAFFST               ! School resource shortage
+        EDUSHT STAFFSHT             ! School resource shortage
         ;
 
     usev =
         CNTRYID CNTSCHID            ! Level labels
         FLIT                        ! Regressant
         PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
-        DISCRIM BELONG BULLY        !   Lat var "Safety"
+        BELONG BULLY                !   Lat var "Safety"
         FLFAMILY                    !   Financial socialisation
         FCFMLRTY FLCONFIN           !   Mediators
         MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
@@ -37,9 +37,9 @@ VARIABLE:
 !	between = (CNTRYID) FKI;
 
     within =
-        PERFEED TEACHINT FLSCHOOL
-        DISCRIM BELONG BULLY
-        FLFAMILY
+!        PERFEED TEACHINT FLSCHOOL
+!        DISCRIM BELONG BULLY
+!        FLFAMILY
         FCFMLRTY FLCONFIN
         MALE IMMI1GEN IMMI2GEN ESCS
         MATH READ
@@ -48,13 +48,12 @@ VARIABLE:
     missing = all (-99);
 
     weight = W_STU;
-!    wtscale = cluster;
 
-!    b2weight = W_SCH;
+    b2weight = W_SCH;
 
 
 ANALYSIS:
-    process = 8;
+    process = 4;
 
     type = threelevel;
 
@@ -69,24 +68,32 @@ MODEL:
 %Within%
 
     ! Lat var ACADEMIC
-    ACADEMIC by PERFEED TEACHINT FLSCHOOL;
+    ACADEMIC_w by PERFEED TEACHINT FLSCHOOL;
     ! Lat var SAFTY
-    SAFETY by DISCRIM BELONG BULLY;
+    SAFETY_w by BELONG BULLY;
+    ! Decompose Financial socialisation to within and between
+    FLFAMILY_w by FLFAMILY@1;
+
+    ! Covariances
+    ACADEMIC_w with SAFETY_w;
+    ACADEMIC_w with FLFAMILY_w;
+    SAFETY_w with FLFAMILY_w;
+    FCFMLRTY with FLCONFIN;
 
     ! Total effect
     FLIT on
-        ACADEMIC SAFETY FLFAMILY        ! Input variables
+        ACADEMIC_w SAFETY_w FLFAMILY_w  ! Input variables
         FCFMLRTY FLCONFIN               ! Mediators
         MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
         MATH READ                       ! Control: numeracy and literacy
         ;
 
     ! Onto mediator FAMILIARITY
-    FCFMLRTY on ACADEMIC SAFETY FLFAMILY;
+    FCFMLRTY on ACADEMIC_w SAFETY_w FLFAMILY_w;
 
     ! Onto mediator CONFIDENCE
-    FLCONFIN on ACADEMIC SAFETY FLFAMILY;
+    FLCONFIN on ACADEMIC_w SAFETY_w FLFAMILY_w;
 
 
 OUTPUT:
-    sampstat tech1; !tech8;
+    sampstat tech1;

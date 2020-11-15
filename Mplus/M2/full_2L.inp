@@ -3,29 +3,29 @@ TITLE:
 
 
 DATA:
-    file = "M:/pc/Dokumenter/MSc/Thesis/Data/Mplus/implist.dat";
+    file = "C:/Users/Tony/implist.dat";
 
     type = imputation;
 
 
 VARIABLE:
     names =
-        W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU 
+        W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU 
         MATH READ FLIT              ! Numeracy, literacy, finlit
         MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        DISCRIM BELONG BULLY        ! Lat var "Safety"
+        BELONG BULLY                ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
         W_SCH PRIVATE STRATIO       ! School character
-        EDUST STAFFST               ! School resource shortage
+        EDUSHT STAFFSHT             ! School resource shortage
         ;
 
     usev =
         CNTSCHID                    ! Level label
         FLIT                        ! Regressant
         PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
-        DISCRIM BELONG BULLY        !   Lat var "Safety"
+        BELONG BULLY                !   Lat var "Safety"
         FLFAMILY                    !   Financial socialisation
         FCFMLRTY FLCONFIN           !   Mediators
         MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
@@ -38,7 +38,7 @@ VARIABLE:
 
     within =
 !        PERFEED TEACHINT FLSCHOOL
-!        DISCRIM BELONG BULLY
+!        BELONG BULLY
 !        FLFAMILY
         FCFMLRTY FLCONFIN
         MALE IMMI1GEN IMMI2GEN ESCS
@@ -49,7 +49,7 @@ VARIABLE:
 
     weight = W_STU;
 
-!    bweight = W_SCH;
+    bweight = W_SCH;
 
 
 ANALYSIS:
@@ -68,9 +68,15 @@ MODEL:
     ! Lat var ACADEMIC
     ACADEMIC_w by PERFEED TEACHINT FLSCHOOL;
     ! Lat var SAFTY
-    SAFETY_w by DISCRIM BELONG BULLY;
+    SAFETY_w by BELONG BULLY;
 	! Decompose Financial socialisation to within and between
-	FLFAMILY_w by FLFAMILY@1; 
+	FLFAMILY_w by FLFAMILY@1;
+
+    ! Covariances
+    ACADEMIC_w with SAFETY_w;
+    ACADEMIC_w with FLFAMILY_w;
+    SAFETY_w with FLFAMILY_w;
+    FCFMLRTY with FLCONFIN;
 
     ! Total effect
     FLIT on
@@ -95,4 +101,4 @@ MODEL INDIRECT:
 
 
 OUTPUT:
-    sampstat tech1; !tech8;
+    sampstat tech1;

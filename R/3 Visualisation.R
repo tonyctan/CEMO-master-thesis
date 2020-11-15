@@ -2,38 +2,10 @@
 library(Orcs)
 setwdOS(lin = "~/", win = "C:/Users/Tony/")
 
-# WARNING: Do NOT use read.csv() because it's too slow and kills RAM
-library(data.table); setDTthreads(4)
-# Linux
-FL <- fread("~/FL.csv", nThread=4); attach(FL)
-# Windows (UiO)
-FL <- fread("C:\\Users\\tctan\\FL.csv", nThread=4); attach(FL)
-# Windows (ThinkPad)
-FL <- fread("D:\\M Drive\\Thesis\\Data\\FL.csv")
-# WAIT for the progress bar to finish
-
-
-# Inspect the distribution of the 10 FLIT PVs
-#par(mfrow=c(2,5))
-#hist(PV1FLIT); hist(PV2FLIT); hist(PV3FLIT); hist(PV4FLIT); hist(PV5FLIT); hist(PV6FLIT); hist(PV7FLIT); hist(PV8FLIT); hist(PV9FLIT); hist(PV10FLIT)
-#par(mfrow=c(1,1))
-
-
-library(dplyr)
-# Construct a detection device to see which countries participated in ICT
-#detection <- data.frame(country=factor(CNT), variable=IC001Q01TA)
-# Count the number of missings in each country
-#missings <- detection %>%
-#    filter(is.na(variable)) %>%
-#    count(country)
-# Count the number of participants in each country
-#obs <- detection %>%
-#    group_by(country) %>%
-#    summarize(n())
-#Country <- data.frame(missings)[,1]
-#Missing <- data.frame(missings)[,2]/data.frame(obs)[,2]*100
-#tibble(Country, Missing)
-
+# Use data.table for better RAM management
+library(data.table); setDTthreads(0)
+finlit <- fread("finlit.csv", header = T, nThread=getDTthreads())
+attach(finlit)
 
 # Count the column position of PV1FLIT to PV10FLIT
 #names(FL)
