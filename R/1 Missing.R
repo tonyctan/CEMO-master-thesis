@@ -8,7 +8,7 @@ library(dplyr)
 # Record how many missings each country has for each var
 missings <- finlit %>%
     select(everything()) %>%
-    group_by(CNT) %>% 
+    group_by(CNT) %>%
     summarise_all(funs(sum(is.na(.))))
 # Give me the headcount for each country
 headcount <- finlit %>%
@@ -17,7 +17,7 @@ headcount <- finlit %>%
 # Stitch these two tables together
 missing_table <- tibble(headcount, missings[, -1])
 # Save this file
-fwrite(missing_table,"missing_table.csv", row.names = F, col.names = T)
+fwrite(missing_table, "missing_table.csv", row.names = F, col.names = T)
 
 # Inspect the missing table using Excel
 # Throw away the following countries

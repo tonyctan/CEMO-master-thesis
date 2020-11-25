@@ -10,12 +10,12 @@ DATA:
 
 VARIABLE:
     names =
-        W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU
+        W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU
         MATH READ FLIT              ! Achievement var
         MALE IMMI1GEN IMMI2GEN ESCS ! Control var
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        DISCRIM BELONG BULLY        ! Lat var "Safety"
+        BELONG BULLY                ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community" [Now in manifest var]
         W_SCH PRIVATE STRATIO EDUST STAFFST    ! School var
         ;
@@ -27,7 +27,7 @@ VARIABLE:
         EDUST STAFFST STRATIO       ! L2 regressors
                                     ! L1 regressors:
         PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
-        DISCRIM BELONG BULLY        !   Lat var "Safety"
+        BELONG BULLY                !   Lat var "Safety"
         FLFAMILY                    !   Financial socialisation
         FCFMLRTY FLCONFIN           !   Mediators
         MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
@@ -69,9 +69,9 @@ MODEL:
     ! Lat var ACADEMIC
     ACADEMIC_w by PERFEED TEACHINT FLSCHOOL;
     ! Lat var SAFTY
-    SAFETY_w by DISCRIM BELONG BULLY;
+    SAFETY_w by BELONG BULLY;
     ! Decompose Financial socialisation to within and between parts
-    FLFAMILY_w by FLFAMILY@1;
+    FLFAMILY_w by FLFAMILY;
 
     ! Total effect
     FLIT on
@@ -91,9 +91,9 @@ MODEL:
     ! Lat var ACADEMIC
     ACADEMIC_b by PERFEED TEACHINT FLSCHOOL;
     ! Lat var SAFTY
-    SAFETY_b by DISCRIM BELONG BULLY;
+    SAFETY_b by BELONG BULLY;
     ! Decompose Financial socialisation to within and between parts
-    FLFAMILY_b by FLFAMILY@1;
+    FLFAMILY_b by FLFAMILY;
     ! Lat var RESOURCE
     RESOURCE by EDUST STAFFST;
 

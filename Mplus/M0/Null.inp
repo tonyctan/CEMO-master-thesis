@@ -1,21 +1,21 @@
 TITLE:
-    Financial literacy 3-level null model (using 10 plausible values)
+    Financial literacy 3-level: null model
 
 
 DATA:
-    file = "C:/Users/Tony/implist.dat";
+    file = "C:\Users\Tony\implist.dat";
 
     type = imputation;
 
 
 VARIABLE:
     names =
-        W_CNT FKI CNTRYID CNTSCHID CNTSTUID BOOKID W_STU
-        MATH READ FLIT              ! Financial literacy (1 plausible value)
+        W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT              ! Financial literacy
         MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        DISCRIM BELONG BULLY        ! Lat var "Safety"
+        BELONG BULLY                ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
         W_SCH PRIVATE STRATIO       ! School character
         EDUST STAFFST               ! School resource shortage
@@ -24,14 +24,13 @@ VARIABLE:
     usev =
         CNTRYID CNTSCHID FLIT;
 
-    missing = all (-99);
+!    missing = all (-99);
 
     cluster = CNTRYID CNTSCHID;
 
     weight = W_STU;
-!    wtscale = cluster;
 
-!    b2weight = W_SCH;
+    b2weight = W_SCH;
 
 
 ANALYSIS:
