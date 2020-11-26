@@ -37,31 +37,28 @@
     \draw[gray,->] (-2.15,-2)--(-1.65,-2);
 
 % Lat var "Safety"
-    \node[latvar] (S1) at (0,-3) {$\texttt{DISCRIM}_2$};
-    \node[latvar] (S2) at (0,-4) {$\texttt{BELONG}_2$};
-    \node[latvar] (S3) at (0,-5) {$\texttt{BULLY}_2$};
+    \node[latvar] (S1) at (0,-3) {$\texttt{BELONG}_2$};
+    \node[latvar] (S2) at (0,-4) {$\texttt{BULLY}_2$};
 
-    \node[latvar] (S) at (5,-4) {\texttt{Safety}$_2$};
+    \node[latvar] (S) at (5,-3.5) {\texttt{Safety}$_2$};
     % Variance arrow
     %\draw[gray,decorate,->] (6,-3)--(5.5,-3.5);
 
     \draw[gray,->] (S.west)--(S1.east);
     \draw[gray,->] (S.west)--(S2.east);
-    \draw[gray,->] (S.west)--(S3.east);
 
     % Residual arrows
     \draw[gray,->] (-2.15,-3)--(-1.65,-3);
     \draw[gray,->] (-2.15,-4)--(-1.65,-4);
-    \draw[gray,->] (-2.15,-5)--(-1.65,-5);
 
 % Financial socialisation
     \node[latvar] (C) at (5,-6) {$\texttt{FLFAMILY}_2$};
 
 % Lat var "Resource"
-    \node[manvar] (R1) at (0,-7) {\texttt{EDUST}};
-    \node[manvar] (R2) at (0,-8) {\texttt{STAFFST}};
+    \node[manvar] (R1) at (0,-8) {\texttt{EDUST}};
+    \node[manvar] (R2) at (0,-9) {\texttt{STAFFST}};
 
-    \node[latvar] (R) at (5,-7.5) {\texttt{Resource}};
+    \node[latvar] (R) at (5,-8.5) {\texttt{Resource}};
     % Variance arrow
     %\draw[gray,decorate,->] (6,-6.5)--(5.5,-7);
 
@@ -69,16 +66,16 @@
     \draw[gray,->] (R.west)--(R2.east);
 
     % Residual arrows
-    \draw[gray,->] (-1.75,-7)--(-1.25,-7);
     \draw[gray,->] (-1.75,-8)--(-1.25,-8);
+    \draw[gray,->] (-1.75,-9)--(-1.25,-9);
 
 % Covariances between input variables
-    \draw[dashed,<->] (A.south west) to [bend left] (S.north west);
-    \draw[dashed,<->] (S.south west) to [bend left] (C.north west);
-    \draw[dashed,<->] (C.south west) to [bend left] (R.north west);
-    \draw[dashed,<->] (A.south west) to [bend left] (C.north west);
-    \draw[dashed,<->] (A.south west) to [bend left] (R.north west);
-    \draw[dashed,<->] (S.south west) to [bend left] (R.north west);
+    \draw[<->] (A.south) to [bend right] (S.north);
+    \draw[<->] (S.south) to [bend right] (C.north);
+    \draw[<->] (C.south) to [bend right] (R.north);
+    \draw[<->] (A.south) to [bend left] (C.north);
+    \draw[<->] (S.south) to [bend left] (R.north);
+    \draw[<->] (A.south west) to [bend left] (R.north west);
 
 
 %%%%%%%%%%%%%%%%%
@@ -86,7 +83,7 @@
 %%%%%%%%%%%%%%%%%
 
 % Outcome variable
-    \node[latvar] (finlit) at (10,-4) {$\texttt{FLIT}_2$};
+    \node[latvar] (finlit) at (10,-4.75) {$\texttt{FLIT}_2$};
 
     \draw[->] (A.east)--(finlit.west);
     \draw[->] (S.east)--(finlit.west);
@@ -94,10 +91,10 @@
     \draw[->] (R.east)--(finlit.west);
 
     % Residual arrows
-    \draw[->] (12.15,-4)--(11.65,-4);
+    \draw[->] (12.15,-4.75)--(11.65,-4.75);
 
 % Control variable
-    \node[manvar] (st) at (10,-2) {\texttt{STRATIO}};
+    \node[manvar] (st) at (10,-3) {\texttt{STRATIO}};
 
     \draw[->] (st.south)--(finlit.north);
 

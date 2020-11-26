@@ -1,0 +1,136 @@
+\ltikz{fig:l1}{Path Diagram: Student-level ($L1$)}{
+\begin{tikzpicture}[
+    latvar/.style={ellipse,draw=black,minimum width=3.3cm,minimum height=1cm},
+    manvar/.style={rectangle,draw=black,minimum width=2.5cm},
+    ->,>=stealth',semithick,
+    bend angle=-45,
+    decoration={
+        zigzag,
+        amplitude=1pt,
+        segment length=1mm,
+        post=lineto,
+        post length=4pt
+    }
+]
+
+
+%%%%%%%%%%%%%%%%%%
+% Measurement part
+%%%%%%%%%%%%%%%%%%
+
+% Lat var "Academic"
+    % Draw manifest var
+    \node[manvar] (A1) at (0,0) {$\texttt{PERFEED}_1$};
+    \node[manvar] (A2) at (0,-1) {$\texttt{TEACHINT}_1$};
+    \node[manvar] (A3) at (0,-2) {$\texttt{FLSCHOOL}_1$};
+
+    % Draw latent var
+    \node[latvar] (A) at (5,-1) {$\texttt{Academic}_1$};
+    % Variance arrow
+    %\draw[gray,decorate,->] (6,0)--(5.5,-0.5);
+
+    % Link latent var to manifest var
+    \draw[gray,->] (A.west) to node[above,sloped] {\pres{1.00}{***}{0.00}} (A1.east);
+    \draw[gray,->] (A.west) to node {\pres{0.88}{***}{0.03}} (A2.east);
+    \draw[gray,->] (A.west) to node[below,sloped] {\pres{0.50}{***}{0.03}} (A3.east);
+
+    % Draw solid dots
+    \filldraw [gray] (1.25,0) circle (2pt);
+    \filldraw [gray] (1.25,-1) circle (2pt);
+    \filldraw [gray] (1.25,-2) circle (2pt);
+
+    % Residual arrows
+    \draw[gray,->] (-1.75,0)--(-1.25,0);
+    \draw[gray,->] (-1.75,-1)--(-1.25,-1);
+    \draw[gray,->] (-1.75,-2)--(-1.25,-2);
+
+% Lat var "Safety"
+    \node[manvar] (S1) at (0,-3) {$\texttt{BELONG}_1$};
+    \node[manvar] (S2) at (0,-4) {$\texttt{BULLY}_1$};
+
+    \node[latvar] (S) at (5,-3.5) {$\texttt{Safety}_1$};
+    % Variance arrow
+    %\draw[gray,decorate,->] (6,-3)--(5.5,-3.5);
+
+    \draw[gray,->] (S.west) to node[above,sloped] {\pres{1.00}{***}{0.00}} (S1.east);
+    \draw[gray,->,dashed] (S.west) to node[below,sloped] {\pres{-0.08}{}{0.07}} (S2.east);
+
+    % Draw solid dots
+    \filldraw [gray] (1.25,-3) circle (2pt);
+    \filldraw [gray] (1.25,-4) circle (2pt);
+
+    % Residual arrows
+    \draw[gray,->,dashed] (-1.75,-3)--(-1.25,-3);
+    \draw[gray,->] (-1.75,-4)--(-1.25,-4);
+
+% Financial socialisation
+    \node[latvar] (C) at (5,-6) {$\texttt{FLFAMILY}_1$};
+
+    % Covariances between input variables
+    \draw[<->] (A.south) to [bend right=-45] node [above,sloped] {\pres{0.13}{***}{0.01}} (S.north);
+    \draw[<->] (S.south) to [bend right=-45] node [above,sloped] {\pres{0.13}{***}{0.01}} (C.north);
+    \draw[<->] (A.south) to [bend left=-45] node [below,sloped] {\pres{0.14}{***}{0.01}} (C.north);
+
+
+%%%%%%%%%%%%%%%%%
+% Structural part
+%%%%%%%%%%%%%%%%%
+
+% Mediators
+    \node[manvar] (familiarity) at (10,-1) {\texttt{FCFMLRTY}};
+
+    \draw[blue,->] (A.east) to node[above] {\pres{0.85}{***}{0.13}} (familiarity.west);
+    \draw[blue,->,dashed] (S.east) to node[above,sloped] {\pres{0.09}{}{0.09}} (familiarity.west);
+    \draw[blue,->] (C.east) to node[above,sloped,pos=0.195] {\pres{0.80}{***}{0.05}} (familiarity.west);
+
+    \filldraw [blue] (8.75,-1) circle (2pt);
+
+    \node[manvar] (confidence) at (10,-6) {\texttt{FLCONFIN}};
+
+    \draw[blue,->] (A.east) to node[above,sloped,pos=0.719] {\pres{0.20}{***}{0.02}} (confidence.west);
+    \draw[blue,->,dashed] (S.east) to node[below,sloped,pos=0.65] {\pres{0.01}{}{0.01}} (confidence.west);
+    \draw[blue,->] (C.east) to node[below] {\pres{0.18}{***}{0.01}} (confidence.west);
+
+    \filldraw [blue] (8.75,-6) circle (2pt);
+
+    % Residual arrows
+    \draw[blue,->] (11.75,-1)--(11.25,-1);
+    \draw[blue,->] (11.75,-6)--(11.25,-6);
+
+    % Covariance between mediators
+    \draw[<->] (familiarity.south) to [bend left=-45] node [above,sloped] {\pres{0.98}{***}{0.05}} (confidence.north);
+
+% Outcome variable
+    \node[manvar] (finlit) at (14,-4) {$\texttt{FLIT}_1$};
+
+    % Residual arrow
+    \draw[->] (15.75,-4)--(15.25,-4);
+
+% Indirect paths
+    \draw[blue,->] (familiarity.east) to node[above,sloped] {\pres{0.84}{***}{0.08}} (finlit.west);
+    \draw[blue,->] (confidence.east) to node[below,sloped] {\pres{3.05}{***}{0.40}} (finlit.west);
+% Direct paths
+    \draw[red,->] (A.east) to node[above,sloped,pos=0.67] {\pres{-4.14}{***}{0.80}} (finlit.west);
+    \draw[red,->,dashed] (S.east) to node[pos=0.67] {\pres{0.44}{}{0.42}} (finlit.west);
+    \draw[red,->] (C.east) to node[below,sloped,pos=0.72] {\pres{1.79}{***}{0.36}} (finlit.west);
+
+    \filldraw [red] (12.75,-4) circle (2pt);
+
+% Control variables
+    \node[manvar] (ses) at (17,0) {\texttt{ESCS}};
+    \node[manvar] (immi1) at (17,-1) {\texttt{IMMI1GEN}};
+    \node[manvar] (immi2) at (17,-2) {\texttt{IMMI2GEN}};
+    \node[manvar] (sex) at (17,-3) {\texttt{MALE}};
+
+    \draw[->,dashed] (ses.west) to node[above,sloped,] {\pres{0.40}{}{0.35}} (finlit.north);
+    \draw[->,dashed] (immi1.west) to node[sloped,pos=0.4] {\pres{-4.81}{}{2.88}} (finlit.north);
+    \draw[->,dashed] (immi2.west) to node[sloped] {\pres{-1.21}{}{1.61}} (finlit.north);
+    \draw[->] (sex.west) to node[below,sloped,pos=0.2] {\pres{2.69}{***}{0.77}} (finlit.north);
+
+    \node[manvar] (num) at (17,-5) {\texttt{MATH}};
+    \node[manvar] (lit) at (17,-6) {\texttt{READ}};
+
+    \draw[->] (num.west) to node[above,sloped,pos=0.15] {\pres{0.56}{***}{0.01}} (finlit.south);
+    \draw[->] (lit.west) to node[below,sloped] {\pres{0.40}{***}{0.01}} (finlit.south);
+\end{tikzpicture}
+}{Measurement models are coloured in gray. The direct and indirect paths of the structural component are represented in red and blue respectively. All parameters were estimated over ten plausible values and pooled using Rubin's rule. Paths failing to reach $\alpha=0.05$ significance level are represented in dash. Significance stars: $^{\tiny *}p<0.05$, $^{\tiny **}p<0.01$, $^{\tiny ***}p<0.001$. Presentation convention: estimate$^\text{\tiny significance stars}$ (standard error)}

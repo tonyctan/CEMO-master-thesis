@@ -3,24 +3,24 @@ TITLE:
 
 
 DATA:
-    file = "M:/pc/Dokumenter/MSc/Thesis/Data/Mplus/implist.dat";
+    file = "C:\Users\Tony\implist.dat";
 
     type = imputation;
 
 
 VARIABLE:
     names =
-        W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU
-        MATH READ FLIT              ! Achievement var
+        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT              ! Financial literacy
         MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
         BELONG BULLY                ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
         W_SCH PRIVATE STRATIO       ! School character
-        EDUSHT STAFFSHT             ! School resource shortage
+        EDUST STAFFST               ! School resource shortage
         ;
-
+    
     usev =
         CNTRYID CNTSCHID            ! Level labels
         FLIT                        ! Regressant
@@ -34,8 +34,6 @@ VARIABLE:
 
     cluster = CNTRYID CNTSCHID;
 
-!	between = (CNTRYID) FKI;
-
     within =
 !        PERFEED TEACHINT FLSCHOOL
 !        DISCRIM BELONG BULLY
@@ -45,7 +43,7 @@ VARIABLE:
         MATH READ
         ;
 
-    missing = all (-99);
+!    missing = all (-99);
 
     weight = W_STU;
 
@@ -53,7 +51,7 @@ VARIABLE:
 
 
 ANALYSIS:
-    process = 4;
+    process = 8;
 
     type = threelevel;
 

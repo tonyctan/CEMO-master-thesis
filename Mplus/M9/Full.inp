@@ -3,23 +3,24 @@ TITLE:
 
 
 DATA:
-    file = "M:/pc/Dokumenter/MSc/Thesis/Data/Mplus/implist.dat";
+    file = "C:\Users\Tony\implist.dat";
 
     type = imputation;
 
 
 VARIABLE:
     names =
-        W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU
-        MATH READ FLIT              ! Achievement var
-        MALE IMMI1GEN IMMI2GEN ESCS ! Control var
+        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT              ! Financial literacy
+        MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
         BELONG BULLY                ! Lat var "Safety"
-        FLFAMILY                    ! Lat var "Community" [Now in manifest var]
-        W_SCH PRIVATE STRATIO EDUST STAFFST    ! School var
+        FLFAMILY                    ! Lat var "Community"
+        W_SCH PRIVATE STRATIO       ! School character
+        EDUST STAFFST               ! School resource shortage
         ;
-
+  
     usev =
         CNTRYID CNTSCHID            ! Level labels
         FLIT                        ! Regressant
@@ -47,7 +48,7 @@ VARIABLE:
         (CNTRYID) FKI                       ! L3 var
         ;
 
-    missing = all (-99);
+!    missing = all (-99);
 
     weight = W_STU;
 
@@ -59,7 +60,8 @@ ANALYSIS:
 
     type = threelevel;
 
-!    estimator = Bayes;         ![estimator = Bayes is not available for data type = imputation]
+![Bayes not available for imputation]
+!    estimator = Bayes;
 !    biterations = (30000);
 
 
@@ -113,7 +115,8 @@ MODEL:
 
     FKI;
 
-!MODEL INDIRECT:            [MODEL INDIRECT is not available for analysis type = threelevel]
+! [MODEL INDIRECT not available for threelevel]
+!MODEL INDIRECT:
 !
 !    ! Indirect effects
 !    FLIT ind ACADEMIC;
@@ -122,4 +125,4 @@ MODEL:
 
 
 OUTPUT:
-    sampstat tech1 tech8;
+    sampstat tech1;

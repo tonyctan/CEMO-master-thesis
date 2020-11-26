@@ -3,22 +3,22 @@ TITLE:
 
 
 DATA:
-    file = "C:/Users/Tony/implist.dat";
+    file = "C:\Users\Tony\implist.dat";
 
     type = imputation;
 
 
 VARIABLE:
     names =
-        W_CNT FKI CNTRYID CNTSCHID CNTSTUID W_STU 
-        MATH READ FLIT              ! Numeracy, literacy, finlit
+        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT              ! Financial literacy
         MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
         BELONG BULLY                ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
         W_SCH PRIVATE STRATIO       ! School character
-        EDUSHT STAFFSHT             ! School resource shortage
+        EDUST STAFFST               ! School resource shortage
         ;
 
     usev =
@@ -34,8 +34,6 @@ VARIABLE:
 
     cluster = CNTSCHID;
 
-!	between = (CNTRYID) FKI;
-
     within =
 !        PERFEED TEACHINT FLSCHOOL
 !        BELONG BULLY
@@ -45,7 +43,7 @@ VARIABLE:
         MATH READ
         ;
 
-    missing = all (-99);
+!    missing = all (-99);
 
     weight = W_STU;
 
@@ -70,7 +68,7 @@ MODEL:
     ! Lat var SAFTY
     SAFETY_w by BELONG BULLY;
 	! Decompose Financial socialisation to within and between
-	FLFAMILY_w by FLFAMILY@1;
+	FLFAMILY_w by FLFAMILY;
 
     ! Covariances
     ACADEMIC_w with SAFETY_w;

@@ -45,35 +45,31 @@
     \draw[gray,->] (-1.75,-2)--(-1.25,-2);
 
 % Lat var "Safety"
-    \node[manvar] (S1) at (0,-3) {$\texttt{DISCRIM}_1$};
-    \node[manvar] (S2) at (0,-4) {$\texttt{BELONG}_1$};
-    \node[manvar] (S3) at (0,-5) {$\texttt{BULLY}_1$};
+    \node[manvar] (S1) at (0,-3) {$\texttt{BELONG}_1$};
+    \node[manvar] (S2) at (0,-4) {$\texttt{BULLY}_1$};
 
-    \node[latvar] (S) at (5,-4) {$\texttt{Safety}_1$};
+    \node[latvar] (S) at (5,-3.5) {$\texttt{Safety}_1$};
     % Variance arrow
     %\draw[gray,decorate,->] (6,-3)--(5.5,-3.5);
 
     \draw[gray,->] (S.west)--(S1.east);
     \draw[gray,->] (S.west)--(S2.east);
-    \draw[gray,->] (S.west)--(S3.east);
 
     % Draw solid dots
     \filldraw [gray] (1.25,-3) circle (2pt);
     \filldraw [gray] (1.25,-4) circle (2pt);
-    \filldraw [gray] (1.25,-5) circle (2pt);
 
     % Residual arrows
     \draw[gray,->] (-1.75,-3)--(-1.25,-3);
     \draw[gray,->] (-1.75,-4)--(-1.25,-4);
-    \draw[gray,->] (-1.75,-5)--(-1.25,-5);
 
 % Financial socialisation
-    \node[latvar] (C) at (5,-7) {$\texttt{FLFAMILY}_1$};
+    \node[latvar] (C) at (5,-6) {$\texttt{FLFAMILY}_1$};
 
     % Covariances between input variables
-    \draw[dashed,<->] (A.south) to [bend left] (S.north);
-    \draw[dashed,<->] (S.south) to [bend left] (C.north);
-    \draw[dashed,<->] (A.south) to [bend left] (C.north);
+    \draw[<->] (A.south) to [bend right] (S.north);
+    \draw[<->] (S.south) to [bend right] (C.north);
+    \draw[<->] (A.south) to [bend left] (C.north);
 
 
 %%%%%%%%%%%%%%%%%
@@ -89,20 +85,20 @@
 
     \filldraw [blue] (8.75,-1) circle (2pt);
 
-    \node[manvar] (confidence) at (10,-7) {\texttt{FLCONFIN}};
+    \node[manvar] (confidence) at (10,-6) {\texttt{FLCONFIN}};
 
     \draw[blue,->] (A.east)--(confidence.west);
     \draw[blue,->] (S.east)--(confidence.west);
     \draw[blue,->] (C.east)--(confidence.west);
 
-    \filldraw [blue] (8.75,-7) circle (2pt);
+    \filldraw [blue] (8.75,-6) circle (2pt);
 
     % Residual arrows
     \draw[blue,->] (11.75,-1)--(11.25,-1);
-    \draw[blue,->] (11.75,-7)--(11.25,-7);
+    \draw[blue,->] (11.75,-6)--(11.25,-6);
 
     % Covariance between mediators
-    \draw[dashed,<->] (familiarity.south) to [bend left] (confidence.north);
+    \draw[<->] (familiarity.south) to [bend left] (confidence.north);
 
 % Outcome variable
     \node[manvar] (finlit) at (14,-4) {$\texttt{FLIT}_1$};
@@ -131,8 +127,8 @@
     \draw[->] (immi2.west)--(finlit.north);
     \draw[->] (sex.west)--(finlit.north);
 
-    \node[manvar] (num) at (17,-6) {\texttt{MATH}};
-    \node[manvar] (lit) at (17,-7) {\texttt{READ}};
+    \node[manvar] (num) at (17,-5) {\texttt{MATH}};
+    \node[manvar] (lit) at (17,-6) {\texttt{READ}};
 
     \draw[->] (num.west)--(finlit.south);
     \draw[->] (lit.west)--(finlit.south);
