@@ -1,0 +1,133 @@
+\ltikz{fig:moderator}{Moderated Mediation Model}{
+\begin{tikzpicture}[
+    manvar/.style={rectangle,draw=black,minimum width=1.5cm},
+    ->,>=stealth',semithick,
+    bend angle=-45,
+    decoration={
+        zigzag,
+        amplitude=1pt,
+        segment length=1mm,
+        post=lineto,
+        post length=4pt
+    }
+]
+
+% MODEL DIAGRAM
+
+% Draw independent vars (X)
+    \node[manvar] (0X1) at (1,9) {$X_1$};
+    \node[manvar] (0X2) at (1,6) {$X_2$};
+    \node[manvar] (0X3) at (1,3) {$X_3$};
+
+% Draw mediators (M)
+    \node[manvar] (0M1) at (4,7) {$M_1$};
+    \node[manvar] (0M2) at (4,5) {$M_2$};
+
+% Draw moderators (D)
+    \node[manvar] (0D1) at (7,8) {$D_1$};
+    \node[manvar] (0D2) at (7,4) {$D_2$};
+
+% Draw dependent var (Y)
+    \node[manvar] (0Y) at (10,6) {$Y$};
+
+% Link X with M
+    \draw[blue,->] (0X1.east) to node[above,sloped,pos=0.5] {$a_{11}$} (0M1.west);
+    \draw[blue,->] (0X2.east) to node[] {} (0M1.west);
+    \draw[blue,->] (0X3.east) to node[] {} (0M1.west);
+
+    \draw[blue,->] (0X1.east) to node[] {} (0M2.west);
+    \draw[blue,->] (0X2.east) to node[] {} (0M2.west);
+    \draw[blue,->] (0X3.east) to node[below,sloped,pos=0.5] {$a_{32}$} (0M2.west);
+
+% Link M with Y
+    \draw[blue,->] (0M1.east) to node[above,sloped] {$b_1$} (0Y.west);
+    \draw[blue,->] (0M2.east) to node[below,sloped] {$b_2$} (0Y.west);
+
+% Link X with Y
+    \draw[red,->] (0X1.east) to node[above,sloped,pos=0.3] {$c_1$} (0Y.west);
+    \draw[red,->] (0X2.east) to node[pos=0.3] {$c_2$} (0Y.west);
+    \draw[red,->] (0X3.east) to node[below,sloped,pos=0.3] {$c_3$} (0Y.west);
+
+% Moderate on direct pathways
+    \draw[forestgreen,->] (6.25,8)--(5.5,7.5);
+    \draw[forestgreen,->] (6.25,8)--(5.5,6);
+    \draw[forestgreen,->] (6.25,8)--(5.5,4.5);
+
+    \draw[forestgreen,->] (6.25,4)--(5.5,7.5);
+    \draw[forestgreen,->] (6.25,4)--(5.5,6);
+    \draw[forestgreen,->] (6.25,4)--(5.5,4.5);
+
+% Moderate on indirect pathways
+    \draw[forestgreen,->] (7,7.7)--(8.5,6.17);
+    \draw[forestgreen,->] (7,7.7)--(8.5,5.83);
+
+    \draw[forestgreen,->] (7,4.3)--(8.5,6.17);
+    \draw[forestgreen,->] (7,4.3)--(8.5,5.83);
+
+
+% STATISTICAL DIAGRAM
+
+% Draw independent vars (X)
+    \node[manvar] (X1) at (0,0) {$X_1$};
+    \node[manvar] (X2) at (0,-1) {$X_2$};
+    \node[manvar] (X3) at (0,-2) {$X_3$};
+
+% Draw mediators (M)
+    \node[manvar] (M1) at (3,-4) {$M_1$};
+    \node[manvar] (M2) at (3,-5) {$M_2$};
+
+% Draw dependent var (Y)
+    \node[manvar] (Y) at (7,-3) {$Y$};
+
+% Draw moderators (D)
+    \node[manvar] (D1) at (7,1) {$D_1$};
+    \node[manvar] (D2) at (9,1) {$D_2$};
+
+% Draw X * D interactions
+    \node[manvar] (X1D1) at (11,0) {$X_1D_1$};
+    \node[manvar] (X2D1) at (11,-1) {$X_2D_1$};
+    \node[manvar] (X3D1) at (11,-2) {$X_3D_1$};
+
+    \node[manvar] (X1D2) at (13,0) {$X_1D_2$};
+    \node[manvar] (X2D2) at (13,-1) {$X_2D_2$};
+    \node[manvar] (X3D2) at (13,-2) {$X_3D_2$};
+
+% Draw M * D interactions
+    \node[manvar] (M1D1) at (11,-4) {$M_1D_1$};
+    \node[manvar] (M2D1) at (11,-5) {$M_2D_1$};
+
+    \node[manvar] (M1D2) at (13,-4) {$M_1D_2$};
+    \node[manvar] (M2D2) at (13,-5) {$M_2D_2$};
+
+% Link X with M (a)
+    \draw[blue,->] (X1.east) to node[above,sloped,pos=0.7] {$a_{11}$} (M1.west);
+    \draw[blue,->] (X1.east) to node[above,sloped] {} (M2.west);
+
+    \draw[blue,->] (X2.east) to node[above,sloped] {} (M1.west);
+    \draw[blue,->] (X2.east) to node[above,sloped] {} (M2.west);
+
+    \draw[blue,->] (X3.east) to node[above,sloped] {} (M1.west);
+    \draw[blue,->] (X3.east) to node[below,sloped,pos=0.4] {$a_{32}$} (M2.west);
+
+% Link M with Y (b)
+    \draw[blue,->] (M1.east) to node[above,sloped,pos=0.4] {$b_1$} (Y.west);
+    \draw[blue,->] (M2.east) to node[below,sloped,pos=0.4] {$b_2$} (Y.west);
+
+% Link X with Y (c)
+    \draw[red,->] (X1.east) to node[above,sloped] {$c_1$} (Y.west);
+    \draw[red,->] (X2.east) to node[above,sloped] {} (Y.west);
+    \draw[red,->] (X3.east) to node[below,sloped] {$c_3$} (Y.west);
+
+% Link D with Y (f)
+    \draw[forestgreen,->] (D1.south) to node[below,sloped,rotate=180,pos=0.3] {$f_1$} (Y.north);
+    \draw[forestgreen,->] (D2.south) to node[above,sloped,pos=0.4] {$f_2$} (Y.north);
+
+% Link XD with Y (G)
+    \draw[forestgreen,->] (X1D1.west) to node[below,sloped] {$g_{11}$} (Y.east);
+    \draw[forestgreen,->] (X3D2.west) to node[above,sloped,pos=0.6] {$g_{32}$} (Y.east);
+
+% Link MD with Y (H)
+    \draw[forestgreen,->] (M1D1.west) to node[above,sloped,pos=0.4] {$h_{11}$} (Y.south);
+    \draw[forestgreen,->] (M2D2.west) to node[below,sloped,pos=0.65] {$h_{22}$} (Y.south);
+\end{tikzpicture}
+}{A moderated mediation is shown in both model diagram (upper panel) and statistical diagram (lower panel). \textcolor{red}{Direct paths}, \textcolor{blue}{indirect paths} and \textcolor{forestgreen}{moderations} are differentiated by colour.}

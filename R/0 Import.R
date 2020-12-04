@@ -71,6 +71,9 @@ IMMI2GEN <- recode(finlit$IMMIG, "
     3 = 0
 ")
 
+# Revert coding direction: bigger number => safer school
+finlit$BEINGBULLIED <- (-1) * BEINGBULLIED
+
 # Recode PRIVATESCH from texts to numbers
 finlit$PRIVATESCH <- recode(finlit$PRIVATESCH, "
     'public ' = 0;
