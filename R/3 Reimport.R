@@ -26,7 +26,6 @@ finlit <- pisa.select.merge(
         "FLFAMILY" # Parental involvement in matters of Financial Literacy (WLE)
     ),
     school = c(
-        "PRIVATESCH", # School type (public, private, missing)
         "STRATIO", # Student-teacher ratio
         "EDUSHORT", # Shortage of educational material (WLE)
         "STAFFSHORT" # Shortage of educational staff (WLE)
@@ -48,19 +47,25 @@ library(car)
 # Input country-level FKI
 
 FKI <- recode(finlit$CNT, "
-    'USA' = 1.029;
-    'ITA' = 0.810;
-    'ESP' = 0.661;
-    'LTU' = 0.609;
-    'PRT' = 0.606;
-    'CHL' = 0.589;
-    'EST' = 0.576;
-    'SVK' = 0.552;
-    'POL' = 0.546;
-    'GEO' = 0.369;
-    'PER' = 0.289;
-    'BRA' = 0.131;
-    'IDN' = 0.104
+    'NLD' = 0.957;
+    'USA' = 0.947;
+    'ITA' = 0.771;
+    'FIN' = 0.733;
+    'ESP' = 0.637;
+    'LTU' = 0.614;
+    'PRT' = 0.598;
+    'BGR' = 0.585;
+    'EST' = 0.579;
+    'SVK' = 0.562;
+    'POL' = 0.559;
+    'CHL' = 0.552;
+    'LVA' = 0.547;
+    'RUS' = 0.449;
+    'SRB' = 0.424;
+    'GEO' = 0.419;
+    'PER' = 0.309;
+    'BRA' = 0.145;
+    'IDN' = 0.122
 ")
 
 # Recode ST004D01T from Sex to Male

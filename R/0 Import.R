@@ -29,7 +29,6 @@ finlit <- pisa.select.merge(
         "PASCHPOL" # School policies for parental involvement (WLE)
     ),
     school = c(
-        "PRIVATESCH", # School type (public, private, missing)
         "STRATIO", # Student-teacher ratio
         "EDUSHORT", # Shortage of educational material (WLE)
         "STAFFSHORT" # Shortage of educational staff (WLE)
@@ -42,6 +41,9 @@ finlit <- pisa.select.merge(
         "SVK", "USA"
     )
 )
+
+# Inspect table header
+names(finlit)
 
 # Remove columns that I do not need
 finlit <- finlit[, -c(5, 7:86)] # 5 = BOOKID; 7:86 = resampling weights
@@ -72,21 +74,15 @@ IMMI2GEN <- recode(finlit$IMMIG, "
 ")
 
 # Revert coding direction: bigger number => safer school
-finlit$BEINGBULLIED <- (-1) * BEINGBULLIED
-
-# Recode PRIVATESCH from texts to numbers
-finlit$PRIVATESCH <- recode(finlit$PRIVATESCH, "
-    'public ' = 0;
-    'private' = 1;
-    'missing' = NA
-")
-finlit$PRIVATESCH <- as.numeric(finlit$PRIVATESCH) # Force "0" to 0.
+NOBULLY <- finlit$BEINGBULLIED * (-1)
 
 # Stitch spreadsheets together
 finlit <- cbind(
     finlit[, c(1:35)],
     MALE, IMMI1GEN, IMMI2GEN,
-    finlit[, c(38:54)]
+    finlit[, c(38:45)],
+    NOBULLY,
+    finlit[, c(47:53)]
 )
 
 # Use data.table for better RAM management

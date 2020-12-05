@@ -1,6 +1,6 @@
 \ltikz{fig:l1}{Path Diagram: Student-level ($L1$)}{
 \begin{tikzpicture}[
-    latvar/.style={ellipse,draw=black,minimum width=3.3cm,minimum height=1cm},
+    latvar/.style={ellipse,draw=black,minimum width=3.5cm,minimum height=1cm},
     manvar/.style={rectangle,draw=black,minimum width=2.5cm},
     ->,>=stealth',semithick,
     bend angle=-45,
@@ -20,12 +20,12 @@
 
 % Lat var "Academic"
     % Draw manifest var
-    \node[manvar] (A1) at (0,0) {$\texttt{PERFEED}_1$};
-    \node[manvar] (A2) at (0,-1) {$\texttt{TEACHINT}_1$};
-    \node[manvar] (A3) at (0,-2) {$\texttt{FLSCHOOL}_1$};
+    \node[latvar] (A1) at (0,0) {$\texttt{PERFEED}_W$};
+    \node[latvar] (A2) at (0,-1) {$\texttt{TEACHINT}_W$};
+    \node[latvar] (A3) at (0,-2) {$\texttt{FLSCHOOL}_W$};
 
     % Draw latent var
-    \node[latvar] (A) at (5,-1) {$\texttt{Academic}_1$};
+    \node[latvar] (A) at (5,-1) {$\texttt{Academic}_W$};
     % Variance arrow
     %\draw[gray,decorate,->] (6,0)--(5.5,-0.5);
 
@@ -35,20 +35,20 @@
     \draw[gray,->] (A.west)--(A3.east);
 
     % Draw solid dots
-    \filldraw [gray] (1.25,0) circle (2pt);
-    \filldraw [gray] (1.25,-1) circle (2pt);
-    \filldraw [gray] (1.25,-2) circle (2pt);
+    \filldraw [gray] (1.75,0) circle (2pt);
+    \filldraw [gray] (1.75,-1) circle (2pt);
+    \filldraw [gray] (1.75,-2) circle (2pt);
 
     % Residual arrows
-    \draw[gray,->] (-1.75,0)--(-1.25,0);
-    \draw[gray,->] (-1.75,-1)--(-1.25,-1);
-    \draw[gray,->] (-1.75,-2)--(-1.25,-2);
+    \draw[gray,->] (-2.25,0)--(-1.75,0);
+    \draw[gray,->] (-2.25,-1)--(-1.75,-1);
+    \draw[gray,->] (-2.25,-2)--(-1.75,-2);
 
 % Lat var "Safety"
-    \node[manvar] (S1) at (0,-3) {$\texttt{BELONG}_1$};
-    \node[manvar] (S2) at (0,-4) {$\texttt{BULLY}_1$};
+    \node[latvar] (S1) at (0,-3) {$\texttt{BELONG}_W$};
+    \node[latvar] (S2) at (0,-4) {$\texttt{BULLY}_W$};
 
-    \node[latvar] (S) at (5,-3.5) {$\texttt{Safety}_1$};
+    \node[latvar] (S) at (5,-3.5) {$\texttt{Safety}_W$};
     % Variance arrow
     %\draw[gray,decorate,->] (6,-3)--(5.5,-3.5);
 
@@ -56,15 +56,15 @@
     \draw[gray,->] (S.west)--(S2.east);
 
     % Draw solid dots
-    \filldraw [gray] (1.25,-3) circle (2pt);
-    \filldraw [gray] (1.25,-4) circle (2pt);
+    \filldraw [gray] (1.75,-3) circle (2pt);
+    \filldraw [gray] (1.75,-4) circle (2pt);
 
     % Residual arrows
-    \draw[gray,->] (-1.75,-3)--(-1.25,-3);
-    \draw[gray,->] (-1.75,-4)--(-1.25,-4);
+    \draw[gray,->] (-2.25,-3)--(-1.75,-3);
+    \draw[gray,->] (-2.25,-4)--(-1.75,-4);
 
 % Financial socialisation
-    \node[latvar] (C) at (5,-6) {$\texttt{FLFAMILY}_1$};
+    \node[latvar] (C) at (5,-6) {$\texttt{FLFAMILY}_W$};
 
     % Covariances between input variables
     \draw[<->] (A.south) to [bend right] (S.north);
@@ -83,15 +83,11 @@
     \draw[blue,->] (S.east)--(familiarity.west);
     \draw[blue,->] (C.east)--(familiarity.west);
 
-    \filldraw [blue] (8.75,-1) circle (2pt);
-
     \node[manvar] (confidence) at (10,-6) {\texttt{FLCONFIN}};
 
     \draw[blue,->] (A.east)--(confidence.west);
     \draw[blue,->] (S.east)--(confidence.west);
     \draw[blue,->] (C.east)--(confidence.west);
-
-    \filldraw [blue] (8.75,-6) circle (2pt);
 
     % Residual arrows
     \draw[blue,->] (11.75,-1)--(11.25,-1);
@@ -101,10 +97,10 @@
     \draw[<->] (familiarity.south) to [bend left] (confidence.north);
 
 % Outcome variable
-    \node[manvar] (finlit) at (14,-4) {$\texttt{FLIT}_1$};
+    \node[latvar] (finlit) at (14,-4) {$\texttt{FLIT}_W$};
 
     % Residual arrow
-    \draw[->] (15.75,-4)--(15.25,-4);
+    \draw[->] (16.25,-4)--(15.75,-4);
 
 % Indirect paths
     \draw[blue,->] (familiarity.east)--(finlit.west);
@@ -114,7 +110,7 @@
     \draw[red,->] (S.east)--(finlit.west);
     \draw[red,->] (C.east)--(finlit.west);
 
-    \filldraw [red] (12.75,-4) circle (2pt);
+    \filldraw [black] (12.25,-4) circle (2pt);
 
 % Control variables
     \node[manvar] (ses) at (17,0) {\texttt{ESCS}};
