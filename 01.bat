@@ -1,4 +1,4 @@
-cd /d M:\pc\Dokumenter\Thesis
+cd /d M:\pc\Dokumenter\MSc\Thesis
 Rscript -e "library(knitr); knit('Master.Rnw')"
 lualatex Master.tex
 biber Master
