@@ -1,9 +1,9 @@
 TITLE:
-    Financial literacy 2-level: L1 full model
+    M2: Financial literacy 2-level: L1 no numceracy or literacy
 
 
 DATA:
-    file = "C:\Users\Tony\implist.dat";
+    file = "C:\Users\Admin\implist.dat";
 
     type = imputation;
 
@@ -15,21 +15,19 @@ VARIABLE:
         MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        BELONG BULLY                ! Lat var "Safety"
+        BELONG NOBULLY              ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
-        W_SCH PRIVATE STRATIO       ! School character
-        EDUST STAFFST               ! School resource shortage
+        W_SCH STRATIO               ! School character
+        EDUSHT STAFFSHT             ! School resource shortage
         ;
 
     usev =
-!       CNTSCHID                    ! Level label (DO NOT include cluster labels in usev)
         FLIT                        ! Regressant
         PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
-        BELONG BULLY                !   Lat var "Safety"
+        BELONG NOBULLY              !   Lat var "Safety"
         FLFAMILY                    !   Financial socialisation
         FCFMLRTY FLCONFIN           !   Mediators
         MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
-!        MATH READ                   !   Control: numeracy and literacy
         ;
     
     ! Nested by schools
@@ -38,11 +36,10 @@ VARIABLE:
     ! Only list vars that are used EXCLUSIVELY on L1
     within =
 !        PERFEED TEACHINT FLSCHOOL
-!        BELONG BULLY
+!        BELONG NOBULLY
 !        FLFAMILY
 !        FCFMLRTY FLCONFIN
         MALE IMMI1GEN IMMI2GEN ESCS
-!        MATH READ
         ;
 
     missing = all (-99);
@@ -54,66 +51,71 @@ VARIABLE:
 
 
 ANALYSIS:
-    process = 8;
-
     type = twolevel;
+
+    estimator = MLR;
+
+    processors = 16;
+
+!    starts = 16;
 
 
 MODEL:
 
 %Between% ! L2: School-level (Saturated model)
+
     ! Estimate the variances of the following variables
     PERFEED TEACHINT FLSCHOOL
-    BELONG BULLY
+    BELONG NOBULLY
     FLFAMILY
-    FCFMLRTY FLCONFIN
+!    FCFMLRTY FLCONFIN
     FLIT;
 
     ! Estimate the covariances between all the var above
     PERFEED with TEACHINT FLSCHOOL
-        BELONG BULLY
+        BELONG NOBULLY
         FLFAMILY
-        FCFMLRTY FLCONFIN
+!        FCFMLRTY FLCONFIN
         FLIT;
 
     TEACHINT with FLSCHOOL
-        BELONG BULLY
+        BELONG NOBULLY
         FLFAMILY
-        FCFMLRTY FLCONFIN
+!        FCFMLRTY FLCONFIN
         FLIT;
 
     FLSCHOOL with
-        BELONG BULLY
+        BELONG NOBULLY
         FLFAMILY
-        FCFMLRTY FLCONFIN
+!        FCFMLRTY FLCONFIN
         FLIT;
 
-    BELONG with BULLY
+    BELONG with NOBULLY
         FLFAMILY
-        FCFMLRTY FLCONFIN
+!        FCFMLRTY FLCONFIN
         FLIT;
 
-    BULLY with
+    NOBULLY with
         FLFAMILY
-        FCFMLRTY FLCONFIN
+!        FCFMLRTY FLCONFIN
         FLIT;
 
     FLFAMILY with
-        FCFMLRTY FLCONFIN
+!        FCFMLRTY FLCONFIN
         FLIT;
 
-    FCFMLRTY with FLCONFIN
-        FLIT;
+!    FCFMLRTY with FLCONFIN
+!        FLIT;
 
-    FLCONFIN with
-        FLIT;
+!    FLCONFIN with
+!        FLIT;
 
 %Within% ! L1: Student-level
 
     ! Lat var ACADEMIC
     ACADEMIC_w by PERFEED TEACHINT FLSCHOOL;
     ! Lat var SAFTY
-    SAFETY_w by BELONG BULLY;
+    SAFETY_w by BELONG NOBULLY;
 
 	! Decompose Financial socialisation to within and between
 	FLFAMILY_w by FLFAMILY@1;
@@ -138,16 +140,15 @@ MODEL:
         ACADEMIC_w SAFETY_w FLFAMILY_w  ! Input variables
         FCFMLRTY FLCONFIN               ! Mediators
         MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
-!       MATH READ                       ! Control: numeracy and literacy
         ;
 
 
-MODEL INDIRECT:
+!MODEL INDIRECT:
 
     ! Indirect effects
-    FLIT ind ACADEMIC_w;
-    FLIT ind SAFETY_w;
-    FLIT ind FLFAMILY_w;
+!    FLIT ind ACADEMIC_w;
+!    FLIT ind SAFETY_w;
+!    FLIT ind FLFAMILY_w;
 
 
 OUTPUT:

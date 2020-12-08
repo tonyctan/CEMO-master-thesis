@@ -1,6 +1,6 @@
 # Housekeeping
 library(Orcs)
-setwdOS(lin = "~/", win = "C:/Users/Tony/")
+setwdOS(lin = "~/", win = Sys.getenv("USERPROFILE"))
 
 # Import SPSS file into R
 library(intsvy)
@@ -31,9 +31,10 @@ finlit <- pisa.select.merge(
         "STAFFSHORT" # Shortage of educational staff (WLE)
     ),
     countries = c(
-        "BRA", "CHL", "ESP", "EST", "GEO",
-        "IDN", "ITA", "LTU", "PER", "POL",
-        "PRT", "SVK", "USA"
+        "BRA", "BGR", "CHL", "EST", "FIN",
+        "GEO", "IDN", "ITA", "LVA", "LTU",
+        "NLD", "PER", "POL", "PRT", "RUS",
+        "SRB", "SVK", "ESP", "USA"
     )
 )
 
@@ -44,8 +45,13 @@ finlit <- finlit[, -c(5,7:86)] # 5 = BOOKID; 7:86 = resampling weights
 # Some var need recording
 library(car)
 
-# Input country-level FKI
+# Re-code Russian territories to RUS
+finlit$CNT <- recode(finlit$CNT, "
+    'QMR' = 'RUS';
+    'QRT' = 'RUS'
+")
 
+# Input country-level FKI
 FKI <- recode(finlit$CNT, "
     'NLD' = 0.957;
     'USA' = 0.947;
@@ -85,21 +91,18 @@ IMMI2GEN <- recode(finlit$IMMIG, "
 ")
 
 # Revert coding direction: bigger number => safer school
-finlit$BEINGBULLIED <- -1 * finlit$BEINGBULLIED
-
-# Recode PRIVATESCH from texts to numbers
-finlit$PRIVATESCH <- recode(finlit$PRIVATESCH, "
-    'public ' = 0;
-    'private' = 1;
-    'missing' = NA
-")
-finlit$PRIVATESCH <- as.numeric(finlit$PRIVATESCH) # Force "0" to 0.
+NOBULLY <- finlit$BEINGBULLIED * (-1)
 
 # Stitch spreadsheet together
-finlit <- cbind(FKI, finlit[, c(2:35)], MALE, IMMI1GEN, IMMI2GEN, finlit[, c(38:51)])
+names(finlit)
+finlit <- cbind(FKI, finlit[, c(2:35)], MALE, IMMI1GEN, IMMI2GEN, finlit[, c(38:50)])
 
 # Remove cases whose school weights (col #48) are NA
+obs0 <- dim(finlit)[1]
 finlit <- finlit[complete.cases(finlit[, 48]), ]
+obs1 <- dim(finlit)[1]
+obs0 - obs1 # 12 cases contained missing school weights and have been dropped
+rm(obs0, obs1)
 
 # Use data.table for better RAM management
 library(data.table); setDTthreads(0) # 0 means all the available cores

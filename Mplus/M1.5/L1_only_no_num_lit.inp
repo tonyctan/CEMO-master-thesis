@@ -1,9 +1,9 @@
 TITLE:
-    Financial literacy single-level only
+    M1.5: Financial literacy single-level only no numeracy or literacy
 
 
 DATA:
-    file = "C:\Users\Tony\implist.dat";
+    file = "C:\Users\Admin\implist.dat";
 
     type = imputation;
 
@@ -15,16 +15,16 @@ VARIABLE:
         MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        BELONG BULLY                ! Lat var "Safety"
+        BELONG NOBULLY              ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
-        W_SCH PRIVATE STRATIO       ! School character
-        EDUST STAFFST               ! School resource shortage
+        W_SCH STRATIO               ! School character
+        EDUSHT STAFFSHT             ! School resource shortage
         ;
 
     usev =
         FLIT                        ! Regressant
         PERFEED TEACHINT FLSCHOOL   !   Lat var "Academic"
-        BELONG BULLY                !   Lat var "Safety"
+        BELONG NOBULLY              !   Lat var "Safety"
         FLFAMILY                    !   Financial socialisation
         FCFMLRTY FLCONFIN           !   Mediators
         MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
@@ -36,7 +36,7 @@ VARIABLE:
 
 
 ANALYSIS:
-    process = 8;
+    process = 16;
 
     estimator = MLR;
 
@@ -45,7 +45,7 @@ MODEL:
     ! Lat var ACADEMIC
     ACADEMIC by PERFEED TEACHINT FLSCHOOL;
     ! Lat var SAFTY
-    SAFETY by BELONG BULLY;
+    SAFETY by BELONG NOBULLY;
 
     ! Covariances
     ACADEMIC with SAFETY;

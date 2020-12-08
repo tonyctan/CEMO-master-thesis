@@ -2,11 +2,11 @@ VERSION 1.1.0
 INPUT
 TITLE:
 
-    Financial literacy single-level only
+    Financial literacy single-level only: no numeracy or literacy
 
 
 DATA:
-    file = "C:\Users\Tony\implist.dat";
+    file = "C:\Users\Admin\implist.dat";
     type = imputation;
 VARIABLE:
     names =
@@ -15,15 +15,15 @@ VARIABLE:
         MALE IMMI1GEN IMMI2GEN ESCS
         FCFMLRTY FLCONFIN
         PERFEED TEACHINT FLSCHOOL
-        BELONG BULLY
+        BELONG NOBULLY
         FLFAMILY
-        W_SCH PRIVATE STRATIO
-        EDUST STAFFST
+        W_SCH STRATIO
+        EDUSHT STAFFSHT
         ;
     usev =
         FLIT
         PERFEED TEACHINT FLSCHOOL
-        BELONG BULLY
+        BELONG NOBULLY
         FLFAMILY
         FCFMLRTY FLCONFIN
         MALE IMMI1GEN IMMI2GEN ESCS
@@ -31,13 +31,13 @@ VARIABLE:
     missing = all (-99);
     weight = W_STU;
 ANALYSIS:
-    process = 8;
+    process = 16;
     estimator = MLR;
 OUTPUT:
     sampstat stdyx;
 MODEL:
     ACADEMIC by PERFEED TEACHINT FLSCHOOL;
-    SAFETY by BELONG BULLY;
+    SAFETY by BELONG NOBULLY;
     ACADEMIC with SAFETY;
     ACADEMIC with FLFAMILY;
     SAFETY with FLFAMILY;
@@ -61,7 +61,7 @@ GENERAL
 9
 2
 4
-flit perfeed teachint flschool belong bully fcfmlrty flconfin flfamily academic safety male immi1gen immi2gen escs
+flit perfeed teachint flschool belong nobully fcfmlrty flconfin flfamily academic safety male immi1gen immi2gen escs
 3
 2 -1 -1 -1 -1 -1 1 1 0 0 0 0 0 0 0
 0
@@ -69,80 +69,80 @@ flit perfeed teachint flschool belong bully fcfmlrty flconfin flfamily academic 
 academic
 perfeed teachint flschool
 safety
-belong bully
+belong nobully
 1 1 academic perfeed           1.000           0.000
-1 1 academic teachint           0.861           0.029
-1 1 academic flschool           0.520           0.037
+1 1 academic teachint           0.862           0.027
+1 1 academic flschool           0.483           0.030
 1 1 safety belong           1.000           0.000
-1 1 safety bully           0.143           0.116
-1 1 flfamily flit          -3.121           0.923
-1 1 fcfmlrty flit           4.111           0.182
-1 1 flconfin flit          -1.073           1.038
-1 1 male flit          -4.630           1.921
-1 1 immi1gen flit           9.066           6.210
-1 1 immi2gen flit          41.566           4.252
-1 1 escs flit          37.261           0.763
-1 1 flfamily fcfmlrty           0.843           0.051
-1 1 flfamily flconfin           0.182           0.010
-1 1 academic flit         -11.597           2.340
-1 1 safety flit           1.760           2.132
-1 1 academic fcfmlrty           0.758           0.143
-1 1 safety fcfmlrty           0.182           0.170
-1 1 academic flconfin           0.202           0.027
-1 1 safety flconfin           0.023           0.017
-2 1 fcfmlrty flconfin           0.985           0.052
-2 1 academic safety           0.133           0.009
-2 1 academic flfamily           0.144           0.010
-2 1 safety flfamily           0.122           0.012
-4 1 flit        7659.652         128.986
-4 1 perfeed           0.596           0.018
-4 1 teachint           0.552           0.014
-4 1 flschool           1.002           0.017
-4 1 belong          -1.084           1.643
-4 1 bully           1.151           0.038
-4 1 fcfmlrty          26.160           0.265
-4 1 flconfin           0.946           0.014
-5 1 flfamily           1.134           0.015
-5 1 academic           0.413           0.019
-5 1 safety           1.946           1.643
+1 1 safety nobully          -0.246           0.094
+1 1 flfamily flit          -3.684           0.819
+1 1 fcfmlrty flit           4.031           0.162
+1 1 flconfin flit           0.413           0.918
+1 1 male flit          -4.526           1.741
+1 1 immi1gen flit           5.808           5.653
+1 1 immi2gen flit          38.397           3.961
+1 1 escs flit          37.843           0.689
+1 1 flfamily fcfmlrty           0.809           0.046
+1 1 flfamily flconfin           0.175           0.009
+1 1 academic flit         -10.523           2.006
+1 1 safety flit           3.778           2.443
+1 1 academic fcfmlrty           0.622           0.127
+1 1 safety fcfmlrty           0.343           0.162
+1 1 academic flconfin           0.172           0.024
+1 1 safety flconfin           0.047           0.016
+2 1 fcfmlrty flconfin           1.118           0.047
+2 1 academic safety           0.136           0.008
+2 1 academic flfamily           0.147           0.009
+2 1 safety flfamily           0.111           0.011
+4 1 flit        7628.648         113.194
+4 1 perfeed           0.586           0.016
+4 1 teachint           0.559           0.013
+4 1 flschool           1.013           0.014
+4 1 belong          -0.270           0.431
+4 1 nobully           1.118           0.031
+4 1 fcfmlrty          27.639           0.239
+4 1 flconfin           0.954           0.012
+5 1 flfamily           1.132           0.013
+5 1 academic           0.424           0.017
+5 1 safety           1.129           0.432
 2 1 male immi1gen         999.000         999.000
 2 1 male immi2gen         999.000         999.000
 2 1 male escs         999.000         999.000
 2 1 immi1gen immi2gen         999.000         999.000
 2 1 immi1gen escs         999.000         999.000
 2 1 immi2gen escs         999.000         999.000
-11 1 academic perfeed           0.640           0.014
-11 1 academic teachint           0.597           0.013
-11 1 academic flschool           0.317           0.019
-11 1 safety belong           1.500           0.626
-11 1 safety bully           0.181           0.075
-11 1 flfamily flit          -0.032           0.010
-11 1 fcfmlrty flit           0.209           0.009
-11 1 flconfin flit          -0.010           0.010
-11 1 male flit          -0.022           0.009
-11 1 immi1gen flit           0.014           0.009
-11 1 immi2gen flit           0.097           0.010
-11 1 escs flit           0.471           0.009
-11 1 flfamily fcfmlrty           0.171           0.010
-11 1 flfamily flconfin           0.193           0.010
-11 1 academic flit          -0.072           0.014
-11 1 safety flit           0.023           0.019
-11 1 academic fcfmlrty           0.093           0.017
-11 1 safety fcfmlrty           0.048           0.026
-11 1 academic flconfin           0.129           0.017
-11 1 safety flconfin           0.031           0.012
-12 1 fcfmlrty flconfin           0.198           0.010
-12 1 academic safety           0.149           0.064
-12 1 academic flfamily           0.210           0.015
-12 1 safety flfamily           0.082           0.030
-14 1 flit           0.718           0.007
-14 1 perfeed           0.591           0.017
-14 1 teachint           0.644           0.016
-14 1 flschool           0.900           0.012
-14 1 belong          -1.258         999.000
-14 1 bully           0.967           0.027
-14 1 fcfmlrty           0.950           0.005
-14 1 flconfin           0.933           0.006
+11 1 academic perfeed           0.648           0.012
+11 1 academic teachint           0.601           0.012
+11 1 academic flschool           0.298           0.016
+11 1 safety belong           1.146           0.218
+11 1 safety nobully          -0.240           0.047
+11 1 flfamily flit          -0.038           0.008
+11 1 fcfmlrty flit           0.210           0.008
+11 1 flconfin flit           0.004           0.009
+11 1 male flit          -0.022           0.008
+11 1 immi1gen flit           0.009           0.009
+11 1 immi2gen flit           0.088           0.009
+11 1 escs flit           0.472           0.008
+11 1 flfamily fcfmlrty           0.160           0.009
+11 1 flfamily flconfin           0.184           0.009
+11 1 academic flit          -0.067           0.013
+11 1 safety flit           0.039           0.018
+11 1 academic fcfmlrty           0.075           0.015
+11 1 safety fcfmlrty           0.068           0.020
+11 1 academic flconfin           0.111           0.015
+11 1 safety flconfin           0.049           0.010
+12 1 fcfmlrty flconfin           0.218           0.009
+12 1 academic safety           0.197           0.040
+12 1 academic flfamily           0.212           0.013
+12 1 safety flfamily           0.098           0.014
+14 1 flit           0.718           0.006
+14 1 perfeed           0.580           0.016
+14 1 teachint           0.639           0.015
+14 1 flschool           0.911           0.010
+14 1 belong          -0.314         999.000
+14 1 nobully           0.942           0.022
+14 1 fcfmlrty           0.955           0.004
+14 1 flconfin           0.939           0.005
 15 1 flfamily           1.000           0.000
 15 1 academic           1.000           0.000
 15 1 safety           1.000           0.000
@@ -152,39 +152,39 @@ belong bully
 12 1 immi1gen immi2gen         999.000         999.000
 12 1 immi1gen escs         999.000         999.000
 12 1 immi2gen escs         999.000         999.000
-31 1 academic perfeed           0.642           0.015
-31 1 academic teachint           0.553           0.013
-31 1 academic flschool           0.334           0.020
-31 1 safety belong           1.393           0.581
-31 1 safety bully           0.197           0.082
-31 1 flfamily flit          -3.121           0.923
-31 1 fcfmlrty flit           4.111           0.182
-31 1 flconfin flit          -1.073           1.038
-31 1 male flit          -4.630           1.921
-31 1 immi1gen flit           9.066           6.210
-31 1 immi2gen flit          41.566           4.252
-31 1 escs flit          37.261           0.763
-31 1 flfamily fcfmlrty           0.843           0.051
-31 1 flfamily flconfin           0.182           0.010
-31 1 academic flit          -7.450           1.482
-31 1 safety flit           2.408           1.993
-31 1 academic fcfmlrty           0.487           0.087
-31 1 safety fcfmlrty           0.252           0.136
-31 1 academic flconfin           0.130           0.017
-31 1 safety flconfin           0.031           0.012
-32 1 fcfmlrty flconfin           0.985           0.052
-32 1 academic safety           0.149           0.064
-32 1 academic flfamily           0.223           0.017
-32 1 safety flfamily           0.088           0.031
-34 1 flit        7659.652         128.986
-34 1 perfeed           0.596           0.018
-34 1 teachint           0.552           0.014
-34 1 flschool           1.002           0.017
+31 1 academic perfeed           0.651           0.013
+31 1 academic teachint           0.562           0.012
+31 1 academic flschool           0.315           0.017
+31 1 safety belong           1.062           0.202
+31 1 safety nobully          -0.261           0.051
+31 1 flfamily flit          -3.684           0.819
+31 1 fcfmlrty flit           4.031           0.162
+31 1 flconfin flit           0.413           0.918
+31 1 male flit          -4.526           1.741
+31 1 immi1gen flit           5.808           5.653
+31 1 immi2gen flit          38.397           3.961
+31 1 escs flit          37.843           0.689
+31 1 flfamily fcfmlrty           0.809           0.046
+31 1 flfamily flconfin           0.175           0.009
+31 1 academic flit          -6.856           1.299
+31 1 safety flit           3.996           1.876
+31 1 academic fcfmlrty           0.405           0.080
+31 1 safety fcfmlrty           0.363           0.106
+31 1 academic flconfin           0.112           0.015
+31 1 safety flconfin           0.049           0.010
+32 1 fcfmlrty flconfin           1.118           0.047
+32 1 academic safety           0.197           0.040
+32 1 academic flfamily           0.226           0.014
+32 1 safety flfamily           0.105           0.015
+34 1 flit        7628.648         113.194
+34 1 perfeed           0.586           0.016
+34 1 teachint           0.559           0.013
+34 1 flschool           1.013           0.014
 34 1 belong           0.000         999.000
-34 1 bully           1.151           0.038
-34 1 fcfmlrty          26.160           0.265
-34 1 flconfin           0.946           0.014
-35 1 flfamily           1.134           0.015
+34 1 nobully           1.118           0.031
+34 1 fcfmlrty          27.639           0.239
+34 1 flconfin           0.954           0.012
+35 1 flfamily           1.132           0.013
 35 1 academic           1.000           0.000
 35 1 safety           1.000           0.000
 32 1 male immi1gen         999.000         999.000

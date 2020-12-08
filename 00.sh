@@ -1,11 +1,10 @@
-rm *.idx;
-rm *.ilg;
-rm *.ind;
 rm *.aux;
 rm *.bbl;
 rm *.bcf;
 rm *.blg;
-rm *.fdb_latexmk;
+rm *.idx;
+rm *.ilg;
+rm *.ind;
 rm *.lof;
 rm *.log;
 rm *.lot;

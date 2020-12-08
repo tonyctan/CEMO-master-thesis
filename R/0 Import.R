@@ -1,6 +1,6 @@
 # Housekeeping
 library(Orcs)
-setwdOS(lin = "~/", win = "C:/Users/Tony/")
+setwdOS(lin = "~/", win = Sys.getenv("USERPROFILE"))
 
 # Import SPSS file into R
 library(intsvy)

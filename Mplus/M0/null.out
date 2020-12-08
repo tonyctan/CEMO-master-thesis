@@ -1,6 +1,6 @@
 Mplus VERSION 8.3
 MUTHEN & MUTHEN
-11/25/2020   3:57 AM
+12/06/2020   3:24 PM
 
 INPUT INSTRUCTIONS
 
@@ -9,7 +9,7 @@ INPUT INSTRUCTIONS
 
 
   DATA:
-      file = "C:\Users\Tony\implist.dat";
+      file = "C:\Users\Admin\implist.dat";
 
       type = imputation;
 
@@ -21,16 +21,15 @@ INPUT INSTRUCTIONS
           MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
           FCFMLRTY FLCONFIN           ! Mediators
           PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-          BELONG BULLY                ! Lat var "Safety"
+          BELONG NOBULLY              ! Lat var "Safety"
           FLFAMILY                    ! Lat var "Community"
-          W_SCH PRIVATE STRATIO       ! School character
-          EDUST STAFFST               ! School resource shortage
+          W_SCH STRATIO               ! School character
+          EDUSHT STAFFSHT             ! School resource shortage
           ;
 
-      usev =
-          CNTRYID CNTSCHID FLIT;
+      usev = FLIT;
 
-  !    missing = all (-99);
+      missing = all (-99);
 
       cluster = CNTRYID CNTSCHID;
 
@@ -40,7 +39,7 @@ INPUT INSTRUCTIONS
 
 
   ANALYSIS:
-      process = 8;
+      process = 16;
 
       type = threelevel;
 
@@ -57,7 +56,7 @@ INPUT INSTRUCTIONS
 
 
   OUTPUT:
-      sampstat tech1; !tech8;
+      sampstat stdyx;
 
 
 
@@ -76,7 +75,7 @@ Financial literacy 3-level: null model
 SUMMARY OF ANALYSIS
 
 Number of groups                                                 1
-Average number of observations                               71771
+Average number of observations                               94795
 
 Number of replications
     Requested                                                   10
@@ -116,32 +115,62 @@ Optimization algorithm                                         EMA
 
 Input data file(s)
   Multiple data files from
-    C:\Users\Tony\implist.dat
+    C:\Users\Admin\implist.dat
 Input data format  FREE
 
 
 SUMMARY OF DATA FOR THE FIRST DATA SET
 
-     Number of CNTSCHID clusters              4536
-     Number of CNTRYID clusters                 13
+     Number of missing data patterns             1
+     Number of CNTSCHID clusters              5842
+     Number of CNTRYID clusters                 19
 
-     Average cluster size for CNTSCHID level       15.823
+     Average cluster size for CNTSCHID level       16.226
 
      Estimated Intraclass Correlations for the Y Variables for CNTSCHID level
 
                 Intraclass
      Variable  Correlation
 
-     FLIT         0.234
+     FLIT         0.200
 
-     Average cluster size for CNTRYID level     5520.846
+     Average cluster size for CNTRYID level     4989.211
 
      Estimated Intraclass Correlations for the Y Variables for CNTRYID level
 
                 Intraclass
      Variable  Correlation
 
-     FLIT         0.212
+     FLIT         0.373
+
+
+SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
+
+
+     MISSING DATA PATTERNS (x = not missing)
+
+           1
+ FLIT      x
+
+
+     MISSING DATA PATTERN FREQUENCIES
+
+    Pattern   Frequency
+          1       94795
+
+
+COVARIANCE COVERAGE OF DATA FOR THE FIRST DATA SET
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              FLIT
+              ________
+ FLIT           1.000
 
 
 SAMPLE STATISTICS
@@ -165,7 +194,7 @@ NOTE:  These are average results over 10 data sets.
            Covariances
               FLIT
               ________
- FLIT        5898.720
+ FLIT        5991.801
 
 
            Correlations
@@ -186,7 +215,7 @@ NOTE:  These are average results over 10 data sets.
            Covariances
               FLIT
               ________
- FLIT        2489.355
+ FLIT        2799.364
 
 
            Correlations
@@ -201,13 +230,13 @@ NOTE:  These are average results over 10 data sets.
            Means
               FLIT
               ________
-              470.504
+              477.501
 
 
            Covariances
               FLIT
               ________
- FLIT        2258.305
+ FLIT        5228.058
 
 
            Correlations
@@ -226,139 +255,139 @@ Loglikelihood
 
     H0 Value
 
-        Mean                           -471162.639
-        Std Dev                              0.000
+        Mean                           -616763.303
+        Std Dev                            202.846
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000      -471162.639    -471162.639
-           0.980       1.000      -471162.639    -471162.639
-           0.950       1.000      -471162.639    -471162.639
-           0.900       1.000      -471162.639    -471162.639
-           0.800       0.000      -471162.639    -471162.639
-           0.700       0.000      -471162.639    -471162.639
-           0.500       0.000      -471162.639    -471162.639
-           0.300       0.000      -471162.639    -471162.639
-           0.200       0.000      -471162.639    -471162.639
-           0.100       0.000      -471162.639    -471162.639
-           0.050       0.000      -471162.639    -471162.639
-           0.020       0.000      -471162.639    -471162.639
-           0.010       0.000      -471162.639    -471162.639
+           0.990       1.000      -617235.184    -616994.854
+           0.980       1.000      -617179.888    -616994.854
+           0.950       1.000      -617096.964    -616994.854
+           0.900       1.000      -617023.270    -616994.854
+           0.800       0.800      -616934.018    -616994.854
+           0.700       0.600      -616869.675    -616924.642
+           0.500       0.400      -616763.303    -616856.958
+           0.300       0.300      -616656.931    -616748.558
+           0.200       0.300      -616592.588    -616576.216
+           0.100       0.200      -616503.336    -616485.053
+           0.050       0.100      -616429.642    -616485.053
+           0.020       0.000      -616346.718    -616485.053
+           0.010       0.000      -616291.422    -616485.053
 
     H1 Value
 
-        Mean                           -471149.950
-        Std Dev                              0.000
+        Mean                           -616763.303
+        Std Dev                            202.846
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000      -471149.950    -471149.950
-           0.980       1.000      -471149.950    -471149.950
-           0.950       1.000      -471149.950    -471149.950
-           0.900       1.000      -471149.950    -471149.950
-           0.800       0.000      -471149.950    -471149.950
-           0.700       0.000      -471149.950    -471149.950
-           0.500       0.000      -471149.950    -471149.950
-           0.300       0.000      -471149.950    -471149.950
-           0.200       0.000      -471149.950    -471149.950
-           0.100       0.000      -471149.950    -471149.950
-           0.050       0.000      -471149.950    -471149.950
-           0.020       0.000      -471149.950    -471149.950
-           0.010       0.000      -471149.950    -471149.950
+           0.990       1.000      -617235.184    -616994.854
+           0.980       1.000      -617179.888    -616994.854
+           0.950       1.000      -617096.964    -616994.854
+           0.900       1.000      -617023.270    -616994.854
+           0.800       0.800      -616934.018    -616994.854
+           0.700       0.600      -616869.675    -616924.642
+           0.500       0.400      -616763.303    -616856.958
+           0.300       0.300      -616656.931    -616748.558
+           0.200       0.300      -616592.588    -616576.216
+           0.100       0.200      -616503.336    -616485.053
+           0.050       0.100      -616429.642    -616485.053
+           0.020       0.000      -616346.718    -616485.053
+           0.010       0.000      -616291.422    -616485.053
 
 Information Criteria
 
     Akaike (AIC)
 
-        Mean                            942333.278
-        Std Dev                              0.000
+        Mean                           1233534.606
+        Std Dev                            405.692
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000       942333.278     942333.278
-           0.980       1.000       942333.278     942333.278
-           0.950       1.000       942333.278     942333.278
-           0.900       1.000       942333.278     942333.278
-           0.800       1.000       942333.278     942333.278
-           0.700       1.000       942333.278     942333.278
-           0.500       1.000       942333.278     942333.278
-           0.300       1.000       942333.278     942333.278
-           0.200       0.000       942333.278     942333.278
-           0.100       0.000       942333.278     942333.278
-           0.050       0.000       942333.278     942333.278
-           0.020       0.000       942333.278     942333.278
-           0.010       0.000       942333.278     942333.278
+           0.990       1.000      1232590.845    1232772.577
+           0.980       1.000      1232701.436    1232772.577
+           0.950       0.900      1232867.283    1232772.577
+           0.900       0.800      1233014.671    1232772.577
+           0.800       0.700      1233193.176    1232772.577
+           0.700       0.700      1233321.861    1233160.433
+           0.500       0.600      1233534.606    1233570.799
+           0.300       0.400      1233747.351    1233838.596
+           0.200       0.200      1233876.036    1233857.285
+           0.100       0.000      1234054.541    1233943.524
+           0.050       0.000      1234201.929    1233943.524
+           0.020       0.000      1234367.776    1233943.524
+           0.010       0.000      1234478.367    1233943.524
 
     Bayesian (BIC)
 
-        Mean                            942370.485
-        Std Dev                              0.000
+        Mean                           1233572.886
+        Std Dev                            405.692
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000       942370.485     942370.485
-           0.980       1.000       942370.485     942370.485
-           0.950       1.000       942370.485     942370.485
-           0.900       0.000       942370.485     942370.485
-           0.800       0.000       942370.485     942370.485
-           0.700       0.000       942370.485     942370.485
-           0.500       0.000       942370.485     942370.485
-           0.300       0.000       942370.485     942370.485
-           0.200       0.000       942370.485     942370.485
-           0.100       0.000       942370.485     942370.485
-           0.050       0.000       942370.485     942370.485
-           0.020       0.000       942370.485     942370.485
-           0.010       0.000       942370.485     942370.485
+           0.990       1.000      1232629.125    1232810.857
+           0.980       1.000      1232739.716    1232810.857
+           0.950       0.900      1232905.563    1232810.857
+           0.900       0.800      1233052.951    1232810.857
+           0.800       0.700      1233231.456    1232810.857
+           0.700       0.700      1233360.141    1233198.713
+           0.500       0.600      1233572.886    1233609.079
+           0.300       0.400      1233785.631    1233876.876
+           0.200       0.200      1233914.316    1233895.565
+           0.100       0.000      1234092.821    1233981.804
+           0.050       0.000      1234240.209    1233981.804
+           0.020       0.000      1234406.056    1233981.804
+           0.010       0.000      1234516.647    1233981.804
 
     Sample-Size Adjusted BIC (n* = (n + 2) / 24)
 
-        Mean                            942357.773
-        Std Dev                              0.000
+        Mean                           1233560.174
+        Std Dev                            405.692
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       0.000       942357.773     942357.773
-           0.980       0.000       942357.773     942357.773
-           0.950       0.000       942357.773     942357.773
-           0.900       0.000       942357.773     942357.773
-           0.800       0.000       942357.773     942357.773
-           0.700       0.000       942357.773     942357.773
-           0.500       0.000       942357.773     942357.773
-           0.300       0.000       942357.773     942357.773
-           0.200       0.000       942357.773     942357.773
-           0.100       0.000       942357.773     942357.773
-           0.050       0.000       942357.773     942357.773
-           0.020       0.000       942357.773     942357.773
-           0.010       0.000       942357.773     942357.773
+           0.990       1.000      1232616.412    1232798.145
+           0.980       1.000      1232727.004    1232798.145
+           0.950       0.900      1232892.851    1232798.145
+           0.900       0.800      1233040.239    1232798.145
+           0.800       0.700      1233218.743    1232798.145
+           0.700       0.700      1233347.429    1233186.001
+           0.500       0.600      1233560.174    1233596.367
+           0.300       0.400      1233772.919    1233864.164
+           0.200       0.200      1233901.604    1233882.853
+           0.100       0.000      1234080.109    1233969.092
+           0.050       0.000      1234227.497    1233969.092
+           0.020       0.000      1234393.344    1233969.092
+           0.010       0.000      1234503.935    1233969.092
 
 Chi-Square Test of Model Fit
 
         Degrees of freedom                       0
 
-        Mean                                25.378
+        Mean                                 0.000
         Std Dev                              0.000
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000            0.000         25.378
-           0.980       1.000            0.000         25.378
-           0.950       1.000            0.000         25.378
-           0.900       1.000            0.000         25.378
-           0.800       1.000            0.000         25.378
-           0.700       1.000            0.000         25.378
-           0.500       1.000            0.000         25.378
-           0.300       1.000            0.000         25.378
-           0.200       1.000            0.000         25.378
-           0.100       1.000            0.000         25.378
-           0.050       1.000            0.000         25.378
-           0.020       1.000            0.000         25.378
-           0.010       1.000            0.000         25.378
+           0.990       0.000            0.000          0.000
+           0.980       0.000            0.000          0.000
+           0.950       0.000            0.000          0.000
+           0.900       0.000            0.000          0.000
+           0.800       0.000            0.000          0.000
+           0.700       0.000            0.000          0.000
+           0.500       0.000            0.000          0.000
+           0.300       0.000            0.000          0.000
+           0.200       0.000            0.000          0.000
+           0.100       0.000            0.000          0.000
+           0.050       0.000            0.000          0.000
+           0.020       0.000            0.000          0.000
+           0.010       0.000            0.000          0.000
 
 RMSEA (Root Mean Square Error Of Approximation)
 
@@ -386,25 +415,25 @@ CFI/TLI
 
     CFI
 
-        Mean                                 0.000
+        Mean                                 1.000
         Std Dev                              0.000
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       0.000            0.000          0.000
-           0.980       0.000            0.000          0.000
-           0.950       0.000            0.000          0.000
-           0.900       0.000            0.000          0.000
-           0.800       0.000            0.000          0.000
-           0.700       0.000            0.000          0.000
-           0.500       0.000            0.000          0.000
-           0.300       0.000            0.000          0.000
-           0.200       0.000            0.000          0.000
-           0.100       0.000            0.000          0.000
-           0.050       0.000            0.000          0.000
-           0.020       0.000            0.000          0.000
-           0.010       0.000            0.000          0.000
+           0.990       0.000            1.000          1.000
+           0.980       0.000            1.000          1.000
+           0.950       0.000            1.000          1.000
+           0.900       0.000            1.000          1.000
+           0.800       0.000            1.000          1.000
+           0.700       0.000            1.000          1.000
+           0.500       0.000            1.000          1.000
+           0.300       0.000            1.000          1.000
+           0.200       0.000            1.000          1.000
+           0.100       0.000            1.000          1.000
+           0.050       0.000            1.000          1.000
+           0.020       0.000            1.000          1.000
+           0.010       0.000            1.000          1.000
 
     TLI
 
@@ -430,69 +459,69 @@ CFI/TLI
 
 SRMR (Standardized Root Mean Square Residual) for the WITHIN level
 
-        Mean                                 0.003
+        Mean                                 0.000
         Std Dev                              0.000
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       0.000            0.003          0.003
-           0.980       0.000            0.003          0.003
-           0.950       0.000            0.003          0.003
-           0.900       0.000            0.003          0.003
-           0.800       0.000            0.003          0.003
-           0.700       0.000            0.003          0.003
-           0.500       0.000            0.003          0.003
-           0.300       0.000            0.003          0.003
-           0.200       0.000            0.003          0.003
-           0.100       0.000            0.003          0.003
-           0.050       0.000            0.003          0.003
-           0.020       0.000            0.003          0.003
-           0.010       0.000            0.003          0.003
+           0.990       0.000            0.000          0.000
+           0.980       0.000            0.000          0.000
+           0.950       0.000            0.000          0.000
+           0.900       0.000            0.000          0.000
+           0.800       0.000            0.000          0.000
+           0.700       0.000            0.000          0.000
+           0.500       0.000            0.000          0.000
+           0.300       0.000            0.000          0.000
+           0.200       0.000            0.000          0.000
+           0.100       0.000            0.000          0.000
+           0.050       0.000            0.000          0.000
+           0.020       0.000            0.000          0.000
+           0.010       0.000            0.000          0.000
 
 SRMR (Standardized Root Mean Square Residual) for the BETWEEN level 2
 
-        Mean                                 0.120
+        Mean                                 0.000
         Std Dev                              0.000
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       0.000            0.120          0.120
-           0.980       0.000            0.120          0.120
-           0.950       0.000            0.120          0.120
-           0.900       0.000            0.120          0.120
-           0.800       0.000            0.120          0.120
-           0.700       0.000            0.120          0.120
-           0.500       0.000            0.120          0.120
-           0.300       0.000            0.120          0.120
-           0.200       0.000            0.120          0.120
-           0.100       0.000            0.120          0.120
-           0.050       0.000            0.120          0.120
-           0.020       0.000            0.120          0.120
-           0.010       0.000            0.120          0.120
+           0.990       0.000            0.000          0.000
+           0.980       0.000            0.000          0.000
+           0.950       0.000            0.000          0.000
+           0.900       0.000            0.000          0.000
+           0.800       0.000            0.000          0.000
+           0.700       0.000            0.000          0.000
+           0.500       0.000            0.000          0.000
+           0.300       0.000            0.000          0.000
+           0.200       0.000            0.000          0.000
+           0.100       0.000            0.000          0.000
+           0.050       0.000            0.000          0.000
+           0.020       0.000            0.000          0.000
+           0.010       0.000            0.000          0.000
 
 SRMR (Standardized Root Mean Square Residual) for the BETWEEN level 3
 
-        Mean                                 1.019
+        Mean                                 0.000
         Std Dev                              0.000
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       0.000            1.019          1.019
-           0.980       0.000            1.019          1.019
-           0.950       0.000            1.019          1.019
-           0.900       0.000            1.019          1.019
-           0.800       0.000            1.019          1.019
-           0.700       0.000            1.019          1.019
-           0.500       0.000            1.019          1.019
-           0.300       0.000            1.019          1.019
-           0.200       0.000            1.019          1.019
-           0.100       0.000            1.019          1.019
-           0.050       0.000            1.019          1.019
-           0.020       0.000            1.019          1.019
-           0.010       0.000            1.019          1.019
+           0.990       0.000            0.000          0.000
+           0.980       0.000            0.000          0.000
+           0.950       0.000            0.000          0.000
+           0.900       0.000            0.000          0.000
+           0.800       0.000            0.000          0.000
+           0.700       0.000            0.000          0.000
+           0.500       0.000            0.000          0.000
+           0.300       0.000            0.000          0.000
+           0.200       0.000            0.000          0.000
+           0.100       0.000            0.000          0.000
+           0.050       0.000            0.000          0.000
+           0.020       0.000            0.000          0.000
+           0.010       0.000            0.000          0.000
 
 
 
@@ -504,25 +533,61 @@ MODEL RESULTS
 Within Level
 
  Variances
-    FLIT            5882.593    280.811     20.949      0.000      0.000
+    FLIT            5991.801    283.924     21.104      0.000      0.000
 
 Between CNTSCHID Level
 
  Variances
-    FLIT            2786.834    371.581      7.500      0.000      0.000
+    FLIT            2799.364    333.210      8.401      0.000      0.000
 
 Between CNTRYID Level
 
  Means
-    FLIT             447.777     14.720     30.419      0.000      0.000
+    FLIT             477.501     10.923     43.713      0.000      0.000
 
  Variances
-    FLIT            5055.406      0.069  73524.406      0.000      0.000
+    FLIT            5228.058      0.003  *********      0.000      0.002
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Within Level
+
+ Variances
+    FLIT               1.000      0.000  *********      0.000      0.000
+
+Between CNTSCHID Level
+
+ Variances
+    FLIT               1.000      0.000  *********      0.000      0.000
+
+Between CNTRYID Level
+
+ Means
+    FLIT               6.604      0.151     43.714      0.000      0.000
+
+ Variances
+    FLIT               1.000      0.000  *********      0.000      0.000
+
+
+R-SQUARE
+
+Within Level
+
+Between CNTSCHID Level
+
+Between CNTRYID Level
 
 
 QUALITY OF NUMERICAL RESULTS
 
-     Average Condition Number for the Information Matrix     -0.174E-04
+     Average Condition Number for the Information Matrix     -0.274E-04
        (ratio of smallest to largest eigenvalue)
 
 
@@ -586,7 +651,7 @@ TECHNICAL 1 OUTPUT
            THETA
               FLIT
               ________
- FLIT        5064.850
+ FLIT        5241.030
 
 
      STARTING VALUES FOR BETWEEN CNTSCHID
@@ -601,7 +666,7 @@ TECHNICAL 1 OUTPUT
            THETA
               FLIT
               ________
- FLIT        5064.850
+ FLIT        5241.030
 
 
      STARTING VALUES FOR BETWEEN CNTRYID
@@ -610,13 +675,13 @@ TECHNICAL 1 OUTPUT
            NU
               FLIT
               ________
-              468.784
+              474.570
 
 
            THETA
               FLIT
               ________
- FLIT        5064.850
+ FLIT        5241.030
 
 
 DIAGRAM INFORMATION
@@ -625,9 +690,9 @@ DIAGRAM INFORMATION
   No diagram output was produced.
 
 
-     Beginning Time:  03:57:45
-        Ending Time:  03:59:12
-       Elapsed Time:  00:01:27
+     Beginning Time:  15:24:44
+        Ending Time:  15:26:40
+       Elapsed Time:  00:01:56
 
 
 

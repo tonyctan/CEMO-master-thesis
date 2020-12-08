@@ -1,9 +1,9 @@
 TITLE:
-    Financial literacy 3-level: L3 with FKI
+    M0.5: Financial literacy 3-level L3 with FKI
 
 
 DATA:
-    file = "C:\Users\Tony\implist.dat";
+    file = "C:\Users\Admin\implist.dat";
 
     type = imputation;
 
@@ -16,10 +16,10 @@ VARIABLE:
         MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
         FCFMLRTY FLCONFIN           ! Mediators
         PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        BELONG BULLY                ! Lat var "Safety"
+        BELONG NOBULLY              ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
-        W_SCH PRIVATE STRATIO       ! School character
-        EDUST STAFFST               ! School resource shortage
+        W_SCH STRATIO               ! School character
+        EDUSHT STAFFSHT             ! School resource shortage
         ;
 
     usev =
@@ -29,7 +29,7 @@ VARIABLE:
 
     between = (CNTRYID) FKI;
 
-!    missing = all (-99);
+    missing = all (-99);
 
     weight = W_STU;
 
@@ -37,12 +37,13 @@ VARIABLE:
 
 
 ANALYSIS:
-    process = 8;
+    process = 16;
 
     type = threelevel;
 
 
 MODEL:
+
 %Between CNTRYID%
     FLIT on FKI;
 
@@ -54,4 +55,4 @@ MODEL:
 
 
 OUTPUT:
-    sampstat tech1;
+    sampstat stdyx;

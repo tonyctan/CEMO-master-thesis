@@ -1,5 +1,5 @@
 library(Orcs)
-setwdOS(lin = "~/", win = "C:/Users/Tony/")
+setwdOS(lin = "~/", win = Sys.getenv("USERPROFILE"))
 
 library(data.table); setDTthreads(0)
 finlit <- fread("finlit.csv", nThread = getDTthreads())
