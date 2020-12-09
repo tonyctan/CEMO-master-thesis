@@ -57,10 +57,6 @@ Study hard what interests you the most in the most undisciplined, irreverent and
 %--- Richard P. Feynman
 %\end{flushright}
 
-% Set 1.5-spacing or 2-spacing from here on.
-\onehalfspacing
-%\doublespacing
-
 \setcounter{page}{0}
 % End of acknowledgement page
 
@@ -68,17 +64,10 @@ Study hard what interests you the most in the most undisciplined, irreverent and
 \tableofcontents
 
 % Put a List of Tables here
-\cleardoublepage
 \listoftables
 
 % Put a List of Figures here
-\cleardoublepage
 \listoffigures
-
-% Change page numbering back to arabic
-\cleardoublepage
-\pagenumbering{arabic}
-
 
 <<setup, include=FALSE, cache=FALSE>>=
 library(knitr)
@@ -87,29 +76,41 @@ options(formatR.comment = TRUE, formatR.blank = TRUE, formatR.arrow = FALSE, for
 render_listings()
 @
 
+% APA7 Rule 2.21 Line Spacing
+%\onehalfspacing
+\doublespacing
+
 % Acknowledgement
-%<<child="Chapters/Acknowledgement.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
-%@
+<<child="Chapters/Acknowledgement.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+@
 
 % Popular Abstract
-%<<child="Chapters/Abstract0.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
-%@
+<<child="Chapters/Abstract0.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+@
 
 % Abstract
-%<<child="Chapters/Abstract1.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
-%@
+<<child="Chapters/Abstract1.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+@
+
+% End of front matter. None of the pages so far counts towards the page limit.
+\clearpage
+\thispagestyle{empty}
+
+% Restart page number. Page count starts here.
+\pagenumbering{arabic}
+\setcounter{page}{0} % Do not swap these two command. Need new chapter to be "Open right".
 
 % Chapter 1 Introduction
 <<child="Chapters/Ch1.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
 @
 
 % Chapter 2 Theoretical framework
-<<child="Chapters/Ch2.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
-@
+%<<child="Chapters/Ch2.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
 
 % Chapter 3 Methods
-<<child="Chapters/Ch3.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
-@
+%<<child="Chapters/Ch3.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
+%@
 
 % Chapter 4 Results
 %<<child="Chapters/Ch4.Rnw", tidy=FALSE, message=FALSE, warning=FALSE>>=
@@ -121,9 +122,7 @@ render_listings()
 
 % Put Reference here
 \newpage
-\begin{singlespace}
-    \printbibliography[title=References]
-\end{singlespace}
+\printbibliography[title=References]
 
 % New CEMO policy: leave tables and figures close to the paragraphs that discussed them.
 
@@ -144,7 +143,7 @@ render_listings()
 %    \include{Appendices/A}
 %    \include{Appendices/B}
 %    \include{Appendices/C}
-    \include{Appendices/D}
+%    \include{Appendices/D}
 %    \include{Appendices/E}
 %    \include{Appendices/F}
 \end{appendices}
