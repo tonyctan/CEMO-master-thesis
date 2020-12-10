@@ -31,22 +31,40 @@ names(finlit1_CNT) <- c(
     "W_SCH", "STRATIO", "EDUSHT", "STAFFSHT"
 )
 
-# Combine ACADEMIC lat var
-ACADEMIC <- finlit1_CNT$PERFEED + finlit1_CNT$TEACHINT + finlit1_CNT$FLSCHOOL
-data <- cbind(ACADEMIC, finlit1_CNT$FLIT)
-data <- data.frame(data[complete.cases(data), ])
-names(data) <- c("ACADEMIC", "FLIT")
-# Detect non-linearity
-mod_1 <- lm(FLIT ~ ACADEMIC, data = data); summary(mod_1)
-mod_2 <- lm(FLIT ~ I(ACADEMIC^2) + ACADEMIC, data = data); summary(mod_2)
-# Generate prediction lines
-ACADEMICx <- seq(min(data$ACADEMIC), max(data$ACADEMIC), length.out = dim(data)[1])
-pred_1 <- mod_1$coef[1] + mod_1$coef[2] * ACADEMICx
-pred_2 <- mod_2$coef[1] + mod_2$coef[2] * ACADEMICx + mod_2$coef[3] * ACADEMICx
+# # Combine ACADEMIC lat var
+# ACADEMIC <- finlit1_CNT$PERFEED + finlit1_CNT$TEACHINT + finlit1_CNT$FLSCHOOL
+# data <- cbind(ACADEMIC, finlit1_CNT$FLIT)
+# data <- data.frame(data[complete.cases(data), ])
+# names(data) <- c("ACADEMIC", "FLIT")
+# # Detect non-linearity
+# mod_1 <- lm(FLIT ~ ACADEMIC, data = data); summary(mod_1)
+# mod_2 <- lm(FLIT ~ I(ACADEMIC^2) + ACADEMIC, data = data); summary(mod_2)
+# # Generate prediction lines
+# ACADEMICx <- seq(min(data$ACADEMIC), max(data$ACADEMIC), length.out = dim(data)[1])
+# pred_1 <- mod_1$coef[1] + mod_1$coef[2] * ACADEMICx
+# pred_2 <- mod_2$coef[1] + mod_2$coef[2] * ACADEMICx + mod_2$coef[3] * ACADEMICx
 
-pdf(file = paste0("~/uio/pc/Dokumenter/MSc/Thesis/Model building/Linearity/", CNT, ".pdf"))
-    plot(data$ACADEMIC, data$FLIT, xlim=c(-6,6), ylim=c(100,900), xlab = "ACADEMIC", ylab = "FLIT", main = CNT)
-    lines(ACADEMICx, pred_1, col = "blue")
-    lines(ACADEMICx, pred_2, col = "red")
+# pdf(file = paste0("~/uio/pc/Dokumenter/MSc/Thesis/Model building/Linearity/ACADEMIC/", CNT, ".pdf"))
+#     plot(data$ACADEMIC, data$FLIT, xlim=c(-6,6), ylim=c(100,900), xlab = "ACADEMIC", ylab = "FLIT", main = CNT)
+#     lines(ACADEMICx, pred_1, col = "blue")
+#     lines(ACADEMICx, pred_2, col = "red")
+# dev.off()
+
+# Financial socialisation
+data <- cbind(FLFAMILY, finlit1_CNT$FLIT)
+data <- data.frame(data[complete.cases(data), ])
+names(data) <- c("FLFAMILY", "FLIT")
+# Detect non-linearity
+mod_1 <- lm(FLIT ~ FLFAMILY, data = data); summary(mod_1)
+mod_2 <- lm(FLIT ~ I(FLFAMILY^2) + FLFAMILY, data = data); summary(mod_2)
+# Generate prediction lines
+FLFAMILYx <- seq(min(data$FLFAMILY), max(data$FLFAMILY), length.out = dim(data)[1])
+pred_1 <- mod_1$coef[1] + mod_1$coef[2] * FLFAMILYx
+pred_2 <- mod_2$coef[1] + mod_2$coef[2] * FLFAMILYx + mod_2$coef[3] * FLFAMILYx
+
+pdf(file = paste0("~/uio/pc/Dokumenter/MSc/Thesis/Model building/Linearity/FLFAMILY/", CNT, ".pdf"))
+    plot(data$FLFAMILY, data$FLIT, xlim=c(-6,6), ylim=c(100,900), xlab = "FLFAMILY", ylab = "FLIT", main = CNT)
+    lines(FLFAMILYx, pred_1, col = "blue")
+    lines(FLFAMILYx, pred_2, col = "red")
 dev.off()
 }

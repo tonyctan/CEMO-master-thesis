@@ -396,8 +396,10 @@ l3_ordered <- l3[order(-fki), ]
 l3_ordered
 fwrite(l3_ordered, file = "fki.csv", row.names = T)
 
-barplot(l3_ordered$fki,
-    names.arg = rownames(l3_ordered),
-    xlab = "Country", las = 2, ylab = "Financial Knowledge Index (FKI)",
-    ylim = c(0, 1), main = "FKI of 19 participating countries"
-)
+pdf("./Figures/FKI.pdf")
+    barplot(l3_ordered$fki,
+        names.arg = rownames(l3_ordered),
+        xlab = "Country", las = 2, ylab = "Financial Knowledge Index (FKI)",
+        ylim = c(0, 1), main = "FKI of 19 participating countries"
+    )
+dev.off()
