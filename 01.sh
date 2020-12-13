@@ -6,3 +6,4 @@ lualatex Master.tex;
 lualatex Master.tex;
 #okular Master.pdf;
 
+
