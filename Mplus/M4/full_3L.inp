@@ -1,0 +1,96 @@
+TITLE:
+    M3: Financial literacy 3-level
+
+
+DATA:
+    file = "C:\Users\Admin\implist.dat";
+
+    type = imputation;
+
+
+VARIABLE:
+    names =
+        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT              ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS ! Demographic info
+        FCFMLRTY FLCONFIN           ! Affect
+        PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
+        BELONG NOBULLY              ! Lat var "Safety"
+        FLFAMILY                    ! Lat var "Community"
+        W_SCH STRATIO               ! School character
+        EDUSHT STAFFSHT             ! School resource shortage
+        ;
+    
+    usev =
+        FLIT                        ! Regressant
+        FLSCHOOL                    !   "Academic"
+        NOBULLY                     !   "Safety"
+        FLFAMILY                    !   "Community" (Financial socialisation)
+        EDUSHT STRATIO              !   "Institutional environment"
+        FCFMLRTY FLCONFIN           ! L1 mediators
+        MALE IMMI1GEN IMMI2GEN ESCS ! L1 control vars
+        FKI                         ! L3 predictor
+        ;
+
+    ! L3 label = country; L2 label = school
+    cluster = CNTRYID CNTSCHID;
+
+    ! Vars that ONLY appear in L1
+    within =
+        FCFMLRTY FLCONFIN
+        MALE IMMI1GEN IMMI2GEN ESCS
+        ;
+    ! vars that ONLY appear in L2 and L3
+    between = (CNTSCHID) EDUSHT STRATIO (CNTRYID) FKI;
+
+    missing = all (-99);
+
+    weight = W_STU;
+
+    b2weight = W_SCH;
+
+
+ANALYSIS:
+    process = 16;
+
+    type = threelevel;
+
+
+MODEL:
+
+%Within% ! L1: Student-level
+
+    ! Indirect pathways: school climate vars onto mediators
+        ! Onto mediator FAMILIARITY
+    FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
+        ! Onto mediator CONFIDENCE
+    FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
+
+    ! Covariances between school climate vars
+    FLSCHOOL with NOBULLY;
+    FLSCHOOL with FLFAMILY;
+    NOBULLY with FLFAMILY;
+    ! Covariance between mediators
+    FCFMLRTY with FLCONFIN;
+
+    ! Total effect
+    FLIT on
+        FLSCHOOL NOBULLY FLFAMILY;  ! Input variables
+        FCFMLRTY FLCONFIN               ! Mediators
+        MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
+        ;
+
+%Between CNTSCHID% ! L2: School-level (Structured model)
+
+    FLIT on
+        FLSCHOOL NOBULLY FLFAMILY EDUSHT    ! School climate variables
+        STRATIO                             ! Control: Student-teacher ratio
+        ;
+
+%Between CNTRYID%
+    FLIT on
+        FKI
+        ;
+
+OUTPUT:
+    sampstat tech1;
