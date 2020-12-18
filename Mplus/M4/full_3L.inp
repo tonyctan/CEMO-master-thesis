@@ -1,5 +1,5 @@
 TITLE:
-    M3: Financial literacy 3-level
+    M4: Financial literacy 3-level
 
 
 DATA:
@@ -18,7 +18,7 @@ VARIABLE:
         BELONG NOBULLY              ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
         W_SCH STRATIO               ! School character
-        EDUSHT STAFFSHT             ! School resource shortage
+        EDUSHTG STAFFSHT            ! School resource shortage
         ;
     
     usev =
@@ -26,7 +26,7 @@ VARIABLE:
         FLSCHOOL                    !   "Academic"
         NOBULLY                     !   "Safety"
         FLFAMILY                    !   "Community" (Financial socialisation)
-        EDUSHT STRATIO              !   "Institutional environment"
+        EDUSHTG STRATIO             !   "Institutional environment"
         FCFMLRTY FLCONFIN           ! L1 mediators
         MALE IMMI1GEN IMMI2GEN ESCS ! L1 control vars
         FKI                         ! L3 predictor
@@ -40,13 +40,13 @@ VARIABLE:
         FCFMLRTY FLCONFIN
         MALE IMMI1GEN IMMI2GEN ESCS
         ;
-    ! vars that ONLY appear in L2 and L3
-    between = (CNTSCHID) EDUSHT STRATIO (CNTRYID) FKI;
+    ! Vars that ONLY appear in L2 (label=CNTSCHID) and L3 (label=CNTRYID)
+    between = (CNTSCHID) EDUSHTG STRATIO (CNTRYID) FKI;
 
     missing = all (-99);
 
+    ! Weights (weight=student weight; b2weight=school weight)
     weight = W_STU;
-
     b2weight = W_SCH;
 
 
@@ -75,7 +75,7 @@ MODEL:
 
     ! Total effect
     FLIT on
-        FLSCHOOL NOBULLY FLFAMILY;  ! Input variables
+        FLSCHOOL NOBULLY FLFAMILY  ! Input variables
         FCFMLRTY FLCONFIN               ! Mediators
         MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
         ;
@@ -83,9 +83,18 @@ MODEL:
 %Between CNTSCHID% ! L2: School-level (Structured model)
 
     FLIT on
-        FLSCHOOL NOBULLY FLFAMILY EDUSHT    ! School climate variables
+        FLSCHOOL NOBULLY FLFAMILY EDUSHTG    ! School climate variables
         STRATIO                             ! Control: Student-teacher ratio
         ;
+
+    FLSCHOOL with NOBULLY;
+    NOBULLY with FLFAMILY;
+    FLFAMILY with EDUSHTG;
+
+    FLSCHOOL with FLFAMILY;
+    NOBULLY with EDUSHTG;
+
+    FLSCHOOL with EDUSHTG;
 
 %Between CNTRYID%
     FLIT on
@@ -93,4 +102,4 @@ MODEL:
         ;
 
 OUTPUT:
-    sampstat tech1;
+    sampstat stdyx;

@@ -1,9 +1,9 @@
 TITLE:
-    M2: Financial literacy 2-level
+    M2: Financial literacy 2-level saturated model
 
 
 DATA:
-    file = "C:\Users\Admin\implist.dat";
+    file = "C:\Users\tctan\implist.dat";
 
     type = imputation;
 
@@ -18,7 +18,7 @@ VARIABLE:
         BELONG NOBULLY              ! Lat var "Safety"
         FLFAMILY                    ! Lat var "Community"
         W_SCH STRATIO               ! School character
-        EDUSHT STAFFSHT             ! School resource shortage
+        EDUSHTG STAFFSHT             ! School resource shortage
         ;
 
     usev =
@@ -26,7 +26,7 @@ VARIABLE:
         FLSCHOOL                    !   "Academic"
         NOBULLY                     !   "Safety"
         FLFAMILY                    !   "Community" (Financial socialisation)
-        EDUSHT STRATIO               !   "Institutional environment"
+        EDUSHTG STRATIO               !   "Institutional environment"
         FCFMLRTY FLCONFIN           !   Mediators
         MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
                
@@ -42,7 +42,7 @@ VARIABLE:
         ;
         
     between = 
-        EDUSHT STRATIO
+        EDUSHTG STRATIO
         ;
 
     missing = all (-99);
@@ -58,9 +58,8 @@ ANALYSIS:
 
     estimator = MLR;
 
-    processors = 16;
+    processors = 8;
 
-!    starts = 16;
 
 
 MODEL:
@@ -75,14 +74,14 @@ MODEL:
 
     ! Covariances between school climate vars
     FLSCHOOL with NOBULLY;
-    FLSCHOOL with FLFAMILY;   ! Turn off cov between ACADEMIC and FLFAMILY
-    NOBULLY with FLFAMILY;     ! Turn off cov between SAFETY and FLFAMILY
+    FLSCHOOL with FLFAMILY;
+    NOBULLY with FLFAMILY;
     ! Covariance between mediators
     FCFMLRTY with FLCONFIN;
 
     ! Total effect
     FLIT on
-        FLSCHOOL NOBULLY FLFAMILY;  ! Input variables
+        FLSCHOOL NOBULLY FLFAMILY  ! Input variables
         FCFMLRTY FLCONFIN               ! Mediators
         MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
         ;
