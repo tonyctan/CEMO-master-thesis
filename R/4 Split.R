@@ -9,16 +9,16 @@ finlit <- fread("finlit.csv", header = T)
 names(finlit)
 
 # Split dataset into 10. One PV each.
-finlit1 <- finlit[, c(c(1:5), 6, 16, 26, c(36:51))]
-finlit2 <- finlit[, c(c(1:5), 7, 17, 27, c(36:51))]
-finlit3 <- finlit[, c(c(1:5), 8, 18, 28, c(36:51))]
-finlit4 <- finlit[, c(c(1:5), 9, 19, 29, c(36:51))]
-finlit5 <- finlit[, c(c(1:5), 10, 20, 30, c(36:51))]
-finlit6 <- finlit[, c(c(1:5), 11, 21, 31, c(36:51))]
-finlit7 <- finlit[, c(c(1:5), 12, 22, 32, c(36:51))]
-finlit8 <- finlit[, c(c(1:5), 13, 23, 33, c(36:51))]
-finlit9 <- finlit[, c(c(1:5), 14, 24, 34, c(36:51))]
-finlit10 <- finlit[, c(c(1:5), 15, 25, 35, c(36:51))]
+finlit1 <- finlit[, c(c(1:5), 6, 16, 26, c(36:47))]
+finlit2 <- finlit[, c(c(1:5), 7, 17, 27, c(36:47))]
+finlit3 <- finlit[, c(c(1:5), 8, 18, 28, c(36:47))]
+finlit4 <- finlit[, c(c(1:5), 9, 19, 29, c(36:47))]
+finlit5 <- finlit[, c(c(1:5), 10, 20, 30, c(36:47))]
+finlit6 <- finlit[, c(c(1:5), 11, 21, 31, c(36:47))]
+finlit7 <- finlit[, c(c(1:5), 12, 22, 32, c(36:47))]
+finlit8 <- finlit[, c(c(1:5), 13, 23, 33, c(36:47))]
+finlit9 <- finlit[, c(c(1:5), 14, 24, 34, c(36:47))]
+finlit10 <- finlit[, c(c(1:5), 15, 25, 35, c(36:47))]
 
 # Use the correct end-of-line marker depending on the operating system
 switch(Sys.info()[["sysname"]],
@@ -76,6 +76,7 @@ finlit1_CNT <- split(finlit1, finlit[, 2])
 
 finlit_BRA <- finlit1_CNT$"76"
 finlit_BGR <- finlit1_CNT$"100"
+finlit_CAN <- finlit1_CNT$"124"
 finlit_CHL <- finlit1_CNT$"152"
 finlit_EST <- finlit1_CNT$"233"
 finlit_FIN <- finlit1_CNT$"246"
@@ -100,6 +101,10 @@ write.table(finlit_BRA, "finlit1_BRA.dat",
 )
 
 write.table(finlit_BGR, "finlit1_BGR.dat",
+    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+)
+
+write.table(finlit_CAN, "finlit1_CAN.dat",
     row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
 )
 
@@ -170,4 +175,3 @@ write.table(finlit_ESP, "finlit1_ESP.dat",
 write.table(finlit_USA, "finlit1_USA.dat",
     row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
-

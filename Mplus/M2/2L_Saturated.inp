@@ -11,82 +11,81 @@ DATA:
 VARIABLE:
     names =
         FKI CNTRYID CNTSCHID CNTSTUID W_STU
-        MATH READ FLIT              ! Financial literacy
-        MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
-        FCFMLRTY FLCONFIN           ! Mediators
-        PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        BELONG NOBULLY              ! Lat var "Safety"
-        FLFAMILY                    ! Lat var "Community"
-        W_SCH STRATIO               ! School character
-        EDUSHTG STAFFSHT             ! School resource shortage
-        ;
-
-    usev =
-        FLIT                        ! Regressant
-        FLSCHOOL                    !   "Academic"
-        NOBULLY                     !   "Safety"
-        FLFAMILY                    !   "Community" (Financial socialisation)
-        EDUSHTG STRATIO               !   "Institutional environment"
-        FCFMLRTY FLCONFIN           !   Mediators
-        MALE IMMI1GEN IMMI2GEN ESCS !   Control: demographic
-               
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
         ;
     
-    ! Nested by schools
+    usev =
+        FLIT                                ! Financial literacy outcome
+        FLSCHOOL                            !   "Academic"
+        NOBULLY                             !   "Safety"
+        FLFAMILY                            !   "Community" (Financial socialisation)
+        EDUSHORT STRATIO                    !   "Institutional environment"
+        FCFMLRTY FLCONFIN                   ! L1 mediators
+        MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
+        ;
+
     cluster = CNTSCHID;
 
-    ! Only list vars that are used EXCLUSIVELY on L1
+    ! Vars that ONLY appear in L1
     within =
         FCFMLRTY FLCONFIN
         MALE IMMI1GEN IMMI2GEN ESCS
         ;
-        
+
+    ! Vars that ONLY appear in L2
     between = 
-        EDUSHTG STRATIO
+        EDUSHORT STRATIO
         ;
 
     missing = all (-99);
 
-    ! Student weights
-    weight = W_STU;
-    ! Schoo weights
-    bweight = W_SCH;
+    weight = W_STU;                         ! Student weight
+    bweight = W_SCH;                        ! School weight
 
 
 ANALYSIS:
-    type = twolevel;
-
-    estimator = MLR;
-
     processors = 8;
 
+    type = twolevel;
 
 
 MODEL:
 
-%Within% ! L1: Student-level
 
-    ! Indirect pathways: school climate vars onto mediators
+%Within%                                    ! === L1: Student-level ===
+
+    ! Indirect pathways (1st half): school climate vars onto mediators
         ! Onto mediator FAMILIARITY
     FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
         ! Onto mediator CONFIDENCE
     FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
 
-    ! Covariances between school climate vars
+    ! Total effect
+    FLIT on
+        ! Direct pathways: school climate vars onto financial literacy
+        FLSCHOOL NOBULLY FLFAMILY
+        ! Indirect pathways (2nd half): affective vars onto financial literacy
+        FCFMLRTY FLCONFIN
+        ! Control vars (demographic info)
+        MALE IMMI1GEN IMMI2GEN ESCS
+        ;
+
+    ! Covariances
+        ! Between school climate vars
     FLSCHOOL with NOBULLY;
     FLSCHOOL with FLFAMILY;
     NOBULLY with FLFAMILY;
-    ! Covariance between mediators
+        ! Between mediators
     FCFMLRTY with FLCONFIN;
 
-    ! Total effect
-    FLIT on
-        FLSCHOOL NOBULLY FLFAMILY  ! Input variables
-        FCFMLRTY FLCONFIN               ! Mediators
-        MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
-        ;
-
-%Between% ! L2: School-level (Saturated model)
+%Between%                                   ! === L2: School-level ===
 
     FLIT-STRATIO WITH FLIT-STRATIO;
 

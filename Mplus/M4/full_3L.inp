@@ -11,94 +11,104 @@ DATA:
 VARIABLE:
     names =
         FKI CNTRYID CNTSCHID CNTSTUID W_STU
-        MATH READ FLIT              ! PISA achievement variables
-        MALE IMMI1GEN IMMI2GEN ESCS ! Demographic info
-        FCFMLRTY FLCONFIN           ! Affect
-        PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        BELONG NOBULLY              ! Lat var "Safety"
-        FLFAMILY                    ! Lat var "Community"
-        W_SCH STRATIO               ! School character
-        EDUSHTG STAFFSHT            ! School resource shortage
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
         ;
     
     usev =
-        FLIT                        ! Regressant
-        FLSCHOOL                    !   "Academic"
-        NOBULLY                     !   "Safety"
-        FLFAMILY                    !   "Community" (Financial socialisation)
-        EDUSHTG STRATIO             !   "Institutional environment"
-        FCFMLRTY FLCONFIN           ! L1 mediators
-        MALE IMMI1GEN IMMI2GEN ESCS ! L1 control vars
-        FKI                         ! L3 predictor
+        FLIT                                ! Financial literacy outcome
+        FLSCHOOL                            !   "Academic"
+        NOBULLY                             !   "Safety"
+        FLFAMILY                            !   "Community" (Financial socialisation)
+        EDUSHORT STRATIO                    !   "Institutional environment"
+        FCFMLRTY FLCONFIN                   ! L1 mediators
+        MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
+        FKI                                 ! L3 predictor
         ;
 
-    ! L3 label = country; L2 label = school
-    cluster = CNTRYID CNTSCHID;
+    cluster =
+        CNTRYID                             ! L3: country
+        CNTSCHID                            ! L2: school
+        ;
 
     ! Vars that ONLY appear in L1
     within =
         FCFMLRTY FLCONFIN
         MALE IMMI1GEN IMMI2GEN ESCS
         ;
-    ! Vars that ONLY appear in L2 (label=CNTSCHID) and L3 (label=CNTRYID)
-    between = (CNTSCHID) EDUSHTG STRATIO (CNTRYID) FKI;
+
+    ! Vars that ONLY appear in L2 and L3
+    between =
+        (CNTRYID) FKI                       ! L3: country
+        (CNTSCHID) EDUSHORT STRATIO         ! L2: school
+        ;
 
     missing = all (-99);
 
-    ! Weights (weight=student weight; b2weight=school weight)
-    weight = W_STU;
-    b2weight = W_SCH;
+    weight = W_STU;                         ! Student weight
+    b2weight = W_SCH;                       ! School weight
 
 
 ANALYSIS:
-    process = 16;
+    processors = 16;
 
     type = threelevel;
 
 
 MODEL:
 
-%Within% ! L1: Student-level
+%Within%                                    ! === L1: Student-level ===
 
-    ! Indirect pathways: school climate vars onto mediators
+    ! Indirect pathways (1st half): school climate vars onto mediators
         ! Onto mediator FAMILIARITY
     FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
         ! Onto mediator CONFIDENCE
     FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
 
-    ! Covariances between school climate vars
-    FLSCHOOL with NOBULLY;
-    FLSCHOOL with FLFAMILY;
-    NOBULLY with FLFAMILY;
-    ! Covariance between mediators
-    FCFMLRTY with FLCONFIN;
-
     ! Total effect
     FLIT on
-        FLSCHOOL NOBULLY FLFAMILY  ! Input variables
-        FCFMLRTY FLCONFIN               ! Mediators
-        MALE IMMI1GEN IMMI2GEN ESCS     ! Control: demographic
+        ! Direct pathways: school climate vars onto financial literacy
+        FLSCHOOL NOBULLY FLFAMILY
+        ! Indirect pathways (2nd half): affective vars onto financial literacy
+        FCFMLRTY FLCONFIN
+        ! Control vars (demographic info)
+        MALE IMMI1GEN IMMI2GEN ESCS
         ;
 
-%Between CNTSCHID% ! L2: School-level (Structured model)
+    ! Covariances
+        ! Between school climate vars
+    FLSCHOOL with NOBULLY;
+    FLSCHOOL with FLFAMILY;
+    NOBULLY with FLFAMILY;
+        ! Between mediators
+    FCFMLRTY with FLCONFIN;
+
+%Between CNTSCHID%                          ! === L2: School-level ===
 
     FLIT on
-        FLSCHOOL NOBULLY FLFAMILY EDUSHTG    ! School climate variables
-        STRATIO                             ! Control: Student-teacher ratio
+        FLSCHOOL NOBULLY FLFAMILY EDUSHORT  ! Input vars (school climate vars)
+        STRATIO                             ! Control var (student-teacher ratio)
         ;
 
+    ! Covariances
     FLSCHOOL with NOBULLY;
     NOBULLY with FLFAMILY;
-    FLFAMILY with EDUSHTG;
+    FLFAMILY with EDUSHORT;
 
     FLSCHOOL with FLFAMILY;
-    NOBULLY with EDUSHTG;
+    NOBULLY with EDUSHORT;
 
-    FLSCHOOL with EDUSHTG;
+    FLSCHOOL with EDUSHORT;
 
-%Between CNTRYID%
+%Between CNTRYID%                           ! === L3: Country-level ===
     FLIT on
-        FKI
+        FKI                                 ! Financial knowledge indices
         ;
 
 OUTPUT:

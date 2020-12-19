@@ -16,25 +16,21 @@ finlit <- pisa.select.merge(
         "FCFMLRTY", # Familiarity with concepts of finance (Sum)
         "FLCONFIN", # Confidence about financial matters (WLE)
     # Academic
-        "PERFEED", # Perceived feedback (WLE)
-        "TEACHINT", # Perceived teacher's interest (WLE)
         "FLSCHOOL", # Financial education in school lessons (WLE)
     # Safety
-        "BELONG", # Sense of belonging to school (WLE)
         "BEINGBULLIED", # Student's experience of being bullied (WLE)
     # Community
         "FLFAMILY" # Parental involvement in matters of Financial Literacy (WLE)
     ),
     school = c(
         "STRATIO", # Student-teacher ratio
-        "EDUSHORT", # Shortage of educational material (WLE)
-        "STAFFSHORT" # Shortage of educational staff (WLE)
+        "EDUSHORT" # Shortage of educational material (WLE)
     ),
     countries = c(
-        "BRA", "BGR", "CHL", "EST", "FIN",
-        "GEO", "IDN", "ITA", "LVA", "LTU",
-        "NLD", "PER", "POL", "PRT", "RUS",
-        "SRB", "SVK", "ESP", "USA"
+        "BRA", "BGR", "CAN", "CHL", "EST",
+        "FIN", "GEO", "IDN", "ITA", "LVA",
+        "LTU", "NLD", "PER", "POL", "PRT",
+        "RUS", "SRB", "SVK", "ESP", "USA"
     )
 )
 
@@ -53,24 +49,25 @@ finlit$CNT <- recode(finlit$CNT, "
 
 # Input country-level FKI
 FKI <- recode(finlit$CNT, "
-    'NLD' = 0.957;
-    'USA' = 0.947;
-    'ITA' = 0.771;
-    'FIN' = 0.733;
-    'ESP' = 0.637;
-    'LTU' = 0.614;
-    'PRT' = 0.598;
-    'BGR' = 0.585;
-    'EST' = 0.579;
-    'SVK' = 0.562;
-    'POL' = 0.559;
-    'CHL' = 0.552;
-    'LVA' = 0.547;
-    'RUS' = 0.449;
-    'SRB' = 0.424;
-    'GEO' = 0.419;
+    'NLD' = 0.940;
+    'USA' = 0.937;
+    'CAN' = 0.784;
+    'ITA' = 0.762;
+    'FIN' = 0.724;
+    'ESP' = 0.627;
+    'LTU' = 0.613;
+    'PRT' = 0.591;
+    'BGR' = 0.583;
+    'EST' = 0.577;
+    'SVK' = 0.559;
+    'POL' = 0.555;
+    'LVA' = 0.550;
+    'CHL' = 0.544;
+    'RUS' = 0.450;
+    'GEO' = 0.424;
+    'SRB' = 0.423;
     'PER' = 0.309;
-    'BRA' = 0.145;
+    'BRA' = 0.141;
     'IDN' = 0.122
 ")
 
@@ -95,11 +92,13 @@ NOBULLY <- finlit$BEINGBULLIED * (-1)
 
 # Stitch spreadsheet together
 names(finlit)
-finlit <- cbind(FKI, finlit[, c(2:35)], MALE, IMMI1GEN, IMMI2GEN, finlit[, c(38:50)])
+finlit <- cbind(FKI, finlit[, c(2:35)], MALE, IMMI1GEN, IMMI2GEN, finlit[, c(38:41)], NOBULLY, finlit[, c(43:46)])
+head(finlit)
+names(finlit)
 
-# Remove cases whose school weights (col #48) are NA
+# Remove cases whose school weights (col #45) are NA
 obs0 <- dim(finlit)[1]
-finlit <- finlit[complete.cases(finlit[, 48]), ]
+finlit <- finlit[complete.cases(finlit[, 45]), ]
 obs1 <- dim(finlit)[1]
 obs0 - obs1 # 12 cases contained missing school weights and have been dropped
 rm(obs0, obs1)
