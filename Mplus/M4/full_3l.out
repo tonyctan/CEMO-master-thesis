@@ -1,6 +1,6 @@
 Mplus VERSION 8.3
 MUTHEN & MUTHEN
-12/19/2020   2:49 PM
+12/20/2020   5:02 PM
 
 INPUT INSTRUCTIONS
 
@@ -32,7 +32,7 @@ INPUT INSTRUCTIONS
           FLSCHOOL                            !   "Academic"
           NOBULLY                             !   "Safety"
           FLFAMILY                            !   "Community" (Financial socialisation)
-          EDUSHORT STRATIO                     !   "Institutional environment"
+          EDUSHORT STRATIO                    !   "Institutional environment"
           FCFMLRTY FLCONFIN                   ! L1 mediators
           MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
           FKI                                 ! L3 predictor
@@ -45,14 +45,14 @@ INPUT INSTRUCTIONS
 
       ! Vars that ONLY appear in L1
       within =
-          FCFMLRTY FLCONFIN
-          MALE IMMI1GEN IMMI2GEN ESCS
+          FCFMLRTY FLCONFIN                   ! Affective vars
+          MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
           ;
 
       ! Vars that ONLY appear in L2 and L3
       between =
           (CNTRYID) FKI                       ! L3: country
-          (CNTSCHID) EDUSHORT STRATIO          ! L2: school
+          (CNTSCHID) EDUSHORT STRATIO         ! L2: school
           ;
 
       missing = all (-99);
@@ -62,7 +62,7 @@ INPUT INSTRUCTIONS
 
 
   ANALYSIS:
-      process = 16;
+      processors = 16;
 
       type = threelevel;
 
@@ -71,21 +71,33 @@ INPUT INSTRUCTIONS
 
   %Within%                                    ! === L1: Student-level ===
 
+      ! First of all, save the variances of X and Y vars
+      ! These parameters are necessary for the MODEL CONSTRAINT section
+      FLSCHOOL (var_A);
+      NOBULLY (var_S);
+      FLFAMILY (var_C);
+      FLIT (var_Y);
+
       ! Indirect pathways (1st half): school climate vars onto mediators
           ! Onto mediator FAMILIARITY
-      FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
+      FCFMLRTY on FLSCHOOL (a11);
+      FCFMLRTY on NOBULLY (a21);
+      FCFMLRTY on FLFAMILY (a31);
           ! Onto mediator CONFIDENCE
-      FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
+      FLCONFIN on FLSCHOOL (a12);
+      FLCONFIN on NOBULLY (a22);
+      FLCONFIN on FLFAMILY (a32);
 
       ! Total effect
-      FLIT on
-          ! Direct pathways: school climate vars onto financial literacy
-          FLSCHOOL NOBULLY FLFAMILY
           ! Indirect pathways (2nd half): affective vars onto financial literacy
-          FCFMLRTY FLCONFIN
+      FLIT on FCFMLRTY (b1);
+      FLIT on FLCONFIN (b2);
+          ! Direct pathways: school climate vars onto financial literacy
+      FLIT on FLSCHOOL (c1);
+      FLIT on NOBULLY (c2);
+      FLIT on FLFAMILY (c3);
           ! Control vars (demographic info)
-          MALE IMMI1GEN IMMI2GEN ESCS
-          ;
+      FLIT on MALE IMMI1GEN IMMI2GEN ESCS;
 
       ! Covariances
           ! Between school climate vars
@@ -113,9 +125,57 @@ INPUT INSTRUCTIONS
       FLSCHOOL with EDUSHORT;
 
   %Between CNTRYID%                           ! === L3: Country-level ===
+
       FLIT on
           FKI                                 ! Financial knowledge indices
           ;
+
+
+  ! Since MODEL INDIRECT is not available for 3-level models,
+  ! I have to calculate indirect effects manually.
+  ! But I don't know how to standardise these output.
+
+  MODEL CONSTRAINT:
+
+      ! Effect from ACADEMIC to FLIT
+      new(total_A
+              direct_A
+              indire_A
+                  ind_A_FM
+                  ind_A_CF
+      );
+          total_A = (c1 + a11*b1 + a12*b2)*sqrt(var_A)/sqrt(var_Y);
+          direct_A = c1*sqrt(var_A)/sqrt(var_Y);
+          indire_A = (a11*b1 + a12*b2)*sqrt(var_A)/sqrt(var_Y);
+          ind_A_FM = (a11*b1)*sqrt(var_A)/sqrt(var_Y);
+          ind_A_CF = (a12*b2)*sqrt(var_A)/sqrt(var_Y);
+
+      ! Effect from SAFETY to FLIT
+      new(total_S
+              direct_S
+              indire_S
+                  ind_S_FM
+                  ind_S_CF
+      );
+          total_S = (c2 + a21*b1 + a22*b2)*sqrt(var_S)/sqrt(var_Y);
+          direct_S = c2*sqrt(var_S)/sqrt(var_Y);
+          indire_S = (a21*b1 + a22*b2)*sqrt(var_S)/sqrt(var_Y);
+          ind_S_FM = (a21*b1)*sqrt(var_S)/sqrt(var_Y);
+          ind_S_CF = (a22*b2)*sqrt(var_S)/sqrt(var_Y);
+
+      ! Effect from COMMUNITY to FLIT
+      new(total_C
+              direct_C
+              indire_C
+                  ind_C_FM
+                  ind_C_CF
+      );
+          total_C = (c3 + a31*b1 + a32*b2)*sqrt(var_C)/sqrt(var_Y);
+          direct_C = c3*sqrt(var_C)/sqrt(var_Y);
+          indire_C = (a31*b1 + a32*b2)*sqrt(var_C)/sqrt(var_Y);
+          ind_C_FM = (a31*b1)*sqrt(var_C)/sqrt(var_Y);
+          ind_C_CF = (a32*b2)*sqrt(var_C)/sqrt(var_Y);
+
 
   OUTPUT:
       sampstat stdyx;
@@ -655,23 +715,23 @@ Loglikelihood
     H0 Value
 
         Mean                          -1270961.826
-        Std Dev                            204.449
+        Std Dev                            204.448
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000     -1271437.435   -1271263.522
-           0.980       1.000     -1271381.702   -1271263.522
-           0.950       1.000     -1271298.124   -1271263.522
-           0.900       0.900     -1271223.847   -1271263.522
-           0.800       0.700     -1271133.890   -1271263.522
-           0.700       0.600     -1271069.039   -1271149.844
-           0.500       0.500     -1270961.826   -1270986.960
-           0.300       0.200     -1270854.613   -1270857.061
-           0.200       0.200     -1270789.762   -1270856.875
-           0.100       0.200     -1270699.804   -1270651.676
+           0.990       1.000     -1271437.434   -1271263.520
+           0.980       1.000     -1271381.701   -1271263.520
+           0.950       1.000     -1271298.123   -1271263.520
+           0.900       0.900     -1271223.847   -1271263.520
+           0.800       0.700     -1271133.889   -1271263.520
+           0.700       0.600     -1271069.038   -1271149.843
+           0.500       0.500     -1270961.826   -1270986.959
+           0.300       0.200     -1270854.613   -1270857.060
+           0.200       0.200     -1270789.762   -1270856.878
+           0.100       0.200     -1270699.805   -1270651.676
            0.050       0.000     -1270625.528   -1270651.676
-           0.020       0.000     -1270541.949   -1270651.676
+           0.020       0.000     -1270541.950   -1270651.676
            0.010       0.000     -1270486.217   -1270651.676
 
     H1 Value
@@ -700,93 +760,93 @@ Information Criteria
 
     Akaike (AIC)
 
-        Mean                           2542029.652
-        Std Dev                            408.898
+        Mean                           2542029.651
+        Std Dev                            408.897
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000      2541078.433    2541395.859
-           0.980       1.000      2541189.899    2541395.859
-           0.950       1.000      2541357.056    2541395.859
+           0.990       1.000      2541078.435    2541395.859
+           0.980       1.000      2541189.900    2541395.859
+           0.950       1.000      2541357.057    2541395.859
            0.900       0.800      2541505.609    2541395.859
            0.800       0.800      2541685.524    2541395.859
-           0.700       0.800      2541815.226    2541819.750
-           0.500       0.500      2542029.652    2541932.718
-           0.300       0.400      2542244.078    2542346.294
-           0.200       0.300      2542373.780    2542405.688
-           0.100       0.100      2542553.695    2542453.771
-           0.050       0.000      2542702.247    2542453.771
-           0.020       0.000      2542869.405    2542453.771
-           0.010       0.000      2542980.870    2542453.771
+           0.700       0.800      2541815.226    2541819.755
+           0.500       0.500      2542029.651    2541932.716
+           0.300       0.400      2542244.077    2542346.295
+           0.200       0.300      2542373.779    2542405.687
+           0.100       0.100      2542553.694    2542453.769
+           0.050       0.000      2542702.246    2542453.769
+           0.020       0.000      2542869.403    2542453.769
+           0.010       0.000      2542980.868    2542453.769
 
     Bayesian (BIC)
 
         Mean                           2542529.976
-        Std Dev                            408.898
+        Std Dev                            408.897
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000      2541578.758    2541896.184
-           0.980       1.000      2541690.223    2541896.184
-           0.950       1.000      2541857.380    2541896.184
+           0.990       1.000      2541578.759    2541896.184
+           0.980       1.000      2541690.224    2541896.184
+           0.950       1.000      2541857.381    2541896.184
            0.900       0.800      2542005.933    2541896.184
            0.800       0.800      2542185.848    2541896.184
-           0.700       0.800      2542315.550    2542320.075
-           0.500       0.500      2542529.976    2542433.043
-           0.300       0.400      2542744.402    2542846.619
-           0.200       0.300      2542874.104    2542906.012
-           0.100       0.100      2543054.019    2542954.095
-           0.050       0.000      2543202.572    2542954.095
-           0.020       0.000      2543369.729    2542954.095
-           0.010       0.000      2543481.194    2542954.095
+           0.700       0.800      2542315.550    2542320.080
+           0.500       0.500      2542529.976    2542433.040
+           0.300       0.400      2542744.401    2542846.619
+           0.200       0.300      2542874.103    2542906.011
+           0.100       0.100      2543054.018    2542954.093
+           0.050       0.000      2543202.570    2542954.093
+           0.020       0.000      2543369.727    2542954.093
+           0.010       0.000      2543481.192    2542954.093
 
     Sample-Size Adjusted BIC (n* = (n + 2) / 24)
 
         Mean                           2542361.540
-        Std Dev                            408.898
+        Std Dev                            408.897
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000      2541410.322    2541727.748
-           0.980       1.000      2541521.787    2541727.748
+           0.990       1.000      2541410.323    2541727.748
+           0.980       1.000      2541521.788    2541727.748
            0.950       1.000      2541688.945    2541727.748
-           0.900       0.800      2541837.497    2541727.748
+           0.900       0.800      2541837.498    2541727.748
            0.800       0.800      2542017.412    2541727.748
-           0.700       0.800      2542147.114    2542151.639
-           0.500       0.500      2542361.540    2542264.607
-           0.300       0.400      2542575.966    2542678.183
-           0.200       0.300      2542705.668    2542737.576
-           0.100       0.100      2542885.583    2542785.659
-           0.050       0.000      2543034.136    2542785.659
-           0.020       0.000      2543201.293    2542785.659
-           0.010       0.000      2543312.759    2542785.659
+           0.700       0.800      2542147.114    2542151.644
+           0.500       0.500      2542361.540    2542264.605
+           0.300       0.400      2542575.965    2542678.183
+           0.200       0.300      2542705.668    2542737.575
+           0.100       0.100      2542885.582    2542785.658
+           0.050       0.000      2543034.134    2542785.658
+           0.020       0.000      2543201.291    2542785.658
+           0.010       0.000      2543312.757    2542785.658
 
 Chi-Square Test of Model Fit
 
         Degrees of freedom                      33
 
-        Mean                              1467.740
-        Std Dev                              1.756
+        Mean                              1467.739
+        Std Dev                              1.760
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000           17.074       1464.707
-           0.980       1.000           18.527       1464.707
-           0.950       1.000           20.867       1464.707
-           0.900       1.000           23.110       1464.707
-           0.800       1.000           26.042       1464.707
-           0.700       1.000           28.307       1467.010
-           0.500       1.000           32.336       1467.396
-           0.300       1.000           36.731       1468.400
-           0.200       1.000           39.572       1469.249
-           0.100       1.000           43.745       1470.027
-           0.050       1.000           47.400       1470.027
-           0.020       1.000           51.743       1470.027
-           0.010       1.000           54.776       1470.027
+           0.990       1.000           17.074       1464.708
+           0.980       1.000           18.527       1464.708
+           0.950       1.000           20.867       1464.708
+           0.900       1.000           23.110       1464.708
+           0.800       1.000           26.042       1464.708
+           0.700       1.000           28.307       1467.020
+           0.500       1.000           32.336       1467.392
+           0.300       1.000           36.731       1468.401
+           0.200       1.000           39.572       1469.250
+           0.100       1.000           43.745       1470.039
+           0.050       1.000           47.400       1470.039
+           0.020       1.000           51.743       1470.039
+           0.010       1.000           54.776       1470.039
 
 RMSEA (Root Mean Square Error Of Approximation)
 
@@ -893,8 +953,8 @@ SRMR (Standardized Root Mean Square Residual) for the BETWEEN level 2
            0.800       0.800            0.065          0.065
            0.700       0.700            0.065          0.065
            0.500       0.600            0.065          0.065
-           0.300       0.300            0.065          0.065
-           0.200       0.200            0.066          0.066
+           0.300       0.200            0.066          0.065
+           0.200       0.200            0.066          0.065
            0.100       0.100            0.066          0.066
            0.050       0.100            0.066          0.066
            0.020       0.000            0.066          0.066
@@ -942,11 +1002,11 @@ Within Level
     FLFAMILY           0.151      0.008     19.217      0.000      0.000
 
  FLIT       ON
+    FCFMLRTY           2.842      0.226     12.558      0.000      0.032
+    FLCONFIN           6.208      0.785      7.911      0.000      0.127
     FLSCHOOL          -6.466      1.093     -5.913      0.000      0.035
     NOBULLY            5.567      0.664      8.389      0.000      0.211
     FLFAMILY          -0.297      1.019     -0.291      0.771      0.049
-    FCFMLRTY           2.841      0.226     12.558      0.000      0.032
-    FLCONFIN           6.208      0.785      7.911      0.000      0.127
     MALE               3.906      1.863      2.097      0.036      0.056
     IMMI1GEN         -22.637      8.748     -2.588      0.010      0.018
     IMMI2GEN          -9.894      4.100     -2.413      0.016      0.088
@@ -979,10 +1039,10 @@ Within Level
 Between CNTSCHID Level
 
  FLIT       ON
-    FLSCHOOL         -59.595      9.540     -6.247      0.000      0.024
-    NOBULLY           85.111     14.856      5.729      0.000      0.029
-    FLFAMILY           3.941     19.318      0.204      0.838      0.023
-    EDUSHORT          -7.228      1.692     -4.272      0.000      0.010
+    FLSCHOOL         -59.596      9.540     -6.247      0.000      0.024
+    NOBULLY           85.106     14.856      5.729      0.000      0.029
+    FLFAMILY           3.943     19.316      0.204      0.838      0.022
+    EDUSHORT          -7.227      1.692     -4.272      0.000      0.010
     STRATIO            0.038      0.323      0.118      0.906      0.001
 
  FLSCHOOL WITH
@@ -991,7 +1051,7 @@ Between CNTSCHID Level
     EDUSHORT           0.014      0.007      2.091      0.037      0.000
 
  NOBULLY  WITH
-    FLFAMILY           0.006      0.002      2.717      0.007      0.001
+    FLFAMILY           0.006      0.002      2.718      0.007      0.001
     EDUSHORT          -0.011      0.009     -1.250      0.211      0.001
 
  FLFAMILY WITH
@@ -1003,11 +1063,11 @@ Between CNTSCHID Level
  Variances
     FLSCHOOL           0.052      0.009      5.991      0.000      0.000
     NOBULLY            0.033      0.004      7.935      0.000      0.000
-    FLFAMILY           0.014      0.002      6.438      0.000      0.000
+    FLFAMILY           0.014      0.002      6.437      0.000      0.000
     EDUSHORT           1.077      0.097     11.149      0.000      0.000
 
  Residual Variances
-    FLIT            1017.962    146.517      6.948      0.000      0.007
+    FLIT            1017.969    146.516      6.948      0.000      0.006
 
 Between CNTRYID Level
 
@@ -1028,7 +1088,24 @@ Between CNTRYID Level
     FLFAMILY           0.035      0.010      3.539      0.000      0.000
 
  Residual Variances
-    FLIT             701.991    212.128      3.309      0.001      0.003
+    FLIT             701.990    212.127      3.309      0.001      0.003
+
+New/Additional Parameters
+    TOTAL_A           -0.010      0.018     -0.557      0.578      0.000
+    DIRECT_A          -0.082      0.015     -5.538      0.000      0.000
+    INDIRE_A           0.072      0.005     14.078      0.000      0.000
+    IND_A_FM           0.059      0.005     10.952      0.000      0.000
+    IND_A_CF           0.014      0.002      8.544      0.000      0.000
+    TOTAL_S            0.086      0.009      9.590      0.000      0.000
+    DIRECT_S           0.074      0.009      8.402      0.000      0.000
+    INDIRE_S           0.012      0.002      7.235      0.000      0.000
+    IND_S_FM           0.011      0.001      8.524      0.000      0.000
+    IND_S_CF           0.000      0.001      0.580      0.562      0.000
+    TOTAL_C            0.033      0.015      2.225      0.026      0.000
+    DIRECT_C          -0.004      0.014     -0.293      0.770      0.000
+    INDIRE_C           0.037      0.004     10.444      0.000      0.000
+    IND_C_FM           0.024      0.003      9.373      0.000      0.000
+    IND_C_CF           0.013      0.002      6.984      0.000      0.000
 
 
 STANDARDIZED MODEL RESULTS
@@ -1052,11 +1129,11 @@ Within Level
     FLFAMILY           0.153      0.008     18.420      0.000      0.000
 
  FLIT       ON
+    FCFMLRTY           0.195      0.014     14.364      0.000      0.039
+    FLCONFIN           0.080      0.010      7.763      0.000      0.129
     FLSCHOOL          -0.078      0.014     -5.497      0.000      0.031
     NOBULLY            0.071      0.008      8.415      0.000      0.220
     FLFAMILY          -0.004      0.013     -0.293      0.769      0.050
-    FCFMLRTY           0.195      0.014     14.364      0.000      0.039
-    FLCONFIN           0.080      0.010      7.763      0.000      0.129
     MALE               0.025      0.012      2.065      0.039      0.053
     IMMI1GEN          -0.039      0.015     -2.584      0.010      0.018
     IMMI2GEN          -0.023      0.010     -2.424      0.015      0.090
@@ -1078,11 +1155,11 @@ Within Level
 
  Variances
     FLSCHOOL           1.000      0.000  *********      0.000      0.000
-    NOBULLY            1.000      0.000    999.000    999.000      0.000
+    NOBULLY            1.000      0.000  *********      0.000      0.000
     FLFAMILY           1.000      0.000  *********      0.000      0.000
 
  Residual Variances
-    FLIT               0.899      0.009     96.209      0.000      0.021
+    FLIT               0.899      0.009     96.207      0.000      0.021
     FCFMLRTY           0.890      0.010     87.064      0.000      0.000
     FLCONFIN           0.940      0.005    183.615      0.000      0.000
 
@@ -1090,7 +1167,7 @@ Between CNTSCHID Level
 
  FLIT       ON
     FLSCHOOL          -0.330      0.058     -5.671      0.000      0.019
-    NOBULLY            0.378      0.055      6.836      0.000      0.037
+    NOBULLY            0.378      0.055      6.835      0.000      0.037
     FLFAMILY           0.011      0.056      0.204      0.838      0.023
     EDUSHORT          -0.182      0.044     -4.133      0.000      0.010
     STRATIO            0.009      0.079      0.118      0.906      0.001
@@ -1101,7 +1178,7 @@ Between CNTSCHID Level
     EDUSHORT           0.060      0.029      2.073      0.038      0.000
 
  NOBULLY  WITH
-    FLFAMILY           0.257      0.089      2.893      0.004      0.001
+    FLFAMILY           0.257      0.089      2.894      0.004      0.001
     EDUSHORT          -0.057      0.045     -1.270      0.204      0.001
 
  FLFAMILY WITH
@@ -1114,10 +1191,10 @@ Between CNTSCHID Level
     FLSCHOOL           1.000      0.000  *********      0.000      0.000
     NOBULLY            1.000      0.000  *********      0.000      0.000
     FLFAMILY           1.000      0.000  *********      0.000      0.000
-    EDUSHORT           1.000      0.000    999.000    999.000      0.000
+    EDUSHORT           1.000      0.000  *********      0.000      0.000
 
  Residual Variances
-    FLIT               0.601      0.045     13.271      0.000      0.022
+    FLIT               0.601      0.045     13.272      0.000      0.022
 
 Between CNTRYID Level
 
@@ -1133,7 +1210,7 @@ Between CNTRYID Level
     FLIT              10.691      1.774      6.028      0.000      0.001
 
  Variances
-    FLSCHOOL           1.000      0.000    999.000    999.000      0.000
+    FLSCHOOL           1.000      0.000  *********      0.000      0.000
     NOBULLY            1.000      0.000  *********      0.000      0.000
     FLFAMILY           1.000      0.000    999.000    999.000      0.000
 
@@ -1169,7 +1246,7 @@ Between CNTRYID Level
 
 QUALITY OF NUMERICAL RESULTS
 
-     Average Condition Number for the Information Matrix     -0.289E-16
+     Average Condition Number for the Information Matrix     -0.302E-16
        (ratio of smallest to largest eigenvalue)
 
 
@@ -1473,6 +1550,27 @@ TECHNICAL 1 OUTPUT
  FKI                0             0             0             0             0
 
 
+     PARAMETER SPECIFICATION FOR THE ADDITIONAL PARAMETERS
+
+
+           NEW/ADDITIONAL PARAMETERS
+              TOTAL_A       DIRECT_A      INDIRE_A      IND_A_FM      IND_A_CF
+              ________      ________      ________      ________      ________
+                   54            55            56            57            58
+
+
+           NEW/ADDITIONAL PARAMETERS
+              TOTAL_S       DIRECT_S      INDIRE_S      IND_S_FM      IND_S_CF
+              ________      ________      ________      ________      ________
+                   59            60            61            62            63
+
+
+           NEW/ADDITIONAL PARAMETERS
+              TOTAL_C       DIRECT_C      INDIRE_C      IND_C_FM      IND_C_CF
+              ________      ________      ________      ________      ________
+                   64            65            66            67            68
+
+
      STARTING VALUES FOR WITHIN
 
 
@@ -1770,15 +1868,36 @@ TECHNICAL 1 OUTPUT
  FKI            0.000         0.000         0.000         0.000         0.024
 
 
+     STARTING VALUES FOR THE ADDITIONAL PARAMETERS
+
+
+           NEW/ADDITIONAL PARAMETERS
+              TOTAL_A       DIRECT_A      INDIRE_A      IND_A_FM      IND_A_CF
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+           NEW/ADDITIONAL PARAMETERS
+              TOTAL_S       DIRECT_S      INDIRE_S      IND_S_FM      IND_S_CF
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+           NEW/ADDITIONAL PARAMETERS
+              TOTAL_C       DIRECT_C      INDIRE_C      IND_C_FM      IND_C_CF
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
 DIAGRAM INFORMATION
 
   Mplus diagrams are currently not available for multilevel analysis.
   No diagram output was produced.
 
 
-     Beginning Time:  14:49:59
-        Ending Time:  16:39:40
-       Elapsed Time:  01:49:41
+     Beginning Time:  17:02:47
+        Ending Time:  18:59:59
+       Elapsed Time:  01:57:12
 
 
 

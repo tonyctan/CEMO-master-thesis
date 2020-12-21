@@ -1,57 +1,54 @@
 TITLE:
-    M0.5: Financial literacy 3-level L3 with FKI
+    M0.5: Financial literacy L1 and L2 empty, L3 having FKI
 
 
 DATA:
-    file = "C:\Users\Admin\implist.dat";
+    file = "C:\Users\Tony\implist.dat";
 
     type = imputation;
 
 
 VARIABLE:
-VARIABLE:
     names =
         FKI CNTRYID CNTSCHID CNTSTUID W_STU
-        MATH READ FLIT              ! Financial literacy
-        MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
-        FCFMLRTY FLCONFIN           ! Mediators
-        PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        BELONG NOBULLY              ! Lat var "Safety"
-        FLFAMILY                    ! Lat var "Community"
-        W_SCH STRATIO               ! School character
-        EDUSHT STAFFSHT             ! School resource shortage
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
         ;
-
-    usev =
-        CNTRYID CNTSCHID FLIT FKI;
-
-    cluster = CNTRYID CNTSCHID;
+    
+    usev = FLIT FKI;
 
     between = (CNTRYID) FKI;
+
+    cluster = CNTRYID CNTSCHID;
 
     missing = all (-99);
 
     weight = W_STU;
-
     b2weight = W_SCH;
 
 
 ANALYSIS:
-    process = 16;
+    process = 8;
 
     type = threelevel;
 
 
 MODEL:
 
-%Between CNTRYID%
-    FLIT on FKI;
+%Within%
+    FLIT;
 
 %Between CNTSCHID%
     FLIT;
 
-%Within%
-    FLIT;
+%Between CNTRYID%
+    FLIT on FKI;
 
 
 OUTPUT:

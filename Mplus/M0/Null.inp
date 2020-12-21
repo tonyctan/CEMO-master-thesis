@@ -1,9 +1,9 @@
 TITLE:
-    M0: Financial literacy 3-level null model
+    M0: Financial literacy null model
 
 
 DATA:
-    file = "C:\Users\Admin\implist.dat";
+    file = "C:\Users\Tony\implist.dat";
 
     type = imputation;
 
@@ -11,29 +11,31 @@ DATA:
 VARIABLE:
     names =
         FKI CNTRYID CNTSCHID CNTSTUID W_STU
-        MATH READ FLIT              ! Financial literacy
-        MALE IMMI1GEN IMMI2GEN ESCS ! Control variables
-        FCFMLRTY FLCONFIN           ! Mediators
-        PERFEED TEACHINT FLSCHOOL   ! Lat var "Academic"
-        BELONG NOBULLY              ! Lat var "Safety"
-        FLFAMILY                    ! Lat var "Community"
-        W_SCH STRATIO               ! School character
-        EDUSHT STAFFSHT             ! School resource shortage
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
         ;
-
+    
     usev = FLIT;
+
+    cluster =
+        CNTRYID
+        CNTSCHID
+        ;
 
     missing = all (-99);
 
-    cluster = CNTRYID CNTSCHID;
-
     weight = W_STU;
-
     b2weight = W_SCH;
 
 
 ANALYSIS:
-    process = 16;
+    processors = 8;
 
     type = threelevel;
 

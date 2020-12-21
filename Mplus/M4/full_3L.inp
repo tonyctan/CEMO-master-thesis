@@ -39,8 +39,8 @@ VARIABLE:
 
     ! Vars that ONLY appear in L1
     within =
-        FCFMLRTY FLCONFIN
-        MALE IMMI1GEN IMMI2GEN ESCS
+        FCFMLRTY FLCONFIN                   ! Affective vars
+        MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
         ;
 
     ! Vars that ONLY appear in L2 and L3
@@ -65,21 +65,33 @@ MODEL:
 
 %Within%                                    ! === L1: Student-level ===
 
+    ! First of all, save the variances of X and Y vars
+    ! These parameters are necessary for the MODEL CONSTRAINT section
+    FLSCHOOL (var_A);
+    NOBULLY (var_S);
+    FLFAMILY (var_C);
+    FLIT (var_Y);
+
     ! Indirect pathways (1st half): school climate vars onto mediators
         ! Onto mediator FAMILIARITY
-    FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
+    FCFMLRTY on FLSCHOOL (a11);
+    FCFMLRTY on NOBULLY (a21);
+    FCFMLRTY on FLFAMILY (a31);
         ! Onto mediator CONFIDENCE
-    FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
+    FLCONFIN on FLSCHOOL (a12);
+    FLCONFIN on NOBULLY (a22);
+    FLCONFIN on FLFAMILY (a32);
 
     ! Total effect
-    FLIT on
-        ! Direct pathways: school climate vars onto financial literacy
-        FLSCHOOL NOBULLY FLFAMILY
         ! Indirect pathways (2nd half): affective vars onto financial literacy
-        FCFMLRTY FLCONFIN
+    FLIT on FCFMLRTY (b1);
+    FLIT on FLCONFIN (b2);
+        ! Direct pathways: school climate vars onto financial literacy
+    FLIT on FLSCHOOL (c1);
+    FLIT on NOBULLY (c2);
+    FLIT on FLFAMILY (c3);
         ! Control vars (demographic info)
-        MALE IMMI1GEN IMMI2GEN ESCS
-        ;
+    FLIT on MALE IMMI1GEN IMMI2GEN ESCS;
 
     ! Covariances
         ! Between school climate vars
@@ -107,9 +119,57 @@ MODEL:
     FLSCHOOL with EDUSHORT;
 
 %Between CNTRYID%                           ! === L3: Country-level ===
+
     FLIT on
         FKI                                 ! Financial knowledge indices
         ;
+
+
+! Since MODEL INDIRECT is not available for 3-level models,
+! I have to calculate indirect effects manually.
+! But I don't know how to standardise these output.
+
+MODEL CONSTRAINT:
+
+    ! Effect from ACADEMIC to FLIT
+    new(total_A
+            direct_A
+            indire_A
+                ind_A_FM
+                ind_A_CF
+    );
+        total_A = (c1 + a11*b1 + a12*b2)*sqrt(var_A)/sqrt(var_Y);
+        direct_A = c1*sqrt(var_A)/sqrt(var_Y);
+        indire_A = (a11*b1 + a12*b2)*sqrt(var_A)/sqrt(var_Y);
+        ind_A_FM = (a11*b1)*sqrt(var_A)/sqrt(var_Y);
+        ind_A_CF = (a12*b2)*sqrt(var_A)/sqrt(var_Y);
+
+    ! Effect from SAFETY to FLIT
+    new(total_S
+            direct_S
+            indire_S
+                ind_S_FM
+                ind_S_CF
+    );
+        total_S = (c2 + a21*b1 + a22*b2)*sqrt(var_S)/sqrt(var_Y);
+        direct_S = c2*sqrt(var_S)/sqrt(var_Y);
+        indire_S = (a21*b1 + a22*b2)*sqrt(var_S)/sqrt(var_Y);
+        ind_S_FM = (a21*b1)*sqrt(var_S)/sqrt(var_Y);
+        ind_S_CF = (a22*b2)*sqrt(var_S)/sqrt(var_Y);
+
+    ! Effect from COMMUNITY to FLIT
+    new(total_C
+            direct_C
+            indire_C
+                ind_C_FM
+                ind_C_CF
+    );
+        total_C = (c3 + a31*b1 + a32*b2)*sqrt(var_C)/sqrt(var_Y);
+        direct_C = c3*sqrt(var_C)/sqrt(var_Y);
+        indire_C = (a31*b1 + a32*b2)*sqrt(var_C)/sqrt(var_Y);
+        ind_C_FM = (a31*b1)*sqrt(var_C)/sqrt(var_Y);
+        ind_C_CF = (a32*b2)*sqrt(var_C)/sqrt(var_Y);
+
 
 OUTPUT:
     sampstat stdyx;
