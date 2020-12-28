@@ -1,5 +1,7 @@
 \chapter{Review of Matrix Calculus}
 
+\setlength{\parindent}{0in}
+
 \section{Notations}
 
 Let us first establish the notation. This is important because bad notation is a serious obstacle to elegant mathematics and coherent exposition and it can be misleading.
@@ -112,7 +114,7 @@ This system of linear equations can be represented in the matrix notation using
       \texttt{inc}_1\\
       \texttt{inc}_2\\
       \cdots\\
-      \texttt{inc}_2\\
+      \texttt{inc}_n\\
     \end{pmatrix},\ %
   \md{X}{n}{3}=
     \begin{pmatrix}
@@ -189,16 +191,125 @@ We now differentiate $\phi(\m{\beta})$ \wrt $\m{\beta}$:
 \end{equation}
 (We were able to liberally apply transpose to terms containing $\T{\beta}$ and not to others because $\phi$ is a scalar function and each term in it must also be $1\times 1$ in dimension, whose transpose must be equal to itself.)
 
-Apply first order condition to \cref{Eq.normal}. An optimal $\hat{\beta}$ must satisfy
+Apply first order condition to \cref{Eq.normal}. An optimal $\mhat{\beta}$ must satisfy
 \begin{equation}\label{Eq.FOC}
   \begin{aligned}
-    -2\T{y}\m{X}+2\hat{\beta}\Ts\T{X}\m{X}&=\Z\\
-    2\hat{\beta}\Ts\T{X}\m{X}&=2\T{y}\m{X}\\
-    \hat{\beta}\Ts\T{X}\m{X}&=\T{y}\m{X}\\
-    \left(\hat{\beta}\Ts\T{X}\m{X}\right)\Ts&=\left(\T{y}\m{X}\right)\Ts\\
-    \T{X}\m{X}\hat{\beta}&=\T{X}\m{y}\\
-    \hat{\beta}&=\inv{\T{X}\m{X}}\T{X}\m{y}
+    -2\T{y}\m{X}+2\mhat{\beta}\Ts\T{X}\m{X}&=\Z\\
+    2\mhat{\beta}\Ts\T{X}\m{X}&=2\T{y}\m{X}\\
+    \mhat{\beta}\Ts\T{X}\m{X}&=\T{y}\m{X}\\
+    \left(\mhat{\beta}\Ts\T{X}\m{X}\right)\Ts&=\left(\T{y}\m{X}\right)\Ts\\
+    \T{X}\m{X}\mhat{\beta}&=\T{X}\m{y}\\
+    \mhat{\beta}&=\left( \T{X}\m{X} \right)^{-1} \T{X}\m{y}
   \end{aligned}
 \end{equation}
 
-Notice that another transpose was applied to Line 4 of \cref{Eq.FOC} in order to correct $\hat{\beta}\Ts$ (due to \cref{S.layout}) back to its column form $\hat{\beta}$. In fact, it would be better to do $\frac{\dd\phi(\m{\beta})}{\dd\T{\beta}}$ in \cref{Eq.normal} to avoid this later flipping. But the downside of this approach is a pedagogical one: most students would find differentiating \wrt $\T{\beta}$ out of blue while \wrt $\m{\beta}$ is much more natural. In further derivations, $\frac{\dd\phi(\m{\beta})}{\dd\T{\beta}}$ will be used.
+Notice that another transpose was applied to Line 4 of \cref{Eq.FOC} in order to correct $\mhat{\beta}\Ts$ (due to \cref{S.layout}) back to its column form $\mhat{\beta}$. In fact, it would be better to do $\frac{\dd\phi(\m{\beta})}{\dd\T{\beta}}$ in \cref{Eq.normal} to avoid this later flipping. But the downside of this approach is a pedagogical one: most students would find differentiating \wrt $\T{\beta}$ out of blue while \wrt $\m{\beta}$ is much more natural. In further derivations, $\frac{\dd\phi(\m{\beta})}{\dd\T{\beta}}$ will be used.
+
+\newpage
+
+\begin{know}{Derivative of quadratic forms}
+  \abovedisplayshortskip=0pt
+  \belowdisplayshortskip=0pt
+  \abovedisplayskip=0pt
+  \belowdisplayskip=0pt
+The derivative of a quadratic form $q(\m{x}) = \T{x}\m{A}\m{x}$ is
+\begin{equation*}
+  \frac{\dd q}{\dd \m{x}} = \T{x} \left( \m{A} + \T{A} \right),
+\end{equation*}
+which can be further simplified to $ \dd q / \dd \m{x} = 2\T{x}\m{A}$, if $\m{A}$ is symmetric.
+\end{know}
+
+Name the expression in the facebook post $\phi$, which is a function of $\m{\beta}$:
+\begin{equation*}
+  \phi(\m{\beta}) = \frac{1}{\sigma^2}\left( \m{y} - \m{X}\m{\beta} \right)\Ts \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \left( \m{y} - \m{X}\m{\beta} \right).
+\end{equation*}
+
+\begin{caution}{Typo}
+There is a typo in the original post: all $\m{\Omega}$ should be in the inverse form $\inv{\Omega}$, including the one sandwiched between $\T{Z}$ and $\m{Z}$.
+\end{caution}
+
+\begin{note}{Scalar function}
+  \abovedisplayshortskip=0pt
+  \belowdisplayshortskip=0pt
+  \abovedisplayskip=0pt
+  \belowdisplayskip=0pt
+Note that $\phi$ is a scalar function:
+\begin{equation*}
+  \underset{1 \times 1}{\phi} \left( \md{\beta}{k}{1} \right) = \frac{1}{\sigma^2} \left( \md{y}{n}{1} - \md{X}{n}{k} \md{\beta}{k}{1} \right)\Ts \md{\Omega}{n}{n}^{-1} \md{Z}{n}{k} \left( \md{Z}{k}{n}\Ts \md{\Omega}{n}{n}^{-1} \md{Z}{n}{k} \right)^{-1} \md{Z}{k}{n}\Ts \md{\Omega}{n}{n}^{-1} \left( \md{y}{n}{1} - \md{X}{n}{k} \md{\beta}{k}{1} \right).
+\end{equation*}
+
+\bigskip
+
+When differentiating a scalar function $\phi$ \wrt a column vector $\m{\beta}$, the result is a \emph{row} vector. If this is undesirable, differentiate the scalar function $\phi$ \wrt the \emph{transpose} of that vector $\T{\beta}$.
+\end{note}
+
+I want to know
+\begin{equation*}
+  \frac{\dd \phi}{\dd \m{\beta}} = \frac{\dd \phi}{\dd \left( \m{y} - \m{X}\m{\beta} \right)} \frac{\dd \left( \m{y} - \m{X}\m{\beta} \right)}{\dd \m{\beta}} = \frac{\dd \phi}{\dd \left( \m{y} - \m{X}\m{\beta} \right)} \left( -\m{X} \right),
+\end{equation*}
+so I first calculate (using the result from quadratic form derivatives stated at the beginning)
+\begin{equation*}
+    \frac{\dd \phi}{\dd \left( \m{y} - \m{X}\m{\beta} \right)} =
+      \frac{2}{\sigma^2} \left( \m{y} - \m{X}\m{\beta} \right)\Ts \left[ \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \right].
+\end{equation*}
+
+Therefore,
+\begin{equation*}
+  \begin{aligned}
+    \frac{\dd \phi}{\dd \m{\beta}} &= -\frac{2}{\sigma^2}\left( \m{y} - \m{X}\m{\beta} \right)\Ts \left[ \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \right] \m{X}\\
+    \frac{\dd \phi}{\dd \T{\beta}} &= -\frac{2}{\sigma^2} \T{X} \left[ \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \right] \left( \m{y} - \m{X}\m{\beta} \right)
+  \end{aligned}
+\end{equation*}
+(The second line is to avoid working with row vectors.)
+
+\begin{note}{Second derivative}
+  \abovedisplayshortskip=0pt
+  \belowdisplayshortskip=0pt
+  \abovedisplayskip=0pt
+  \belowdisplayskip=0pt
+The second derivative of $\phi$ is
+\begin{equation*}
+  \frac{\dd^2 \phi}{\dd \T{\beta} \dd \m{\beta}} = \frac{2}{\sigma^2} \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{X},
+\end{equation*}
+which is a positive definite $k \times k$ matrix (another quadratic form). This implies that the result from the first order condition below is a minimum.
+\end{note}
+
+Impose the first order condition:
+\begin{equation*}
+  \begin{aligned}
+    \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \left( \m{y} - \m{X}\mhat{\beta}_{\text{GLS-IV}} \right) &= \m{0}\\
+    \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{y} &= \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{X} \mhat{\beta}_{\text{GLS-IV}}
+  \end{aligned}
+\end{equation*}
+
+Therefore:
+\begin{equation*}
+  \begin{aligned}
+  \mhat{\beta}_{\text{GLS-IV}}
+  &= \left( \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{X} \right)^{-1} \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{y}\\
+  &= \left( \T{X} \inv{\Omega} \mhat{X} \right)^{-1} \T{X} \inv{\Omega} \mhat{y}\\
+  &\neq \left( \mhat{X}\Ts \inv{\Omega} \mhat{X} \right)^{-1} \mhat{X}\Ts \inv{\Omega} \m{y},\ \text{satisfying the claim in the facebook post.}
+  \end{aligned}
+\end{equation*}
+
+\bigskip
+
+However, since $\mhat{X}$ is the GLS-IV-estimator of $\m{X}$ onto the $\m{Z}$-space:
+\begin{equation*}
+  \begin{aligned}
+    \mhat{X} &= \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{X},\ \text{and}\\
+    \mhat{X}\Ts &= \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z}.
+  \end{aligned}
+\end{equation*}
+
+The last expression in the facebook post then becomes:
+\begin{equation*}
+  \begin{aligned}
+      &\left( \mhat{X}\Ts \inv{\Omega} \mhat{X} \right)^{-1} \mhat{X}\Ts \inv{\Omega} \m{y}\\
+      = &\left( \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{X} \right)^{-1} \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{y}\\
+      = & \left( \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{X} \right)^{-1} \T{X} \inv{\Omega} \m{Z} \left( \T{Z} \inv{\Omega} \m{Z} \right)^{-1} \T{Z} \inv{\Omega} \m{y}\\
+      = &\mhat{\beta}_{\text{GLS-IV}}
+  \end{aligned}
+\end{equation*}
+
+After all, ``one might have guessed'' correctly!

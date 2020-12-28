@@ -3,7 +3,7 @@ TITLE:
 
 
 DATA:
-    file = "C:\Users\Tony\implist.dat";
+    file = "C:\Users\Admin\implist.dat";
 
     type = imputation;
 
@@ -56,7 +56,7 @@ VARIABLE:
 
 
 ANALYSIS:
-    processors = 8;
+    processors = 16;
 
     type = threelevel;
 
@@ -104,10 +104,12 @@ MODEL:
 %Between CNTSCHID%                          ! === L2: School-level ===
     
     ! School climate vars
-    FLIT on
-        FLSCHOOL NOBULLY FLFAMILY EDUSHORT
-        STRATIO
-        ;
+    FLIT on FLSCHOOL;
+    FLIT on NOBULLY;
+    FLIT on FLFAMILY;
+    FLIT on EDUSHORT;
+    ! Control var
+    FLIT on STRATIO;
 
     ! Covariances
     FLSCHOOL with NOBULLY;
