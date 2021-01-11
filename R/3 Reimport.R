@@ -30,13 +30,15 @@ finlit <- pisa.select.merge(
         "BRA", "BGR", "CAN", "CHL", "EST",
         "FIN", "GEO", "IDN", "ITA", "LVA",
         "LTU", "NLD", "PER", "POL", "PRT",
-        "RUS", "SRB", "SVK", "ESP", "USA"
+        "RUS", "QMR", "QRT", # Russian Federation and other regions
+        "SRB", "SVK", "ESP", "USA"
     )
 )
 
 names(finlit)
 # Throw away columns that I do not need
-finlit <- finlit[, -c(5,7:86)] # 5 = BOOKID; 7:86 = resampling weights
+finlit <- finlit[, -c(5, 7:86)] # 5 = BOOKID; 7:86 = resampling weights
+names(finlit)
 
 # Some var need recording
 library(car)
@@ -45,6 +47,11 @@ library(car)
 finlit$CNT <- recode(finlit$CNT, "
     'QMR' = 'RUS';
     'QRT' = 'RUS'
+")
+
+finlit$CNTRYID <- recode(finlit$CNTRYID, "
+    982 = 643;
+    983 = 643
 ")
 
 # Input country-level FKI

@@ -26,25 +26,25 @@ switch(Sys.info()[["sysname"]],
     Windows = {EOL = "\n"}
 )
 
-# Save data to Mplus-ready format: no heading, puring numbers, EOL=CRLF
+# Save data to Mplus-ready format: no heading, pure numbers, EOL=CRLF
 write.table(finlit1, "finlit1.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit2, "finlit2.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit3, "finlit3.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit4, "finlit4.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit5, "finlit5.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit6, "finlit6.dat",
@@ -52,15 +52,15 @@ write.table(finlit6, "finlit6.dat",
 )
 
 write.table(finlit7, "finlit7.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit8, "finlit8.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit9, "finlit9.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit10, "finlit10.dat",
@@ -95,29 +95,29 @@ finlit_SVK <- finlit1_CNT$"703"
 finlit_ESP <- finlit1_CNT$"724"
 finlit_USA <- finlit1_CNT$"840"
 
-# Save data to Mplus-ready format: no heading, puring numbers, EOL=CRLF
+# Save data to Mplus-ready format: no heading, pure numbers, EOL=CRLF
 write.table(finlit_BRA, "finlit1_BRA.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_BGR, "finlit1_BGR.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_CAN, "finlit1_CAN.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_CHL, "finlit1_CHL.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_EST, "finlit1_EST.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_FIN, "finlit1_FIN.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_GEO, "finlit1_GEO.dat",
@@ -125,15 +125,15 @@ write.table(finlit_GEO, "finlit1_GEO.dat",
 )
 
 write.table(finlit_IND, "finlit1_IND.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_ITA, "finlit1_ITA.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_LVA, "finlit1_LVA.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_LTU, "finlit1_LTU.dat",
@@ -141,19 +141,19 @@ write.table(finlit_LTU, "finlit1_LTU.dat",
 )
 
 write.table(finlit_NLD, "finlit1_NLD.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_PER, "finlit1_PER.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_POL, "finlit1_POL.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_PRT, "finlit1_PRT.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_RUS, "finlit1_RUS.dat",
@@ -161,15 +161,15 @@ write.table(finlit_RUS, "finlit1_RUS.dat",
 )
 
 write.table(finlit_SRB, "finlit1_SRB.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_SVK, "finlit1_SVK.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_ESP, "finlit1_ESP.dat",
-    row.names = F, col.names = F, sep= ",", na = "-99", eol = EOL
+    row.names = F, col.names = F, sep = ",", na = "-99", eol = EOL
 )
 
 write.table(finlit_USA, "finlit1_USA.dat",
