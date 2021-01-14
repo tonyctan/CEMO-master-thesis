@@ -3,14 +3,14 @@ iterators = group;
 group =
     76 100 124 152 233
     246 268 360 380 428
-    440 528 604 616 620
-    643 688 703 724 840
+    440 604 616
+    643 688 724 840
 ;
 groupnames#group =
     "BRA" "BGR" "CAN" "CHL" "EST"
     "FIN" "GEO" "IND" "ITA" "LVA"
-    "LTU" "NLD" "PER" "POL" "PRT"
-    "RUS" "SRB" "SVK" "ESP" "USA"
+    "LTU" "PER" "POL"
+    "RUS" "SRB" "ESP" "USA"
 ;
 filename = "finlit_sg_msem_[[group]].inp";
 outputDirectory = "M:\pc\Dokumenter\MSc\Thesis\R\MplusAutomation";
@@ -44,7 +44,7 @@ VARIABLE:
         FLSCHOOL                            !   "Academic"
         NOBULLY                             !   "Safety"
         FLFAMILY                            !   "Community" (Financial socialisation)
-        EDUSHORT STRATIO                    !   "Institutional environment"
+        EDUSHORT                            !   "Institutional environment"
         FCFMLRTY FLCONFIN                   ! L1 mediators
         MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
         ;
@@ -57,7 +57,7 @@ VARIABLE:
 
     ! Vars that ONLY appear in L2
     between =
-        EDUSHORT STRATIO                    ! L2: school
+        EDUSHORT                            ! L2: school
         ;
 
     missing = all (-99);
@@ -114,7 +114,6 @@ MODEL:
     ! School climate vars
     FLIT on
         FLSCHOOL NOBULLY FLFAMILY EDUSHORT
-        STRATIO
         ;
 
     ! Covariances
