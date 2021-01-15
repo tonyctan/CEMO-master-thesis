@@ -34,7 +34,7 @@ sg_msem_fixed <- readModels(
 
 # Extract the relevant model fit indices
 
-# Chi-sq value ChiSqM_Mean
+# Chi-sq test statistics (ChiSqM_Mean)
 chisqM <- c(
     sg_msem_fixed$finlit_sg_msem_76.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_100.out$summaries$ChiSqM_Mean,
@@ -58,7 +58,7 @@ chisqM <- c(
     sg_msem_fixed$finlit_sg_msem_840.out$summaries$ChiSqM_Mean
 )
 
-# P-value ChiSqM_SD
+# Standard deviation of Chi-sq test statistics (ChiSqM_SD)
 chisqSD <- c(
     sg_msem_fixed$finlit_sg_msem_76.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_100.out$summaries$ChiSqM_SD,
@@ -71,18 +71,18 @@ chisqSD <- c(
     sg_msem_fixed$finlit_sg_msem_380.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_428.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_440.out$summaries$ChiSqM_SD,
-#    sg_msem_fixed$finlit_sg_msem_528.out$summaries$ChiSqM_SD,
+    #    sg_msem_fixed$finlit_sg_msem_528.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_604.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_616.out$summaries$ChiSqM_SD,
-#    sg_msem_fixed$finlit_sg_msem_620.out$summaries$ChiSqM_SD,
+    #    sg_msem_fixed$finlit_sg_msem_620.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_643.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_688.out$summaries$ChiSqM_SD,
-#    sg_msem_fixed$finlit_sg_msem_703.out$summaries$ChiSqM_SD,
+    #    sg_msem_fixed$finlit_sg_msem_703.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_724.out$summaries$ChiSqM_SD,
     sg_msem_fixed$finlit_sg_msem_840.out$summaries$ChiSqM_SD
 )
 
-# Degrees of freedom ChiSqM_DF
+# Chi-sq degrees of freedom (ChiSqM_DF)
 chisqDF <- c(
     sg_msem_fixed$finlit_sg_msem_76.out$summaries$ChiSqM_DF,
     sg_msem_fixed$finlit_sg_msem_100.out$summaries$ChiSqM_DF,
@@ -154,7 +154,7 @@ cfiSD <- c(
     sg_msem_fixed$finlit_sg_msem_840.out$summaries$CFI_SD
 )
 
-# CFI_Mean
+# TLI_Mean
 tliM <- c(
     sg_msem_fixed$finlit_sg_msem_76.out$summaries$TLI_Mean,
     sg_msem_fixed$finlit_sg_msem_100.out$summaries$TLI_Mean,
@@ -178,7 +178,7 @@ tliM <- c(
     sg_msem_fixed$finlit_sg_msem_840.out$summaries$TLI_Mean
 )
 
-# CFI_Mean
+# TLI_Mean
 tliSD <- c(
     sg_msem_fixed$finlit_sg_msem_76.out$summaries$TLI_SD,
     sg_msem_fixed$finlit_sg_msem_100.out$summaries$TLI_SD,
@@ -202,7 +202,7 @@ tliSD <- c(
     sg_msem_fixed$finlit_sg_msem_840.out$summaries$TLI_SD
 )
 
-# RMSEA_Mean
+# RMSEA
 rmsea <- c(
     sg_msem_fixed$finlit_sg_msem_76.out$summaries$RMSEA_Mean,
     sg_msem_fixed$finlit_sg_msem_100.out$summaries$RMSEA_Mean,
@@ -346,6 +346,7 @@ bicM <- c(
     sg_msem_fixed$finlit_sg_msem_840.out$summaries$BIC_Mean
 )
 
+# BIC_SD
 bicSD <- c(
     sg_msem_fixed$finlit_sg_msem_76.out$summaries$BIC_SD,
     sg_msem_fixed$finlit_sg_msem_100.out$summaries$BIC_SD,
@@ -461,39 +462,6 @@ colnames(sg_msem_fit) <- c(
     "aBIC", "aBIC SD"
 )
 
-    c(
-        "", "SD", "", "", "", "",
-        round(sd(chisqM), 3),
-        round(sd(cfiM), 3),
-        round(sd(tliM), 3),
-        round(sd(rmsea), 3),
-        round(sd(srmr_w), 3),
-        round(sd(srmr_b), 3),
-        round(sd(aicM), 3),
-        round(sd(bicM), 3),
-        round(sd(abicM), 3)
-    )
-
-
-rbind(sg_msem_fit, c(
-        "Summary", "Median",
-        round(median(chisqM), 3),
-        "", "",
-        round(median(cfiM), 3),
-        "",
-        round(median(tliM), 3),
-        "",
-        round(median(rmsea), 3),
-        round(median(srmr_w), 3),
-        round(median(srmr_b), 3),
-        round(median(aicM), 3),
-        "",
-        round(median(bicM), 3),
-        "",
-        round(median(abicM), 3),
-        ""
-    ))
-
 # Add some summary statistics and the values for the entire sample
 sg_msem_fit2 <- rbind(
     sg_msem_fit,
@@ -592,4 +560,147 @@ sg_msem_fit2 <- rbind(
 sg_msem_fit2
 
 # Export the data frame to a spreadsheet
-write.csv(sg_msem_fit2, file = "sg_msem_by_country_model_fit.csv")
+write.csv(sg_msem_fit2,
+    file = "sg_msem_by_country_model_fit.csv", row.names = F
+)
+
+sg_msem_fixed$finlit_sg_msem_76.out$parameters$stdyx.standardized$est[1]
+
+
+par_a11 <- c(
+    sg_msem_fixed$finlit_sg_msem_76.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_100.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_124.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_152.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_233.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_246.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_268.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_360.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_380.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_428.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_440.out$parameters$stdyx.standardized$est[1],
+#    sg_msem_fixed$finlit_sg_msem_528.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_604.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_616.out$parameters$stdyx.standardized$est[1],
+#    sg_msem_fixed$finlit_sg_msem_620.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_643.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_688.out$parameters$stdyx.standardized$est[1],
+#    sg_msem_fixed$finlit_sg_msem_703.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_724.out$parameters$stdyx.standardized$est[1],
+    sg_msem_fixed$finlit_sg_msem_840.out$parameters$stdyx.standardized$est[1]
+)
+
+par_a21 <- c(
+    sg_msem_fixed$finlit_sg_msem_76.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_100.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_124.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_152.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_233.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_246.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_268.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_360.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_380.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_428.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_440.out$parameters$stdyx.standardized$est[2],
+#    sg_msem_fixed$finlit_sg_msem_528.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_604.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_616.out$parameters$stdyx.standardized$est[2],
+#    sg_msem_fixed$finlit_sg_msem_620.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_643.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_688.out$parameters$stdyx.standardized$est[2],
+#    sg_msem_fixed$finlit_sg_msem_703.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_724.out$parameters$stdyx.standardized$est[2],
+    sg_msem_fixed$finlit_sg_msem_840.out$parameters$stdyx.standardized$est[2]
+)
+
+par_a31 <- c(
+    sg_msem_fixed$finlit_sg_msem_76.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_100.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_124.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_152.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_233.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_246.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_268.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_360.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_380.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_428.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_440.out$parameters$stdyx.standardized$est[3],
+#    sg_msem_fixed$finlit_sg_msem_528.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_604.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_616.out$parameters$stdyx.standardized$est[3],
+#    sg_msem_fixed$finlit_sg_msem_620.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_643.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_688.out$parameters$stdyx.standardized$est[3],
+#    sg_msem_fixed$finlit_sg_msem_703.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_724.out$parameters$stdyx.standardized$est[3],
+    sg_msem_fixed$finlit_sg_msem_840.out$parameters$stdyx.standardized$est[3]
+)
+
+par_a12 <- c(
+    sg_msem_fixed$finlit_sg_msem_76.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_100.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_124.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_152.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_233.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_246.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_268.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_360.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_380.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_428.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_440.out$parameters$stdyx.standardized$est[4],
+#    sg_msem_fixed$finlit_sg_msem_528.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_604.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_616.out$parameters$stdyx.standardized$est[4],
+#    sg_msem_fixed$finlit_sg_msem_620.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_643.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_688.out$parameters$stdyx.standardized$est[4],
+#    sg_msem_fixed$finlit_sg_msem_703.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_724.out$parameters$stdyx.standardized$est[4],
+    sg_msem_fixed$finlit_sg_msem_840.out$parameters$stdyx.standardized$est[4]
+)
+
+par_a22 <- c(
+    sg_msem_fixed$finlit_sg_msem_76.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_100.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_124.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_152.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_233.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_246.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_268.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_360.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_380.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_428.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_440.out$parameters$stdyx.standardized$est[5],
+#    sg_msem_fixed$finlit_sg_msem_528.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_604.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_616.out$parameters$stdyx.standardized$est[5],
+#    sg_msem_fixed$finlit_sg_msem_620.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_643.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_688.out$parameters$stdyx.standardized$est[5],
+#    sg_msem_fixed$finlit_sg_msem_703.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_724.out$parameters$stdyx.standardized$est[5],
+    sg_msem_fixed$finlit_sg_msem_840.out$parameters$stdyx.standardized$est[5]
+)
+
+par_a32 <- c(
+    sg_msem_fixed$finlit_sg_msem_76.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_100.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_124.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_152.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_233.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_246.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_268.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_360.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_380.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_428.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_440.out$parameters$stdyx.standardized$est[6],
+#    sg_msem_fixed$finlit_sg_msem_528.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_604.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_616.out$parameters$stdyx.standardized$est[6],
+#    sg_msem_fixed$finlit_sg_msem_620.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_643.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_688.out$parameters$stdyx.standardized$est[6],
+#    sg_msem_fixed$finlit_sg_msem_703.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_724.out$parameters$stdyx.standardized$est[6],
+    sg_msem_fixed$finlit_sg_msem_840.out$parameters$stdyx.standardized$est[6]
+)
