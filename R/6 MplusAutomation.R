@@ -11,7 +11,7 @@ library(metafor)
 library(ggpubr)
 
 # # Create input file
-# createModels("finlit_sg_msem.txt")
+createModels("finlit_sg_msem.txt")
 
 # # Run the input file
 # runModels(
@@ -46,14 +46,14 @@ chisqM <- c(
     sg_msem_fixed$finlit_sg_msem_360.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_380.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_428.out$summaries$ChiSqM_Mean,
-    sg_msem_fixed$finlit_sg_msem_440.out$summaries$ChiSqM_Mean,
-#    sg_msem_fixed$finlit_sg_msem_528.out$summaries$ChiSqM_Mean,
+#    sg_msem_fixed$finlit_sg_msem_440.out$summaries$ChiSqM_Mean,
+    sg_msem_fixed$finlit_sg_msem_528.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_604.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_616.out$summaries$ChiSqM_Mean,
-#    sg_msem_fixed$finlit_sg_msem_620.out$summaries$ChiSqM_Mean,
+    sg_msem_fixed$finlit_sg_msem_620.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_643.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_688.out$summaries$ChiSqM_Mean,
-#    sg_msem_fixed$finlit_sg_msem_703.out$summaries$ChiSqM_Mean,
+    sg_msem_fixed$finlit_sg_msem_703.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_724.out$summaries$ChiSqM_Mean,
     sg_msem_fixed$finlit_sg_msem_840.out$summaries$ChiSqM_Mean
 )

@@ -6,8 +6,8 @@ setwdOS(
 
 # Read direct-indirect effect data
 effect <- read.table("../Data/dir_ind_eff.txt", header = T, sep = "\t")
-# Remove empty rows (NLD, PRT, SVK)
-effect <- effect[-c(12,15,18),]
+# Remove Estonia due to HUGE variance
+#effect <- effect[-c(5),]
 
 # Generate (direct, indirect) pair (means)
 mu_sch <- matrix(NA, nrow = dim(effect)[1], ncol=2)
@@ -87,7 +87,7 @@ for (i in 1:dim(mu_sch)[1]) {
 }
 
 # Draw the rest
-for (i in 1:dim(mu)[1]) {
+for (i in 1:dim(mu_sch)[1]) {
     ellipse(mu_sch[i,], sigma_sch[c(I(2*i-1):I(2*i)),],
         alpha = 0.05, npoints = 250, col=col_scale[col_pos[i]],
         xlim = c(-0.4, 0.1), ylim = c(-0.02, 0.15),
@@ -179,7 +179,7 @@ for (i in 1:dim(mu_fam)[1]) {
 }
 
 # Draw the rest
-for (i in 1:dim(mu)[1]) {
+for (i in 1:dim(mu_fam)[1]) {
     ellipse(mu_fam[i,], sigma_fam[c(I(2*i-1):I(2*i)),],
         alpha = 0.05, npoints = 250, col=col_scale[col_pos[i]],
         xlim = c(-0.4, 0.1), ylim = c(-0.02, 0.15),
