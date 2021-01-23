@@ -1,0 +1,129 @@
+\ptikz{fig:mod}{Path Diagram}{
+\begin{tikzpicture}[
+    latvar/.style={ellipse,draw=black,minimum width=3.5cm,minimum height=1cm},
+    manvar/.style={rectangle,draw=black,minimum width=2.5cm},
+    mean/.style={fill=black!10!white,regular polygon,regular polygon sides=3},
+    ->,>=stealth',semithick,
+    bend angle=-45,
+    decoration={
+        zigzag,
+        amplitude=1pt,
+        segment length=1mm,
+        post=lineto,
+        post length=4pt
+    }
+]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Level 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Draw a dashed line to mark Level 1
+%\draw[black,dashed,-,line width=2pt] (1.5,5)--(14.85,5);
+% Insert level labels
+\node at (0,5) {\textbf{$\m{L1}$: Student}};
+
+% Set input vars (school climate)
+    \node[manvar] (A1) at (0,4) {$\texttt{FLSCHOOL}_W$};
+    \node[manvar] (S1) at (0,2) {$\texttt{NOBULLY}_W$};
+    \node[manvar] (C1) at (0,0) {$\texttt{FLFAMILY}_W$};
+
+% Set mediators (affective vars)
+    \node[manvar] (fami1) at (5,4) {$\texttt{FCFMLRTY}$};
+    \node[manvar] (conf1) at (5,0) {$\texttt{FLCONFIN}$};
+
+% Set outcome var (financial literacy)
+    \node[manvar] (flit1) at (9.5,2) {$\texttt{FLIT}_W$};
+
+% Link input vars with mediators
+    \draw[blue,->] (A1.east) to node[above,sloped] {$a_{11}$} (fami1.west);
+    \draw[blue,->] (A1.east) to node[above,sloped,pos=0.7] {$a_{12}$} (conf1.west);
+
+    \draw[blue,->] (S1.east) to node[above,sloped] {$a_{21}$} (fami1.west);
+    \draw[blue,->] (S1.east) to node[below,sloped] {$a_{22}$} (conf1.west);
+
+    \draw[blue,->] (C1.east) to node[below,sloped,pos=0.7] {$a_{31}$} (fami1.west);
+    \draw[blue,->] (C1.east) to node[below,sloped] {$a_{32}$} (conf1.west);
+
+% Link mediators with outcome var
+    \draw[blue,->] (fami1.east) to node[above,pos=0.6] {$b_1$} (flit1.west);
+    \draw[blue,->] (conf1.east) to node[below,pos=0.6] {$b_2$} (flit1.west);
+
+% Link input vars with outcome var
+    \draw[red,->] (A1.east) to node[above,pos=0.7] {$c_1$} (flit1.west);
+    \draw[red,->] (S1.east) to node[pos=0.65] {$c_2$} (flit1.west);
+    \draw[red,->] (C1.east) to node[below,pos=0.7] {$c_3$} (flit1.west);
+
+% Set control vars
+    \node[manvar] (immi1) at (13.5,4) {$\texttt{IMMI1GEN}$};
+    \node[manvar] (immi2) at (13.5,3) {$\texttt{IMMI2GEN}$};
+    \node[manvar] (male) at (13.5,1) {$\texttt{MALE}$};
+    \node[manvar] (escs) at (13.5,0) {$\texttt{ESCS}$};
+
+% Link control vars with outcome var
+    \draw[->] (immi1.west) to node[above] {$d_1$} (flit1.north east);
+    \draw[->] (immi2.west) to node[below,pos=0.4] {$d_2$} (flit1.north east);
+    \draw[->] (male.west) to node[above,pos=0.4] {$d_3$} (flit1.south east);
+    \draw[->] (escs.west) to node[below] {$d_4$} (flit1.south east);
+
+% Draw a black dot on output var
+    \draw[blue,<-] (6.25,4)--(6.75,4);
+    \draw[blue,<-] (6.25,0)--(6.75,0);
+
+    \filldraw[black] (8.25,2) circle (3pt);
+
+% Draw residual arrow on output var
+\draw[<-] (10.75,2)--(11.25,2);
+
+% Arc covariances
+    \draw[<->] (A1.south) to [bend right] (S1.north);
+    \draw[<->] (S1.south) to [bend right] (C1.north);
+    \draw[<->] (A1.south) to [bend left] (C1.north);
+
+    \draw[<->] (fami1.south) to [bend left] (conf1.north);
+
+    \draw[<->] (C1.south) to [bend right=15] (escs.south);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Level 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Draw a dashed line to mark Level 2
+%\draw[black,dashed,-,line width=2pt] (1.5,13)--(14.85,13);
+% Insert level labels
+\node at (0,13) {\textbf{$\m{L2}$: School}};
+
+% Input vars (school climate)
+    \node[latvar] (A2) at (3,12) {$\texttt{FLSCHOOL}_B$};
+    \node[latvar] (S2) at (3,10) {$\texttt{NOBULLY}_B$};
+    \node[latvar] (C2) at (3,8) {$\texttt{FLFAMILY}_B$};
+    \node[manvar] (R2) at (3,6) {$\texttt{EDUSHORT}$};
+
+% Control var
+    \node[manvar] (st2) at (13.5,6) {$\texttt{STRATIO}$};
+
+% Outcome var (financial literacy)
+    \node[latvar] (flit2) at (9.5,9) {$\texttt{FLIT}_{B}$};
+
+% Link input vars with output var
+    \draw[->] (A2.east) to node[above] {$f_1$} (flit2.west);
+    \draw[->] (S2.east) to node[above,pos=0.4] {$f_2$} (flit2.west);
+    \draw[->] (C2.east) to node[below,pos=0.4] {$f_3$} (flit2.west);
+    \draw[->] (R2.east) to node[below] {$f_4$} (flit2.west);
+
+% Link control vars with output var
+    \draw[->] (st2.west) to node[below,pos=0.55] {$g$} (flit2.south east);
+
+% Draw residual arrow on output var
+    \draw[<-] (11.25,9)--(11.75,9);
+
+% Arc covariances
+    \draw[<->] (A2.south) to [bend right] (S2.north);
+    \draw[<->] (S2.south) to [bend right] (C2.north);
+    \draw[<->] (C2.south) to [bend right] (R2.north);
+    \draw[<->] (A2.south) to [bend left] (C2.north);
+    \draw[<->] (S2.south) to [bend left] (R2.north);
+    \draw[<->] (A2.south west) to [bend left] (R2.north west);
+
+\end{tikzpicture}
+}{The \textcolor{red}{direct} and \textcolor{blue}{indirect} paths of the structural component are represented in red and blue respectively.}

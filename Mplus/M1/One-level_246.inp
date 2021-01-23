@@ -1,0 +1,84 @@
+
+TITLE:
+    One-level 246
+
+DATA:
+    file = "C:\Users\tctan\implist.dat";
+
+    type = imputation;
+
+VARIABLE:
+    names =
+        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
+        ;
+
+    useobs = CNTRYID eq 246;          ! Pull out one country at a time
+
+    usevar =
+        FLIT                                ! PISA achievement variables
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        FCFMLRTY FLCONFIN                   ! Affect
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        ;
+
+    missing = all (-99);
+
+    weight = W_STU;                         ! Student weight
+
+
+ANALYSIS:
+    processors = 4;
+
+    estimator = MLR;
+
+
+MODEL:
+
+    ! Indirect pathways (1st half): school climate vars onto mediators
+        ! Onto mediator FAMILIARITY
+    FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
+        ! Onto mediator CONFIDENCE
+    FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
+
+    ! Total effect
+    FLIT on
+        ! Direct pathways: school climate vars onto financial literacy
+        FLSCHOOL NOBULLY FLFAMILY
+        ! Indirect pathways (2nd half): affective vars onto financial literacy
+        FCFMLRTY FLCONFIN
+        ! Control vars (demographic info)
+        MALE IMMI1GEN IMMI2GEN ESCS
+        ;
+
+    ! Covariances
+        ! Between school climate vars
+    FLSCHOOL with NOBULLY;
+    FLSCHOOL with FLFAMILY;
+    NOBULLY with FLFAMILY;
+        ! Between mediators
+    FCFMLRTY with FLCONFIN;
+        ! SES with FLFAMILY
+    ESCS with FLFAMILY;
+
+MODEL INDIRECT:
+
+! Indirect effects
+    FLIT ind FLSCHOOL;
+    FLIT ind NOBULLY;
+    FLIT ind FLFAMILY;
+
+
+OUTPUT:
+    stdyx                                   ! Fully standardised solution
+    mod(all)                                ! Mod indices (all)
+    ;

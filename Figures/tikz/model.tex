@@ -29,8 +29,8 @@
     \node[manvar] (C1) at (0,0) {$\texttt{FLFAMILY}_W$};
 
 % Set mediators (affective vars)
-    \node[manvar] (fami1) at (5,3) {$\texttt{FCFMLRTY}$};
-    \node[manvar] (conf1) at (5,1) {$\texttt{FLCONFIN}$};
+    \node[manvar] (fami1) at (5,4) {$\texttt{FCFMLRTY}$};
+    \node[manvar] (conf1) at (5,0) {$\texttt{FLCONFIN}$};
 
 % Set outcome var (financial literacy)
     \node[manvar] (flit1) at (9.5,2) {$\texttt{FLIT}_W$};
@@ -55,16 +55,16 @@
     \draw[red,->] (C1.east)--(flit1.west);
 
 % Set control vars
-    \node[manvar] (escs) at (13.5,4) {$\texttt{ESCS}$};
-    \node[manvar] (male) at (13.5,3) {$\texttt{MALE}$};
-    \node[manvar] (immi1) at (13.5,1) {$\texttt{IMMI1GEN}$};
-    \node[manvar] (immi2) at (13.5,0) {$\texttt{IMMI2GEN}$};
+    \node[manvar] (immi1) at (13.5,4) {$\texttt{IMMI1GEN}$};
+    \node[manvar] (immi2) at (13.5,3) {$\texttt{IMMI2GEN}$};
+    \node[manvar] (male) at (13.5,1) {$\texttt{MALE}$};
+    \node[manvar] (escs) at (13.5,0) {$\texttt{ESCS}$};
 
 % Link control vars with outcome var
-    \draw[->] (escs.west)--(flit1.north east);
-    \draw[->] (male.west)--(flit1.north east);
-    \draw[->] (immi1.west)--(flit1.south east);
-    \draw[->] (immi2.west)--(flit1.south east);
+    \draw[->] (immi1.west)--(flit1.north east);
+    \draw[->] (immi2.west)--(flit1.north east);
+    \draw[->] (male.west)--(flit1.south east);
+    \draw[->] (escs.west)--(flit1.south east);
 
 % Draw a black dot on output var
     \filldraw[black] (8.25,2) circle (3pt);
@@ -79,6 +79,8 @@
 
     \draw[<->] (fami1.south) to [bend left] (conf1.north);
 
+    \draw[<->] (C1.south) to [bend right=15] (escs.south);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Level 2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -92,13 +94,13 @@
     \node[latvar] (A2) at (3,12) {$\texttt{FLSCHOOL}_B$};
     \node[latvar] (S2) at (3,10) {$\texttt{NOBULLY}_B$};
     \node[latvar] (C2) at (3,8) {$\texttt{FLFAMILY}_B$};
-    \node[manvar] (R2) at (3,6) {$\texttt{EDUSHTG}$};
+    \node[manvar] (R2) at (3,6) {$\texttt{EDUSHORT}$};
 
 % Control var
     \node[manvar] (st2) at (13.5,6) {$\texttt{STRATIO}$};
 
 % Outcome var (financial literacy)
-    \node[latvar] (flit2) at (9.5,9) {$\texttt{FLIT}_{B2}$};
+    \node[latvar] (flit2) at (9.5,9) {$\texttt{FLIT}_{B}$};
 
 % Link input vars with output var
     \draw[->] (A2.east)--(flit2.west);
@@ -108,9 +110,6 @@
 
 % Link control vars with output var
     \draw[->] (st2.west)--(flit2.south east);
-
-% Draw a black dot on output var
-    \filldraw[black] (7.75,9) circle (3pt);
 
 % Draw residual arrow on output var
     \draw[<-] (11.25,9)--(11.75,9);
@@ -122,29 +121,6 @@
     \draw[<->] (A2.south) to [bend left] (C2.north);
     \draw[<->] (S2.south) to [bend left] (R2.north);
     \draw[<->] (A2.south west) to [bend left] (R2.north west);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Level 3
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Draw a dashed line to mark Level 3
-\draw[black,dashed,-,line width=2pt] (1.5,17)--(14.85,17);
-% Insert level labels
-\node at (0,17) {\textbf{$\m{L3}$: Country}};
-
-% Draw input vars
-    \node[mean] (mean3) at (5,16) {$1$};
-    \node[manvar] (fki3) at (5,14) {\texttt{FKI}};
-
-% Draw output var
-    \node[latvar] (flit3) at (9.5,15) {$\texttt{FLIT}_{B3}$};
-
-% Link input vars with output var
-    \draw[->] (mean3.east)--(flit3.west);
-    \draw[->] (fki3.east)--(flit3.west);
-
-% Draw residual arrow on output var
-    \draw[<-] (11.25,15)--(11.75,15);
 
 \end{tikzpicture}
 }{Measurement models are coloured in gray. The \textcolor{red}{direct} and \textcolor{blue}{indirect} paths of the structural component are represented in red and blue respectively.}

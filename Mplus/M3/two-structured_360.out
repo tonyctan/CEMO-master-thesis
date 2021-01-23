@@ -1,0 +1,873 @@
+Mplus VERSION 8.3
+MUTHEN & MUTHEN
+01/22/2021   8:09 PM
+
+INPUT INSTRUCTIONS
+
+
+  TITLE:
+      Two-level structured model 360
+
+  DATA:
+      file = "C:\Users\tctan\implist.dat";
+
+      type = imputation;
+
+
+  VARIABLE:
+      names =
+          FKI CNTRYID CNTSCHID CNTSTUID W_STU
+          MATH READ FLIT                      ! PISA achievement variables
+          MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+          FCFMLRTY FLCONFIN                   ! Affect
+          FLSCHOOL                            !   Lat var "Academic"
+          NOBULLY                             !   Lat var "Safety"
+          FLFAMILY                            !   Lat var "Community"
+          W_SCH STRATIO                       ! School character
+          EDUSHORT                            !   Lat var "inst. env."
+          ;
+
+      useobs = CNTRYID eq 360;          ! Pull out one country at a time
+
+      usevar =
+          FLIT                                ! PISA achievement variables
+          FLSCHOOL                            !   Lat var "Academic"
+          NOBULLY                             !   Lat var "Safety"
+          FLFAMILY                            !   Lat var "Community"
+          EDUSHORT STRATIO                    !   Lat var "Inst env"
+          FCFMLRTY FLCONFIN                   ! Affect
+          MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+          ;
+
+      ! Vars that ONLY appear in L1
+      within =
+          FCFMLRTY FLCONFIN                   ! Affective vars
+          MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
+          ;
+
+      ! Vars that ONLY appear in L2
+      between =
+          EDUSHORT STRATIO                    ! L2: school
+          ;
+
+      missing = all (-99);
+
+      weight = W_STU;                         ! Student weight
+      wtscale = cluster;                      ! Scale L1 weight to cluster size
+      bweight = W_SCH;                        ! School weight
+      bwtscale = sample;                      ! Scale L2 weight to sample
+
+      cluster = CNTSCHID;                     ! Cluster by school ID
+
+
+  ANALYSIS:
+      processors = 4;
+
+      type = twolevel;
+
+
+  MODEL:
+
+  %Within%                                    ! === L1: Student-level ===
+
+      ! Indirect pathways (1st half): school climate vars onto mediators
+          ! Onto mediator FAMILIARITY
+      FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
+          ! Onto mediator CONFIDENCE
+      FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
+
+      ! Total effect
+      FLIT on
+          ! Direct pathways: school climate vars onto financial literacy
+          FLSCHOOL NOBULLY FLFAMILY
+          ! Indirect pathways (2nd half): affective vars onto financial literacy
+          FCFMLRTY FLCONFIN
+          ! Control vars (demographic info)
+          MALE IMMI1GEN IMMI2GEN ESCS
+          ;
+
+      ! Covariances
+          ! Between school climate vars
+      FLSCHOOL with NOBULLY;
+      FLSCHOOL with FLFAMILY;
+      NOBULLY with FLFAMILY;
+          ! Between mediators
+      FCFMLRTY with FLCONFIN;
+          ! ESCS with FLFAMILY
+      ESCS with FLFAMILY
+
+  %Between%                                   ! === L2: School-level ===
+
+      FLIT on
+          FLSCHOOL NOBULLY FLFAMILY EDUSHORT  ! School climate variables
+          STRATIO                             ! Control: Student-teacher ratio
+          ;
+
+      FLSCHOOL with NOBULLY;
+      NOBULLY with FLFAMILY;
+      FLFAMILY with EDUSHORT;
+
+      FLSCHOOL with FLFAMILY;
+      NOBULLY with EDUSHORT;
+
+      FLSCHOOL with EDUSHORT;
+
+
+  MODEL INDIRECT:
+
+      ! Indirect effects
+      FLIT ind FLSCHOOL;
+      FLIT ind NOBULLY;
+      FLIT ind FLFAMILY;
+
+
+  OUTPUT:
+      stdyx                                   ! Fully standardised solution
+      mod(all)                                ! Mod indices (all)
+      ;
+
+
+
+*** WARNING in OUTPUT command
+  MODINDICES option is not available for multiple imputation.
+  Request for MODINDICES is ignored.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Two-level structured model 360
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Average number of observations                                5342
+
+Number of replications
+    Requested                                                   10
+    Completed                                                    4
+
+Number of dependent variables                                    3
+Number of independent variables                                  9
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   FLIT        FCFMLRTY    FLCONFIN
+
+Observed independent variables
+   FLSCHOOL    NOBULLY     FLFAMILY    EDUSHORT    STRATIO     MALE
+   IMMI1GEN    IMMI2GEN    ESCS
+
+Variables with special functions
+
+  Cluster variable      CNTSCHID
+  Weight variable (cluster-size scaling)
+    W_STU
+  Between weight variable (sample-size scaling)
+    W_SCH
+
+  Within variables
+   FCFMLRTY    FLCONFIN    MALE        IMMI1GEN    IMMI2GEN    ESCS
+
+  Between variables
+   EDUSHORT    STRATIO
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                   100
+Convergence criterion                                    0.100D-05
+Maximum number of EM iterations                                500
+Convergence criteria for the EM algorithm
+  Loglikelihood change                                   0.100D-02
+  Relative loglikelihood change                          0.100D-05
+  Derivative                                             0.100D-03
+Minimum variance                                         0.100D-03
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  Multiple data files from
+    C:\Users\tctan\implist.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA FOR THE FIRST DATA SET
+
+     Number of missing data patterns            34
+     Number of clusters                        306
+
+     Average cluster size       17.458
+
+     Estimated Intraclass Correlations for the Y Variables
+
+                Intraclass              Intraclass              Intraclass
+     Variable  Correlation   Variable  Correlation   Variable  Correlation
+
+     FLIT         0.418      FCFMLRTY     0.000      FLCONFIN     0.000
+     FLSCHOOL     0.020      NOBULLY      0.024      FLFAMILY     0.011
+     ESCS         0.000
+
+
+
+SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
+
+
+     MISSING DATA PATTERNS (x = not missing)
+
+           1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+ EDUSHORT  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ FLIT      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ FCFMLRTY  x  x  x     x     x           x  x  x  x     x  x  x  x  x
+ FLCONFIN  x        x        x  x        x  x     x     x  x  x
+ FLSCHOOL  x  x     x  x     x  x  x  x  x  x                 x
+ NOBULLY   x  x        x  x  x  x  x        x  x           x        x
+ FLFAMILY  x  x     x           x  x     x  x  x        x  x     x
+ ESCS      x  x  x  x  x  x  x  x  x  x  x     x  x  x  x  x  x  x  x
+ MALE      x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI1GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI2GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ STRATIO   x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+
+          21 22 23 24 25 26 27 28 29 30 31 32 33 34
+ EDUSHORT  x  x  x     x  x        x  x     x  x  x
+ FLIT      x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ FCFMLRTY     x     x        x  x  x  x  x     x
+ FLCONFIN  x        x  x  x     x  x        x
+ FLSCHOOL     x  x  x     x  x  x     x
+ NOBULLY   x     x  x              x
+ FLFAMILY           x  x     x  x     x           x
+ ESCS      x  x  x  x  x  x  x  x  x  x  x  x     x
+ MALE      x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI1GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ IMMI2GEN  x  x  x  x  x  x  x  x  x  x  x  x  x  x
+ STRATIO   x  x  x  x  x  x  x  x  x  x  x  x  x  x
+
+
+     MISSING DATA PATTERN FREQUENCIES
+
+    Pattern   Frequency     Pattern   Frequency     Pattern   Frequency
+          1        4819          13           3          25           1
+          2          22          14           3          26           1
+          3          36          15          25          27           1
+          4           2          16           3          28           3
+          5          13          17           2          29           1
+          6         108          18           8          30           5
+          7          17          19           2          31           1
+          8           8          20          11          32           1
+          9           1          21           1          33           1
+         10           2          22           7          34           1
+         11         109          23           1
+         12           3          24         120
+
+
+COVARIANCE COVERAGE OF DATA FOR THE FIRST DATA SET
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.977
+ FLIT           0.977         1.000
+ FCFMLRTY       0.948         0.972         0.972
+ FLCONFIN       0.932         0.955         0.952         0.955
+ FLSCHOOL       0.939         0.963         0.960         0.953         0.963
+ NOBULLY        0.938         0.960         0.938         0.931         0.937
+ FLFAMILY       0.932         0.956         0.953         0.949         0.953
+ ESCS           0.976         0.999         0.971         0.955         0.962
+ MALE           0.977         1.000         0.972         0.955         0.963
+ IMMI1GEN       0.977         1.000         0.972         0.955         0.963
+ IMMI2GEN       0.977         1.000         0.972         0.955         0.963
+ STRATIO        0.977         1.000         0.972         0.955         0.963
+
+
+           Covariance Coverage
+              NOBULLY       FLFAMILY      ESCS          MALE          IMMI1GEN
+              ________      ________      ________      ________      ________
+ NOBULLY        0.960
+ FLFAMILY       0.932         0.956
+ ESCS           0.960         0.955         0.999
+ MALE           0.960         0.956         0.999         1.000
+ IMMI1GEN       0.960         0.956         0.999         1.000         1.000
+ IMMI2GEN       0.960         0.956         0.999         1.000         1.000
+ STRATIO        0.960         0.956         0.999         1.000         1.000
+
+
+           Covariance Coverage
+              IMMI2GEN      STRATIO
+              ________      ________
+ IMMI2GEN       1.000
+ STRATIO        1.000         1.000
+
+
+SAMPLE STATISTICS
+
+NOTE:  The sample statistics for within and between refer to the
+       maximum-likelihood estimated within and between covariance
+       matrices, respectively.
+
+NOTE:  These are average results over 10 data sets.
+
+
+     ESTIMATED SAMPLE STATISTICS FOR WITHIN
+
+
+           Means
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+                0.000         0.000         5.389        -0.069         0.000
+
+
+           Means
+              NOBULLY       FLFAMILY      ESCS          MALE          IMMI1GEN
+              ________      ________      ________      ________      ________
+                0.000         0.000        -1.484         0.486         0.002
+
+
+           Means
+              IMMI2GEN      STRATIO
+              ________      ________
+                0.001         0.000
+
+
+           Covariances
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000
+ FLIT           0.000      3732.721
+ FCFMLRTY       0.000        64.376        27.708
+ FLCONFIN       0.000         1.477         1.075         0.845
+ FLSCHOOL       0.000        -0.133         1.687         0.217         0.913
+ NOBULLY        0.000         2.649         0.099        -0.102        -0.057
+ FLFAMILY       0.000        -1.187         1.213         0.209         0.356
+ ESCS           0.000         7.754         1.267         0.165         0.149
+ MALE           0.000        -1.937        -0.050         0.039         0.016
+ IMMI1GEN       0.000        -0.055         0.006         0.000         0.001
+ IMMI2GEN       0.000        -0.031        -0.002         0.001         0.001
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Covariances
+              NOBULLY       FLFAMILY      ESCS          MALE          IMMI1GEN
+              ________      ________      ________      ________      ________
+ NOBULLY        1.205
+ FLFAMILY      -0.110         1.034
+ ESCS          -0.057         0.173         1.198
+ MALE          -0.067        -0.012         0.024         0.250
+ IMMI1GEN      -0.002         0.001         0.001         0.000         0.002
+ IMMI2GEN       0.001         0.002         0.002         0.000         0.000
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Covariances
+              IMMI2GEN      STRATIO
+              ________      ________
+ IMMI2GEN       0.001
+ STRATIO        0.000         0.000
+
+
+           Correlations
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000
+ FLIT           0.000         1.000
+ FCFMLRTY       0.000         0.200         1.000
+ FLCONFIN       0.000         0.026         0.222         1.000
+ FLSCHOOL       0.000        -0.002         0.335         0.247         1.000
+ NOBULLY        0.000         0.039         0.017        -0.101        -0.055
+ FLFAMILY       0.000        -0.019         0.227         0.223         0.366
+ ESCS           0.000         0.116         0.220         0.164         0.143
+ MALE           0.000        -0.063        -0.019         0.085         0.034
+ IMMI1GEN       0.000        -0.023         0.031         0.007         0.016
+ IMMI2GEN       0.000        -0.017        -0.015         0.021         0.048
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Correlations
+              NOBULLY       FLFAMILY      ESCS          MALE          IMMI1GEN
+              ________      ________      ________      ________      ________
+ NOBULLY        1.000
+ FLFAMILY      -0.098         1.000
+ ESCS          -0.047         0.155         1.000
+ MALE          -0.123        -0.024         0.044         1.000
+ IMMI1GEN      -0.050         0.021         0.022        -0.001         1.000
+ IMMI2GEN       0.029         0.054         0.053         0.008        -0.001
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Correlations
+              IMMI2GEN      STRATIO
+              ________      ________
+ IMMI2GEN       1.000
+ STRATIO        0.000         0.000
+
+
+     ESTIMATED SAMPLE STATISTICS FOR BETWEEN
+
+
+           Means
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+                0.893       392.519         0.000         0.000         0.472
+
+
+           Means
+              NOBULLY       FLFAMILY      ESCS          MALE          IMMI1GEN
+              ________      ________      ________      ________      ________
+               -0.376         0.125         0.000         0.000         0.000
+
+
+           Means
+              IMMI2GEN      STRATIO
+              ________      ________
+                0.000        18.395
+
+
+           Covariances
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       1.725
+ FLIT         -33.623      2459.600
+ FCFMLRTY       0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000
+ FLSCHOOL      -0.032        -0.644         0.000         0.000         0.018
+ NOBULLY       -0.046         6.475         0.000         0.000        -0.006
+ FLFAMILY      -0.045         1.917         0.000         0.000         0.003
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ STRATIO       -2.138       135.990         0.000         0.000        -0.178
+
+
+           Covariances
+              NOBULLY       FLFAMILY      ESCS          MALE          IMMI1GEN
+              ________      ________      ________      ________      ________
+ NOBULLY        0.030
+ FLFAMILY       0.012         0.012
+ ESCS           0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.765         0.271         0.000         0.000         0.000
+
+
+           Covariances
+              IMMI2GEN      STRATIO
+              ________      ________
+ IMMI2GEN       0.000
+ STRATIO        0.000        93.791
+
+
+           Correlations
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       1.000
+ FLIT          -0.516         1.000
+ FCFMLRTY       0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000
+ FLSCHOOL      -0.178        -0.096         0.000         0.000         1.000
+ NOBULLY       -0.203         0.752         0.000         0.000        -0.264
+ FLFAMILY      -0.315         0.358         0.000         0.000         0.197
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ STRATIO       -0.168         0.283         0.000         0.000        -0.135
+
+
+           Correlations
+              NOBULLY       FLFAMILY      ESCS          MALE          IMMI1GEN
+              ________      ________      ________      ________      ________
+ NOBULLY        1.000
+ FLFAMILY       0.661         1.000
+ ESCS           0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.455         0.259         0.000         0.000         0.000
+
+
+           Correlations
+              IMMI2GEN      STRATIO
+              ________      ________
+ IMMI2GEN       0.000
+ STRATIO        0.000         1.000
+
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       51
+
+Loglikelihood
+
+    H0 Value
+
+        Mean                            -81599.944
+        Std Dev                             45.883
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       -81706.682     -81676.477
+           0.980       1.000       -81694.175     -81676.477
+           0.950       0.750       -81675.417     -81676.477
+           0.900       0.750       -81658.748     -81676.477
+           0.800       0.750       -81638.559     -81676.477
+           0.700       0.750       -81624.005     -81676.477
+           0.500       0.750       -81599.944     -81587.313
+           0.300       0.250       -81575.883     -81587.313
+           0.200       0.250       -81561.329     -81581.457
+           0.100       0.000       -81541.140     -81581.457
+           0.050       0.000       -81524.471     -81581.457
+           0.020       0.000       -81505.714     -81581.457
+           0.010       0.000       -81493.206     -81581.457
+
+    H1 Value
+
+        Mean                            -81338.348
+        Std Dev                             45.830
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       -81444.964     -81414.530
+           0.980       1.000       -81432.470     -81414.530
+           0.950       0.750       -81413.735     -81414.530
+           0.900       0.750       -81397.085     -81414.530
+           0.800       0.750       -81376.919     -81414.530
+           0.700       0.750       -81362.382     -81414.530
+           0.500       0.750       -81338.348     -81326.189
+           0.300       0.250       -81314.315     -81326.189
+           0.200       0.250       -81299.777     -81320.491
+           0.100       0.000       -81279.612     -81320.491
+           0.050       0.000       -81262.962     -81320.491
+           0.020       0.000       -81244.226     -81320.491
+           0.010       0.000       -81231.733     -81320.491
+
+Information Criteria
+
+    Akaike (AIC)
+
+        Mean                            163301.888
+        Std Dev                             91.766
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       163088.412     163211.059
+           0.980       1.000       163113.428     163211.059
+           0.950       1.000       163150.942     163211.059
+           0.900       1.000       163184.281     163211.059
+           0.800       0.750       163224.658     163211.059
+           0.700       0.750       163253.766     163211.059
+           0.500       0.250       163301.888     163264.914
+           0.300       0.250       163350.011     163264.914
+           0.200       0.250       163379.119     163276.627
+           0.100       0.250       163419.496     163276.627
+           0.050       0.250       163452.835     163276.627
+           0.020       0.000       163490.349     163276.627
+           0.010       0.000       163515.365     163276.627
+
+    Bayesian (BIC)
+
+        Mean                            163637.640
+        Std Dev                             91.766
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       163424.163     163546.810
+           0.980       1.000       163449.179     163546.810
+           0.950       1.000       163486.693     163546.810
+           0.900       1.000       163520.032     163546.810
+           0.800       0.750       163560.409     163546.810
+           0.700       0.750       163589.517     163546.810
+           0.500       0.250       163637.640     163600.665
+           0.300       0.250       163685.762     163600.665
+           0.200       0.250       163714.870     163612.378
+           0.100       0.250       163755.247     163612.378
+           0.050       0.250       163788.586     163612.378
+           0.020       0.000       163826.100     163612.378
+           0.010       0.000       163851.116     163612.378
+
+    Sample-Size Adjusted BIC (n* = (n + 2) / 24)
+
+        Mean                            163475.578
+        Std Dev                             91.766
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       163262.102     163384.749
+           0.980       1.000       163287.117     163384.749
+           0.950       1.000       163324.631     163384.749
+           0.900       1.000       163357.970     163384.749
+           0.800       0.750       163398.347     163384.749
+           0.700       0.750       163427.456     163384.749
+           0.500       0.250       163475.578     163438.603
+           0.300       0.250       163523.700     163438.603
+           0.200       0.250       163552.808     163450.316
+           0.100       0.250       163593.186     163450.316
+           0.050       0.250       163626.524     163450.316
+           0.020       0.000       163664.039     163450.316
+           0.010       0.000       163689.054     163450.316
+
+Chi-Square Test of Model Fit
+
+        Degrees of freedom                      26
+
+        Mean                               503.127
+        Std Dev                             33.893
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000           12.198        444.436
+           0.980       1.000           13.409        444.436
+           0.950       1.000           15.379        444.436
+           0.900       1.000           17.292        444.436
+           0.800       1.000           19.820        444.436
+           0.700       1.000           21.792        444.436
+           0.500       1.000           25.336        521.931
+           0.300       1.000           29.246        521.931
+           0.200       1.000           31.795        522.249
+           0.100       1.000           35.563        522.249
+           0.050       1.000           38.885        522.249
+           0.020       1.000           42.856        522.249
+           0.010       1.000           45.642        522.249
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+        Mean                                 0.059
+        Std Dev                              0.002
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.054          0.055
+           0.980       1.000            0.054          0.055
+           0.950       0.750            0.055          0.055
+           0.900       0.750            0.056          0.055
+           0.800       0.750            0.057          0.055
+           0.700       0.750            0.057          0.055
+           0.500       0.750            0.059          0.060
+           0.300       0.750            0.060          0.060
+           0.200       0.000            0.060          0.060
+           0.100       0.000            0.061          0.060
+           0.050       0.000            0.062          0.060
+           0.020       0.000            0.063          0.060
+           0.010       0.000            0.064          0.060
+
+CFI/TLI
+
+    CFI
+
+        Mean                                 0.635
+        Std Dev                              0.022
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.583          0.621
+           0.980       1.000            0.589          0.621
+           0.950       1.000            0.598          0.621
+           0.900       1.000            0.606          0.621
+           0.800       1.000            0.616          0.621
+           0.700       0.500            0.623          0.621
+           0.500       0.250            0.635          0.621
+           0.300       0.250            0.647          0.621
+           0.200       0.250            0.654          0.624
+           0.100       0.250            0.663          0.624
+           0.050       0.250            0.671          0.624
+           0.020       0.000            0.681          0.624
+           0.010       0.000            0.687          0.624
+
+    TLI
+
+        Mean                                 0.200
+        Std Dev                              0.049
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.086          0.170
+           0.980       1.000            0.099          0.170
+           0.950       1.000            0.119          0.170
+           0.900       1.000            0.137          0.170
+           0.800       1.000            0.159          0.170
+           0.700       0.500            0.174          0.170
+           0.500       0.250            0.200          0.170
+           0.300       0.250            0.225          0.170
+           0.200       0.250            0.241          0.175
+           0.100       0.250            0.262          0.175
+           0.050       0.250            0.280          0.175
+           0.020       0.000            0.300          0.175
+           0.010       0.000            0.313          0.175
+
+SRMR (Standardized Root Mean Square Residual) for the WITHIN level
+
+        Mean                                 0.050
+        Std Dev                              0.000
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.050          0.050
+           0.980       1.000            0.050          0.050
+           0.950       1.000            0.050          0.050
+           0.900       0.750            0.050          0.050
+           0.800       0.750            0.050          0.050
+           0.700       0.500            0.050          0.050
+           0.500       0.500            0.050          0.050
+           0.300       0.500            0.050          0.050
+           0.200       0.250            0.050          0.050
+           0.100       0.000            0.050          0.050
+           0.050       0.000            0.050          0.050
+           0.020       0.000            0.050          0.050
+           0.010       0.000            0.050          0.050
+
+SRMR (Standardized Root Mean Square Residual) for the BETWEEN level
+
+        Mean                                 0.136
+        Std Dev                              0.001
+        Number of successful computations        4
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.135          0.136
+           0.980       1.000            0.135          0.136
+           0.950       0.750            0.136          0.136
+           0.900       0.750            0.136          0.136
+           0.800       0.750            0.136          0.136
+           0.700       0.750            0.136          0.136
+           0.500       0.750            0.136          0.137
+           0.300       0.250            0.137          0.137
+           0.200       0.250            0.137          0.137
+           0.100       0.000            0.137          0.137
+           0.050       0.000            0.137          0.137
+           0.020       0.000            0.138          0.137
+           0.010       0.000            0.138          0.137
+
+
+
+MODEL RESULTS
+
+                    Estimate
+
+Within Level
+
+ FCFMLRTY   ON
+    FLSCHOOL           1.589
+    NOBULLY            0.214
+    FLFAMILY           0.670
+
+ FLCONFIN   ON
+    FLSCHOOL           0.180
+    NOBULLY           -0.064
+    FLFAMILY           0.134
+
+ FLIT       ON
+    FLSCHOOL          -3.504
+    NOBULLY            1.218
+    FLFAMILY          -3.491
+    FCFMLRTY           2.388
+    FLCONFIN           0.224
+    MALE              -7.188
+    IMMI1GEN         -45.255
+    IMMI2GEN         -23.138
+    ESCS               5.102
+
+ FLSCHOOL WITH
+    NOBULLY           -0.058
+    FLFAMILY           0.341
+
+ NOBULLY  WITH
+    FLFAMILY          -0.108
+
+ FCFMLRTY WITH
+    FLCONFIN           0.619
+
+ ESCS     WITH
+    FLFAMILY           0.127
+
+ Means
+    ESCS              -1.484
+
+ Intercepts
+    FCFMLRTY           5.390
+    FLCONFIN          -0.071
+
+ Variances
+    FLSCHOOL           0.909
+    NOBULLY            1.203
+    FLFAMILY           1.023
+    ESCS               1.198
+
+ Residual Variances
+    FLIT            3538.726
+    FCFMLRTY          24.218
+    FLCONFIN           0.771
+
+Between Level
+
+ FLIT       ON
+    FLSCHOOL         138.225
+    NOBULLY          408.840
+    FLFAMILY        -408.369
+    EDUSHORT         -14.105
+    STRATIO            0.701
+
+ FLSCHOOL WITH
+    NOBULLY           -0.006
+    FLFAMILY           0.002
+    EDUSHORT          -0.047
+
+ NOBULLY  WITH
+    FLFAMILY           0.015
+    EDUSHORT          -0.041
+
+ FLFAMILY WITH
+    EDUSHORT          -0.038
+
+ Means
+    EDUSHORT           0.891
+    FLSCHOOL           0.469
+    NOBULLY           -0.371
+    FLFAMILY           0.125
+
+ Intercepts
+    FLIT             528.792
+
+ Variances
+    EDUSHORT           1.727
+    FLSCHOOL           0.020
+    NOBULLY            0.030
+    FLFAMILY           0.014
+
+ Residual Variances
+    FLIT               0.012
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Within Level
+
+ FCFMLRTY   ON

@@ -102,7 +102,7 @@ Thank-you goes to
 \chapter*{Popular Abstract}
 \label{Ab.0}
 
-This is a press release style abstract.
+Preparing youth for life-long success with numeracy, literacy and science capability has been the foundation for all schooling. The post-global financial crises and post-COVID era, in addition, imposes increasing demand on financial literacy for school leavers. Since 2012, OECD has been a pioneer in measuring 15-year-olds' financial literacy through its triennial Programme for International Student Assessment (PISA) cycles. Subsequent analyses using PISA data, however, reported paradoxical results that more classroom interventions tend to be associated with either no differences or even lower scores in students' financial literacy measures. It is in educators' interest therefore to carefully examine the relationship between school climate variables, including the academic, safety, community and institutional envrionment aspects of students' lives, and their financial literacy outcomes.
 
 % Abstract
 
@@ -189,6 +189,10 @@ Combining individual and institutional data cources can be a productive approach
 
 \newpage
 
+\input{./Figures/tikz/model_par}
+
+\newpage
+
 \input{./Figures/tikz/model_results}
 
 \newpage
@@ -237,15 +241,15 @@ Student-level ($L_1$):
         \texttt{FLCONFIN}_{ij} &= a_{12}\texttt{FLSCHOOL}_{ij} + a_{22}\texttt{NOBULLY}_{ij} + a_{32}\texttt{FLFAMILY}_{ij} + e^{M_2}_{ij}\\
         \texttt{FLIT}_{ij} &= \gamma_{0j} + b_1\texttt{FCFMLRTY}_{ij} + b_2\texttt{FLCONFIN}_{ij}\\
         &+ c_1\texttt{FLSCHOOL}_{ij} + c_2\texttt{NOBULLY}_{ij} + c_3\texttt{FLFAMILY}_{ij}\\
-        &+ d_1\texttt{ESCS}_{ij} + d_2\texttt{MALE}_{ij} + d_3\texttt{IMMI1GEN}_{ij} + d_4\texttt{IMMI2GEN}_{ij} + e^{Y_W}_{ij}
+        &+ d_1\texttt{IMMI1GEN}_{ij} + d_2\texttt{IMMI2GEN}_{ij} + d_3\texttt{MALE}_{ij} + d_4\texttt{ESCS}_{ij} + e^{Y_W}_{ij}
     \end{aligned}
 \end{equation}
 
 School-level ($L_2$):
 \begin{equation}
     \begin{aligned}
-        \gamma_{0j} &= \tau_{00} + f_1\texttt{FLSCHOOL}_j + f_1\texttt{NOBULLY}_j + f_1\texttt{FLFAMILY}_j + f_1\texttt{EDUSHTG}_j\\
-        &+ g_1\texttt{STRATIO}_j + e^{Y_B}_j
+        \gamma_{0j} &= \tau_{00} + f_1\texttt{FLSCHOOL}_j + f_2\texttt{NOBULLY}_j + f_3\texttt{FLFAMILY}_j + f_4\texttt{EDUSHTG}_j\\
+        &+ g\texttt{STRATIO}_j + e^{Y_B}_j
     \end{aligned}
 \end{equation}
 
@@ -484,15 +488,16 @@ FKI is finally computed by taking the geometric mean of all four sub-indices, su
 
 % Insert appendices
 \begin{appendices}
-    \begin{singlespace}
     \include{Appendices/A}
+    \begin{singlespace}
     \include{Appendices/B}
+    \end{singlespace}
     \include{Appendices/C}
 %    \include{Appendices/D}
 %    \include{Appendices/E}
 %    \include{Appendices/F}
      \include{Appendices/Z}
-    \end{singlespace}
+
 \end{appendices}
 
 % Put Index here
