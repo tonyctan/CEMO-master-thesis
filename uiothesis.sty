@@ -1,0 +1,655 @@
+%%%%% 0. Global settings %%%%%
+
+% APA Rule 2.22: Margins
+\usepackage[margin=1in]{geometry}
+
+% APA7 Rule 2.23: Paragraph Alignment
+\usepackage[document]{ragged2e}
+% % APA7 Rule 2.24: Paragraph Indentation
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+
+% Avoid breaking a word into two lines
+\usepackage[none]{hyphenat}
+
+% Polish letters, such as ``a with a tail'' need this packages
+\usepackage[T2A,T1]{fontenc} %T2A is for Russian
+% Must declare Russian font before calling Russian babel
+
+% Russian alphabet
+%//ref https://tex.stackexchange.com/questions/31709/can-one-instruct-lualatex-to-use-t2a-encoded-fonts
+\usepackage{fontspec}
+\setmainfont{CMU Serif}
+\setsansfont{CMU Sans Serif}
+\setmonofont{CMU Typewriter Text}
+
+% This is from the UiO Master thesis template. Do not change anything.
+\usepackage[utf8]{inputenc}
+\usepackage[russian,british]{babel}
+\usepackage{duomasterforside}
+
+% Use this font for Feynman 's quote
+\usepackage{calligra}
+
+% Turn typewriter font to Fira Code and enable ligature
+% BUT remember to change pdflatex to lualatex engine
+\usepackage{fontspec}
+\setmonofont{FiraCode-Regular.otf}[
+    BoldFont=FiraCode-Bold.otf,
+    Contextuals=Alternate % Activate the calt feature
+]
+
+% To set double spacing
+\usepackage{setspace}
+% Do not set 1.5-spacing or 2-spacing here because it messes up title page.
+% Start double spacing from Acknowledgement chapter.
+
+% Enable inline enumerate
+\usepackage[inline]{enumitem}
+
+% To enable page rotation (to landscape for wide tables, for example)
+\usepackage{pdflscape}
+
+% This adds colour into LaTeX.
+\usepackage[dvipsnames]{xcolor}
+% Define some commonly used colours
+\definecolor{forestgreen}{HTML}{228B22}
+
+
+%%%%% 1. Front matter %%%%%
+
+% This package fixes TOC
+\usepackage[numindex]{tocbibind}
+
+%%%%% 2. Each chapter %%%%%
+
+% Put "Chapter X" and title on the same line
+\usepackage{titlesec}
+\titleformat{\chapter}[block]%
+    {\normalfont\huge\bfseries}%
+    {\chaptertitlename\ \thechapter\ }{0em}{\huge}
+
+% APA7 Rule 2.21 Line Spacing
+% It is not necessary to add blank lines befroe or after headings, even if a heading falls at the end of a page. Do not add extra spacing between paragraphs.
+%titlespacing*{\chapter}{<leftsep>}{<beforesep>}{<aftersep>}
+\titlespacing*{\chapter}{0pt}{0pt}{11pt}
+
+\usepackage{epigraph}
+\setlength{\epigraphwidth}{0.618\textwidth}
+\setlength{\epigraphrule}{0pt} % Turn off the line between epigraph and author
+
+% To better present long quotes
+\usepackage[english=british]{csquotes}
+
+%%%%% 3. Tables %%%%%
+
+% This adds colour shading to tables
+\usepackage{colortbl}
+
+% This allows multi-row to be produced
+\usepackage{multirow}
+
+% This aligns numbers along decimal points
+\usepackage{dcolumn}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+
+% APA7: Figures and tables: label=bf, caption=it
+\usepackage[
+    format=plain,
+    font=normalsize,
+    labelfont=bf,
+    textfont=it,
+    labelsep=newline]{caption}
+\captionsetup{
+    justification=raggedright,
+    singlelinecheck=false,
+    margin=0cm
+    } % Align left
+%\AtEveryCite{\normalfont} % Prevent italic anywhere else in the document
+\usepackage[capposition=top]{floatrow} % For ``Note.'' underneath the figures
+%\DeclareCaptionFont{normal}{\fontsize{11}{13.2}\selectfont}
+%\newcommand{\fignote}[1]{\floatsetup{font=normal,cappositon=bottom}\floatfoot{\large \textit{Note.} #1}}
+
+\usepackage[flushleft]{threeparttable} % Otherwise the table notes run wider than the table
+\usepackage{afterpage}
+\usepackage{booktabs}   % To generate underlines in table header
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}%
+\newcommand{\tabnote}[1]{\begin{tablenotes}\item \textit{Note.} #1\end{tablenotes}}
+
+% Automate and standardise the table production process
+\newcommand{\ltable}[5]{% %%% Landscape table WITH note
+\begin{singlespace}
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{landscape}
+        \begin{table} \flushleft \small
+            \begin{threeparttable}[htbp]
+                \caption{#2}
+                \label{#1}
+                \vspace{-#5mm} % to eliminate the white gap
+                #3 % this is where \begin{tabular}...\end{tabular} go
+            \tabnote{\noindent #4}
+            \end{threeparttable}
+        \end{table}
+    \end{landscape}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+\end{singlespace}
+}
+
+\newcommand{\ltableX}[4]{% %%% Landscape table WITHOUT note
+\begin{singlespace}
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{landscape}
+        \begin{table} \flushleft \small
+            \begin{threeparttable}[htbp]
+                \caption{#2}
+                \label{#1}
+                \vspace{-#4mm} % to eliminate the white gap
+                #3 % this is where \begin{tabular}...\end{tabular} go
+            \end{threeparttable}
+        \end{table}
+    \end{landscape}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+\end{singlespace}
+}
+\newcommand{\ltableCont}[3]{% %%% Landscape table WITH note
+\begin{singlespace}
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{landscape}
+        \begin{table} \flushleft \small
+            \begin{threeparttable}[htbp]
+                \caption*{Continued}
+                \vspace{-#3mm} % to eliminate the white gap
+                #1 % this is where \begin{tabular}...\end{tabular} go
+            \tabnote{#2}
+            \end{threeparttable}
+        \end{table}
+    \end{landscape}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+\end{singlespace}
+}
+\newcommand{\ltableContX}[2]{% %%% Landscape table WITH note
+\begin{singlespace}
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{landscape}
+        \begin{table} \flushleft \small
+            \begin{threeparttable}[htbp]
+                \caption*{Continued}
+                \vspace{-#2mm} % to eliminate the white gap
+                #1 % this is where \begin{tabular}...\end{tabular} go
+            \end{threeparttable}
+        \end{table}
+    \end{landscape}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+\end{singlespace}
+}
+\newcommand{\ptable}[5]{% %%% Portrait table WITH note
+\begin{singlespace}
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{table} \flushleft \small
+        \begin{threeparttable}[htbp]
+            \caption{#2}
+            \label{#1}
+            \vspace{-#5mm} % to eliminate the white gap
+            #3 % this is where \begin{tabular}...\end{tabular} go
+        \tabnote{#4}
+        \end{threeparttable}
+    \end{table}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+\end{singlespace}
+}
+\newcommand{\ptableX}[4]{% %%% Portrait table WITHOUT note
+\begin{singlespace}
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{table} \flushleft \small
+        \begin{threeparttable}[htbp]
+            \caption{#2}
+            \label{#1}
+            \vspace{-#4mm} % to eliminate the white gap
+            #3 % this is where \begin{tabular}...\end{tabular} go
+        \end{threeparttable}
+    \end{table}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+\end{singlespace}
+}
+\newcommand{\ptableCont}[3]{% %%% Portrait table WITH note
+\begin{singlespace}
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{table} \flushleft \small
+        \begin{threeparttable}[htbp]
+            \caption*{Continued}
+            \vspace{-#3mm} % to eliminate the white gap
+            #1 % this is where \begin{tabular}...\end{tabular} go
+        \tabnote{#2}
+        \end{threeparttable}
+    \end{table}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+\end{singlespace}
+}
+\newcommand{\ptableContX}[2]{% %%% Portrait table WITHOUT note
+\begin{singlespace}
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{table} \flushleft \small
+        \begin{threeparttable}[htbp]
+            \caption*{Continued}
+            \vspace{-#2mm} % to eliminate the white gap
+            #1 % this is where \begin{tabular}...\end{tabular} go
+        \end{threeparttable}
+    \end{table}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+\end{singlespace}
+}
+
+
+%%%%% 4. Figures %%%%%
+
+% This is for inserting pictures/figures.
+\usepackage{graphicx}
+\graphicspath{ {./Figures/} }
+
+% Enable alignment adjustment
+\usepackage[export]{adjustbox}
+% Use [margin=〈left〉 〈bottom〉 〈right〉 〈top〉]
+
+% Automate and standardise the figure production process
+\newcommand{\pfigure}[7]{ %%% Portrait figure WITH note
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{figure}[!h]
+        \caption{#2}
+        \label{#1}
+        \vspace{-#6cm}
+            \includegraphics[width=#3\textwidth]{#4}
+        \vspace{-#7cm}
+        \floatfoot{\normalsize \textit{Note.} #5}
+    \end{figure}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+}
+\newcommand{\pfigureX}[6]{ %%% Portrait figure WITHOUT note
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{figure}[!h]
+        \caption{#2}
+        \label{#1}
+        \vspace{-#5cm}
+            \includegraphics[width=#3\textwidth]{#4}
+        \vspace{-#6cm}
+    \end{figure}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+}
+\newcommand{\lfigure}[7]{ %%% Landscape figure WITH note
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{landscape}
+        \begin{figure}[!h]
+            \caption{#2}
+            \label{#1}
+            \vspace{-#6cm}
+                \includegraphics[width=#3\textwidth]{#4}
+            \vspace{-#7cm}
+            \floatfoot{\normalsize \textit{Note.} #5}
+        \end{figure}
+    \end{landscape}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+}
+\newcommand{\lfigureX}[6]{ %%% Landscape figure WITHOUT note
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{landscape}
+        \begin{figure}[!h]
+            \caption{#2}
+            \label{#1}
+            \vspace{-#5cm}
+                \includegraphics[width=#3\textwidth]{#4}
+            \vspace{-#6cm}
+        \end{figure}
+    \end{landscape}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+}
+
+% tikz
+
+\usepackage{tikz}
+\usetikzlibrary{automata,shapes,arrows,calc,positioning,decorations.pathmorphing}
+
+\newcommand{\ptikz}[4]{ %%% Portrait figure WITH note
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{figure}[!h]
+        \caption{#2}
+        \label{#1}
+            #3
+        \floatfoot{\normalsize \textit{Note.} #4}
+    \end{figure}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+}
+\newcommand{\ptikzX}[3]{ %%% Portrait figure WITHOUT note
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{figure}[!h]
+        \caption{#2}
+        \label{#1}
+            #3
+    \end{figure}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+}
+\newcommand{\ltikz}[4]{ %%% Landscape TikZ figure WITH note
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{landscape}
+        \begin{figure}[!h]
+            \caption{#2}
+            \label{#1}
+                #3
+            \floatfoot{\normalsize \textit{Note.} #4}
+        \end{figure}
+    \end{landscape}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+}
+\newcommand{\ltikzX}[3]{ %%% Landscape TikZ figure WITHOUT note
+\setlength\parindent{0in}
+\setlength{\RaggedRightParindent}{\parindent}
+    \begin{landscape}
+        \begin{figure}[!h]
+            \caption{#2}
+            \label{#1}
+                #3
+        \end{figure}
+    \end{landscape}
+\setlength\parindent{0.5in}
+\setlength{\RaggedRightParindent}{\parindent}
+}
+
+%%%%% 5. Appendix %%%%%
+
+%% Include PDF pages in the current file
+\usepackage{pdfpages} %//tip Must load this package AFTER xcolor
+
+%% This chunck is needed in order to turn inserted PDF files into hyperlinks.
+\newcounter{includepdfpage}
+\newcounter{currentpagecounter}
+\newcommand{\addlabelstoallincludedpages}[1]{
+    \refstepcounter{includepdfpage}
+    \stepcounter{currentpagecounter}
+    \label{#1.\thecurrentpagecounter}}
+\newcommand{\modifiedincludepdf}[3]{
+    \setcounter{currentpagecounter}{0}
+    \includepdf[pages=#1,fitpaper,rotateoversize,pagecommand=\addlabelstoallincludedpages{#2}]{#3}
+    }
+
+% Use this package to ensure appendices are referenced correctly in toc
+\usepackage[toc,page]{appendix}
+
+% This package sucks R script from an external R file and enbed it into LaTeX as verbatim
+\usepackage{verbatim}
+% Then use
+% \verbatiminput{folder/file.extension}
+% at the place you want the verbatim to go in.
+
+% This package breaks long lines in the  verbatim environment
+\usepackage{listings}
+\usepackage[verbatim]{lstfiracode} %//ref https://ctan.org/pkg/lstfiracode
+\lstset{
+    basicstyle=\normalsize\ttfamily, % the size of the fonts that are used for the code
+    style=FiraCodeStyle,            % Use predefined FiraCodeStyle
+    numbers=left,                   % where to put the line-numbers
+    numberstyle=\normalsize\color{gray},  % the style that is used for the line-numbers
+    stepnumber=1,                   % the step between two line-numbers. If it is 1, each line will be numbered
+    numbersep=5pt,                  % how far the line-numbers are from the code
+    backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+    showspaces=false,               % show spaces adding particular underscores
+    keepspaces=true,
+    columns=fullflexible,
+    showstringspaces=false,         % underline spaces within strings
+    showtabs=false,                 % show tabs within strings adding particular underscores
+    frame=single,                   % adds a frame around the code
+    rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+    tabsize=2,                      % sets default tabsize to 2 spaces
+    %tab=\rightarrowfill,
+    captionpos=b,                   % sets the caption-position to bottom
+    breaklines=true,                % sets automatic line breaking
+    breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+    keywordstyle=\color{blue},      % keyword style
+    morekeywords={},
+    deletekeywords={},
+    commentstyle=\color{gray},   % comment style
+    stringstyle=\color{PineGreen}      % string literal style
+}
+\lstdefinestyle{vscodeR}{
+    language=R,
+    belowcaptionskip=1\baselineskip,
+    breaklines=true,
+    frame=l,
+    xleftmargin=\parindent,
+    showstringspaces=false,
+    basicstyle=\footnotesize\ttfamily,
+    style=FiraCodeStyle,
+    otherkeywords={!,!=,~,$,*,\&,\%/\%,\%*\%,\%\%,<-,<<-,/},
+    alsoother={.$},
+    keywordstyle=\bfseries\color{blue!60!black},
+    commentstyle=\itshape\color{gray},
+    identifierstyle=\color{BrickRed},
+    stringstyle=\color{PineGreen},
+}
+
+\renewcommand{\lstlistingname}{R output} % Listing -> Algorithm
+\renewcommand{\lstlistlistingname}{List of \lstlistingname s} % List of Listings -> List of R output
+
+%%%%% 6. References %%%%%
+\usepackage{ifplatform}
+
+\usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber, useprefix=false]{biblatex}
+\DeclareLanguageMapping{british}{british-apa}
+\ifwindows
+    \addbibresource{M:\\pc\\Dokumenter\\MSc\\Thesis\\Bibliography\\Master.bib}
+\else
+    \addbibresource{~/uio/pc/Dokumenter/MSc/Thesis/Bibliography/Master.bib}
+\fi
+
+% Citation in possesive:
+\newcommand{\poscite}[1]{\citeauthor{#1}'s (\citeyear{#1})}
+
+%%%%% 7. Index %%%%%
+
+% This is for multiple Indices
+\usepackage{imakeidx}
+\makeindex[name=a,title={Name Index}]
+\makeindex[,title={Subject Index}]
+% Present indices in two-column format
+%\usepackage{multicol}
+
+%                                                                          %
+%                                                                          %
+%                                                                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End Preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Begin maths stuff %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                          %
+%                                                                          %
+%                                                                          %
+
+% Let's get the maths part over with
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+%\usepackage{amsfonts} % Do not turn this on because it clashes with other packages.
+
+% I want to change QED square from an empty square (white) to a solid square (black).
+\renewcommand\qedsymbol{$\blacksquare$}
+
+% This package makes symbols bold.
+\usepackage{bm}
+
+% I have been typing ``with respect to'' too many times so here is a shortcut:
+\newcommand{\wrt}{with respect to\ }
+% along with many other shortcuts and re-definitions
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\erf}[1]{\mathrm{erf}\left(#1\right)}
+\renewcommand{\exp}[1]{\text{\Huge\emph{e}}^{#1}}
+\newcommand{\expb}[1]{\mathrm{exp}\left\{#1\right\}}
+\renewcommand{\sin}[1]{\mathrm{sin}\left(#1\right)}
+\renewcommand{\cos}[1]{\mathrm{cos}\left(#1\right)}
+\renewcommand{\tan}[1]{\mathrm{tan}\left(#1\right)}
+\renewcommand{\sinh}[1]{\mathrm{sinh}\left(#1\right)}
+\renewcommand{\cosh}[1]{\mathrm{cosh}\left(#1\right)}
+\renewcommand{\tanh}[1]{\mathrm{tanh}\left(#1\right)}
+\renewcommand{\arcsin}[1]{\mathrm{arcsin}\left(#1\right)}
+\renewcommand{\arccos}[1]{\mathrm{arccos}\left(#1\right)}
+\renewcommand{\arctan}[1]{\mathrm{arctan}\left(#1\right)}
+
+% I do not like the default $\phi$ and $\epsilon$. I am going to change them to the shapes I prefer.
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+
+% Re-define maximisation and minimisation symbols
+\renewcommand{\max}[2]{\underset{#2}{\text{max}}\{#1\}}
+\renewcommand{\min}[2]{\underset{#2}{\text{min}}\{#1\}}
+
+% Probabilities, expected values and variances will be used very often. I also want them to be in empty blackboard font:
+\newcommand{\p}[1]{\mathbb{P}\left(#1\right)}
+\newcommand{\E}[1]{\mathbb{E}\left(#1\right)}
+\newcommand{\V}[1]{\mathbb{V}\left(#1\right)}
+\newcommand{\var}[1]{\text{var}\left(#1\right)}
+
+% Make all vectors and matrices bold
+\newcommand{\m}[1]{\boldsymbol{#1}}
+% Display the dimension of a matrix
+\newcommand{\md}[3]{\underset{#2 \times #3}{\boldsymbol{#1}}}
+
+% The default bar (such as for averages) is too short. I want it to be longer.
+\newcommand{\mbar}[1]{\overline{\m{#1}}}
+\newcommand{\mhat}[1]{\widehat{\m{#1}}}
+
+% Identity matrix
+\newcommand{\I}{\m{I}}
+\newcommand{\Id}[1]{\m{I}_{#1}}
+% Zero matrix
+\newcommand{\Z}{\m{O}}
+\newcommand{\Zd}[1]{\m{O}_{#1}}
+
+% Transpose symbol
+\usepackage{scalerel}
+%\newcommand{\T}[1]{\m{#1}\strut^\intercal}
+%\newcommand{\Ts}{\strut^\intercal}
+%\newcommand{\T}[1]{\m{#1}^\top}
+\newcommand{\T}[1]{\m{#1}^{\raisebox{1.5\depth}{\scaleto{\intercal}{5pt}}}}
+\newcommand{\Ts}{^{\raisebox{1.5\depth}{\scaleto{\intercal}{5pt}}}}
+
+% Orthogonal symbol
+\newcommand{\G}[1]{\m{#1}\strut^{\rotatebox[origin=c]{180}{$\intercal$}}}
+\newcommand{\Gs}{\strut^{\rotatebox[origin=c]{180}{$\intercal$}}}
+% Inverse symbol
+\newcommand{\inv}[1]{\m{#1}^{-1}}
+
+\newcommand{\tr}[1]{\text{tr}\left(#1\right)}
+\renewcommand{\det}[1]{\text{det}\left(#1\right)}
+\renewcommand{\vec}[1]{\text{vec}\left(\boldsymbol{#1}\right)}
+
+% Column space of a matrix
+\newcommand{\Col}[1]{\mathcal{C}\left(\boldsymbol{\mathrm{#1}}\right)}
+% Null space of a matrix
+\newcommand{\Nul}[1]{\mathcal{N}\left(\boldsymbol{\mathrm{#1}}\right)}
+
+% Correct f(x)dx 's d into straight font
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\D}{\mathrm{D}}
+
+% Define capital Greek letters
+\newcommand{\Alpha}{\mathrm{A}}
+\newcommand{\Beta}{\mathrm{B}}
+\newcommand{\Epsilon}{\mathrm{E}}
+\newcommand{\Zeta}{\mathrm{Z}}
+\newcommand{\Eta}{\mathrm{H}}
+\newcommand{\Iota}{\mathrm{I}}
+\newcommand{\Kappa}{\mathrm{K}}
+\newcommand{\Mu}{\mathrm{M}}
+\newcommand{\Nu}{\mathrm{N}}
+\newcommand{\Omicron}{\mathrm{O}}
+\newcommand{\Rho}{\mathrm{P}}
+\newcommand{\Tau}{\mathrm{T}}
+\newcommand{\Chi}{\mathrm{X}}
+
+\newcommand{\degree}{^\circ}
+
+% Define theorems, corollaries and lemmas:
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+% Reduce gap between equations and text
+\abovedisplayshortskip=0pt
+\belowdisplayshortskip=0pt
+\abovedisplayskip=0pt
+\belowdisplayskip=0pt
+
+% Coloured boxes
+\usepackage{tcolorbox}
+\tcbset{before upper={\parindent0in}} % No paragraph indentation within box
+% Background knowledge
+\newtcolorbox{know}[1]{colback=blue!5!white,colframe=blue!75!black,title=\noindent#1}
+% Note
+\newtcolorbox{note}[1]{colback=yellow!5!white,colframe=yellow!75!black,title=\noindent#1}
+% Caution
+\newtcolorbox{caution}[1]{colback=red!5!white,colframe=red!75!black,title=\noindent#1}
+
+% Define commonly used computer package
+% Convert pt to mm: s pt = s x 25.4/72.27
+\newcommand{\cR}{\includegraphics[width=4.2175mm]{Figures/R.pdf}\ }
+%\newcommand{\cR}{\textsf{R}\ }
+\newcommand{\CR}{\includegraphics[width=4.2175mm]{Figures/R.pdf}}
+%\newcommand{\cR}{\textsf{R}\ }
+%\newcommand{\CR}{\textsf{R}}
+\newcommand{\pk}[1]{\textsf{#1}}
+
+\newcommand{\pres}[2]{\footnotesize$\underset{(#2)}{#1}$}
+\newcommand{\press}[3]{${#1}^{#2}$}
+%\newcommand{\press}[3]{\footnotesize$\underset{(#3)}{#1}^{#2}$}
+
+%                                                                          %
+%                                                                          %
+%                                                                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End maths stuff %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Always load hyperref as the last package
+\usepackage[%
+    colorlinks=true,          % I want to colour all my links
+    linkcolor=red,            % I want cross-references to be in red
+    anchorcolor=black,        % Keep anchors blackvar.names[which(var.names$Source=="QQQ_student")][,2]
+    citecolor=blue,           % In-text-referencing is in blue
+    urlcolor=blue,            % DOIs and URLs are in blue
+    bookmarks=true,           % Generate bookmarks for PDF readers
+    bookmarksopen=false,       % Expand all bookmarks as default
+    bookmarksnumbered=true    % Keep section number in bookmarks
+]{hyperref}
+
+% Always load cleveref last last
+\usepackage[nameinlink,noabbrev,capitalise]{cleveref}

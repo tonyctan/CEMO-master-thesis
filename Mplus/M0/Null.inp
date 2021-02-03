@@ -1,0 +1,58 @@
+
+TITLE:
+    Null model for all countries
+
+DATA:
+    file = "C:\Users\tctan\implist.dat";
+
+    type = imputation;
+
+VARIABLE:
+    names =
+        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
+        ;
+
+    usevar =
+        FLIT                                ! Financial literacy outcome
+        ;
+
+    missing = all (-99);
+
+    weight = W_STU;                         ! Student weight
+    wtscale = cluster;                      ! Scale L1 weight to cluster size
+    b2weight = W_SCH;                        ! School weight
+    bwtscale = sample;                      ! Scale L2 weight to sample
+
+    cluster =
+        CNTRYID                             ! L3 label: country ID
+        CNTSCHID;                           ! L2 label: school ID
+
+
+ANALYSIS:
+    processors = 4;
+
+    type = threelevel;
+
+
+MODEL:
+
+%Within%                                    ! === L1: Student-level ===
+    FLIT;
+
+%Between CNTSCHID%                          ! === L2: School-level ===
+    FLIT;
+
+%Between CNTRYID%                           ! === L3: Country-level ===
+    FLIT;
+
+
+OUTPUT:
+    stdyx;                                  ! Fully standardised solution
