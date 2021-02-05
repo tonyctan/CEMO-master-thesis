@@ -209,12 +209,40 @@ dev.off()
 
 
 # Sort countries by FKI
-position <- data.frame(
-    effect$col_pos, effect$cnt_name, effect$fki,
-    order(effect$sch_tot_m), order(effect$fam_tot_m)
-)
-position <- position[order(position[, 3]), ]
-row.names(position) <- seq(1:20)
+effect_fki <- effect[order(effect$fki), ]
+row.names(effect_fki) <- seq(1:20)
+
+# Prepare for FLSCHOOL bubbles
+
+# Generate (direct, indirect) pair (means)
+mu_sch_fki <- matrix(NA, nrow = dim(effect_fki)[1], ncol = 2)
+mu_sch_fki <- cbind(effect_fki$sch_dir_m, effect_fki$sch_ind_m)
+
+# Generate (direct, indirect) pair (variances)
+sigma_sch_fki <- matrix(0, nrow = 2 * dim(effect_fki)[1], ncol = 2)
+for (i in 1:dim(effect_fki)[1]) {
+    sigma_sch_fki[I(i * 2 - 1), 1] <- effect_fki[i, 10]
+    sigma_sch_fki[I(i * 2), 2] <- effect_fki[i, 8]
+}
+# Turn standard deviations to variances
+sigma_sch_fki <- sigma_sch_fki^2
+
+# Prepare for FLFAMILY bubbles
+
+# Generate (direct, indirect) pair (means)
+mu_fam_fki <- matrix(NA, nrow = dim(effect_fki)[1], ncol = 2)
+mu_fam_fki <- cbind(effect_fki$fam_dir_m, effect_fki$fam_ind_m)
+
+# Generate (direct, indirect) pair (variances)
+sigma_fam_fki <- matrix(0, nrow = 2 * dim(effect_fki)[1], ncol = 2)
+for (i in 1:dim(effect_fki)[1]) {
+    sigma_fam_fki[I(i * 2 - 1), 1] <- effect_fki[i, 16]
+    sigma_fam_fki[I(i * 2), 2] <- effect_fki[i, 14]
+}
+# Turn standard deviations to variances
+sigma_fam_fki <- sigma_fam_fki^2
+
+
 
 pdf("../Figures/country_decomposition.pdf", width = 210, height = 297, paper = "a4")
 
@@ -224,52 +252,49 @@ par(
     mar = c(2, 1, 1, 1) + 0.1
 )
 
-for (j in 1:20) {
+for (i in 1:20) {
 
     # Set up canvas
     ellipse(
-        mu_sch[1, ], sigma_sch[c(1:2), ],
+        mu_sch_fki[1, ], sigma_sch_fki[c(1:2), ],
         alpha = 0.05, npoints = 250, col = "white",
         xlim = c(-0.2, 0.15), ylim = c(-0.02, 0.15),
         xlab = "",
         ylab = "",
-        main = paste0(position[j, 2], " (FKI=", position[j, 3], ")"),
+        main = paste0(effect_fki[i, 2], " (FKI=", position[i, 3], ")"),
         newplot = T
     )
-    abline(h = 0, col = "red", lty=2)
-    abline(v = 0, col = "red", lty=2)
+    abline(h = 0, col = "red", lty = 2)
+    abline(v = 0, col = "red", lty = 2)
+    abline(coef = c(0, -1), col = "blue", lty = 2)
 
-    i <- position[j, 4]
-
-    # Draw school bubbles
+    # Draw FLSCHOOL bubbles
     ellipse(
-        mu_sch[i, ], sigma_sch[c(I(2 * i - 1):I(2 * i)), ],
+        mu_sch_fki[i, ], sigma_sch_fki[c(I(2 * i - 1):I(2 * i)), ],
         alpha = 0.05, npoints = 250,
-        col = col_scale[position$effect.col_pos[j]],
+        col = col_scale[effect_fki$col_pos[i]],
         xlim = c(-0.2, 0.15), ylim = c(-0.02, 0.15),
         xaxt = "n", yaxt = "n",
         newplot = F
     )
 
-    text(mu_sch[i, 1], mu_sch[i, 2],
+    text(mu_sch_fki[i, 1], mu_sch_fki[i, 2],
         labels = "FLSCHOOL",
-        col = col_scale[position$effect.col_pos[j]]
+        col = col_scale[effect_fki$col_pos[i]]
     )
 
-    i <- position[j, 5]
-
-    # Draw family bubble
-    ellipse(mu_fam[i, ], sigma_fam[c(I(2 * i - 1):I(2 * i)), ],
+    # Draw FLFAMILY bubble
+    ellipse(mu_fam_fki[i, ], sigma_fam_fki[c(I(2 * i - 1):I(2 * i)), ],
         alpha = 0.05, npoints = 250,
-        col = col_scale[position$effect.col_pos[j]],
+        col = col_scale[effect_fki$col_pos[i]],
         xlim = c(-0.2, 0.15), ylim = c(-0.02, 0.15),
         xaxt = "n", yaxt = "n",
         newplot = F
     )
 
-    text(mu_fam[i, 1], mu_fam[i, 2],
+    text(mu_fam_fki[i, 1], mu_fam_fki[i, 2],
         labels = "FLFAMILY",
-        col = col_scale[position$effect.col_pos[j]]
+        col = col_scale[effect_fki$col_pos[i]]
     )
 }
 
