@@ -34,23 +34,23 @@ The proposed model therefore is:
 Student-level ($L_1$):
 \begin{equation}
     \begin{aligned}
-        \texttt{FCFMLRTY}_{ij} &= a_{11}\texttt{FLSCHOOL}_{ij} + a_{21}\texttt{NOBULLY}_{ij} + a_{31}\texttt{FLFAMILY}_{ij} + e^{M_1}_{ij}\\
-        \texttt{FLCONFIN}_{ij} &= a_{12}\texttt{FLSCHOOL}_{ij} + a_{22}\texttt{NOBULLY}_{ij} + a_{32}\texttt{FLFAMILY}_{ij} + e^{M_2}_{ij}\\
-        \texttt{FLIT}_{ij} &= \gamma_{0j} + b_1\texttt{FCFMLRTY}_{ij} + b_2\texttt{FLCONFIN}_{ij}\\
-        &+ c_1\texttt{FLSCHOOL}_{ij} + c_2\texttt{NOBULLY}_{ij} + c_3\texttt{FLFAMILY}_{ij}\\
-        &+ d_1\texttt{IMMI1GEN}_{ij} + d_2\texttt{IMMI2GEN}_{ij} + d_3\texttt{MALE}_{ij} + d_4\texttt{ESCS}_{ij} + e^{Y_W}_{ij}
+        \texttt{FCFMLRTY}_{ij} &= \gamma_{11}\texttt{FLSCHOOL}_{ij} + \gamma_{21}\texttt{NOBULLY}_{ij} + \gamma_{31}\texttt{FLFAMILY}_{ij} + r^{M_1}_{ij}\\
+        \texttt{FLCONFIN}_{ij} &= \gamma_{12}\texttt{FLSCHOOL}_{ij} + \gamma_{22}\texttt{NOBULLY}_{ij} + \gamma_{32}\texttt{FLFAMILY}_{ij} + r^{M_2}_{ij}\\
+        \texttt{FLIT}_{ij} &= \alpha_{0j} + \beta_1\texttt{FCFMLRTY}_{ij} + \beta_2\texttt{FLCONFIN}_{ij}\\
+        &+ \gamma_1\texttt{FLSCHOOL}_{ij} + \gamma_2\texttt{NOBULLY}_{ij} + \gamma_3\texttt{FLFAMILY}_{ij}\\
+        &+ k_1\texttt{IMMI1GEN}_{ij} + k_2\texttt{IMMI2GEN}_{ij} + k_3\texttt{MALE}_{ij} + k_4\texttt{ESCS}_{ij} + r^{Y_W}_{ij}
     \end{aligned}
 \end{equation}
 
 School-level ($L_2$):
 \begin{equation}
     \begin{aligned}
-        \gamma_{0j} &= \tau_{00} + f_1\texttt{FLSCHOOL}_j + f_2\texttt{NOBULLY}_j + f_3\texttt{FLFAMILY}_j + f_4\texttt{EDUSHTG}_j\\
-        &+ g\texttt{STRATIO}_j + e^{Y_B}_j
+        \alpha_{0j} &= \alpha_{00} + a_1\texttt{FLSCHOOL}_j + a_2\texttt{NOBULLY}_j + a_3\texttt{FLFAMILY}_j + a_4\texttt{EDUSHTG}_j\\
+        &+ k_0\texttt{STRATIO}_j + \epsilon^{Y_B}_j
     \end{aligned}
 \end{equation}
 
-In standard notation $\m{y} = \m{\alpha} + \m{\Beta}\m{y} + \m{\Gamma} \m{x} + \text{controls} + \m{\zeta}$:
+Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{y}_{ij} + \m{\Gamma}_j\m{x}_{ij} + \text{controls}^W + \m{r}_{ij}$ for student-level ($L_1$) and random intercept $\alpha_{0j} = \alpha_{00} + \m{a}\m{w}_j + \text{control}^B + \epsilon_j$ for school-level ($L_2$):
 \begin{equation}
     \begin{aligned}
         \begin{bmatrix}
@@ -61,11 +61,11 @@ In standard notation $\m{y} = \m{\alpha} + \m{\Beta}\m{y} + \m{\Gamma} \m{x} + \
         \begin{pmatrix}
             0\\
             0\\
-            \gamma_{0j}
+            \alpha_{0j}
         \end{pmatrix} +
         \begin{pmatrix}
-            0   &0  &b_1\\
-            0   &0  &b_2\\
+            0   &0  &\beta_1\\
+            0   &0  &\beta_2\\
             0   &0  &0\\
         \end{pmatrix}\Ts
         \begin{bmatrix}
@@ -75,9 +75,9 @@ In standard notation $\m{y} = \m{\alpha} + \m{\Beta}\m{y} + \m{\Gamma} \m{x} + \
         \end{bmatrix}\\
         &+
         \begin{pmatrix}
-            a_{11}  &a_{12}   &c_1\\
-            a_{21}  &a_{22}   &c_2\\
-            a_{31}  &a_{32}   &c_3\\
+            \gamma_{11}  &\gamma_{12}   &\gamma_1\\
+            \gamma_{21}  &\gamma_{22}   &\gamma_2\\
+            \gamma_{31}  &\gamma_{32}   &\gamma_3\\
         \end{pmatrix}\Ts
         \begin{bmatrix}
             \texttt{FLSCHOOL}_{ij}\\
@@ -85,32 +85,31 @@ In standard notation $\m{y} = \m{\alpha} + \m{\Beta}\m{y} + \m{\Gamma} \m{x} + \
             \texttt{FLFAMILY}_{ij}
         \end{bmatrix} +
         \begin{pmatrix}
-            d_1\\
-            d_2\\
-            d_3\\
-            d_4
+            k_1\\
+            k_2\\
+            k_3\\
+            k_4
         \end{pmatrix}\Ts
         \begin{bmatrix}
-            \texttt{ESCS}\\
-            \texttt{MALE}\\
-            \texttt{IMMI1GEN}\\
-            \texttt{IMMI2GEN}
+            \texttt{IMMI1GEN}_{ij}\\
+            \texttt{IMMI2GEN}_{ij}\\
+            \texttt{MALE}_{ij}\\
+            \texttt{ESCS}_{ij}
         \end{bmatrix} +
         \begin{pmatrix}
-            e^{M_1}_{ij}\\
-            e^{M_2}_{ij}\\
-            e^{Y_W}_{ij}
+            r^{M_1}_{ij}\\
+            r^{M_2}_{ij}\\
+            r^{Y_W}_{ij}
         \end{pmatrix}
     \end{aligned}
 \end{equation}
-for student-level ($L_1$) and
 \begin{equation}
-    \gamma_{0j} = \tau_{00} +
+    \alpha_{0j} = \alpha_{00} +
     \begin{pmatrix}
-        f_1\\
-        f_2\\
-        f_3\\
-        f_4
+        a_1\\
+        a_2\\
+        a_3\\
+        a_4
     \end{pmatrix}\Ts
     \begin{bmatrix}
         \texttt{FLSCHOOL}_j\\
@@ -118,9 +117,9 @@ for student-level ($L_1$) and
         \texttt{FLFAMILY}_j\\
         \texttt{EDUSHTG}_j
     \end{bmatrix}
-    + g_1\texttt{STRATIO}_j + e^{Y_B}_j
+    + k_0\texttt{STRATIO}_j + \epsilon^{Y_B}_j
 \end{equation}
-for school-level ($L_2$).
+
 
 \newpage
 
