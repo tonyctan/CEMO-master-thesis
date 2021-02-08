@@ -81,34 +81,41 @@ FKI <- recode(finlit$CNT, "
 # Recode ST004D01T from Sex to Male
 MALE <- finlit$ST004D01T - 1
 
-# Recode IMMIG to 1st and 2nd generation
-IMMI1GEN <- recode(finlit$IMMIG, "
-    1 = 0;
-    2 = 0;
-    3 = 1
-")
-
-IMMI2GEN <- recode(finlit$IMMIG, "
-    1 = 0;
-    2 = 1;
-    3 = 0
-")
-
 # Revert coding direction: bigger number => safer school
 NOBULLY <- finlit$BEINGBULLIED * (-1)
 
 # Stitch spreadsheet together
 names(finlit)
-finlit <- cbind(FKI, finlit[, c(2:35)], MALE, IMMI1GEN, IMMI2GEN, finlit[, c(38:41)], NOBULLY, finlit[, c(43:46)])
+finlit <- cbind(
+    FKI, finlit[, c(2:35)], MALE, finlit[, c(37:41)], NOBULLY, finlit[, c(43:46)]
+)
 head(finlit)
 names(finlit)
 
 # Remove cases whose school weights (col #45) are NA
 obs0 <- dim(finlit)[1]
-finlit <- finlit[complete.cases(finlit[, 45]), ]
+finlit <- finlit[complete.cases(finlit$W_FSTUWT_SCH_SUM), ]
 obs1 <- dim(finlit)[1]
 obs0 - obs1 # 12 cases contained missing school weights and have been dropped
 rm(obs0, obs1)
+
+# Prepare dataset for Mplus multilevel multiple imputation
+
+# Use the correct end-of-line marker depending on the operating system
+switch(Sys.info()[["sysname"]],
+    Linux = {EOL = "\r\n"},
+    Windows = {EOL = "\n"}
+)
+
+write.table(finlit,
+    "finlit.dat",
+    row.names = F, col.names = F,
+    sep= ",", na = "-99", eol = EOL
+)
+
+
+
+
 
 # Use data.table for better RAM management
 library(data.table); setDTthreads(0) # 0 means all the available cores

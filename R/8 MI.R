@@ -6,6 +6,8 @@ setwdOS(lin = "~/", win = "C:/Users/Tony/")
 library(data.table); setDTthreads(0)
 finlit <- fread("finlit.csv", header = T)
 
+# End of Mplus preparation
+
 # Create a MI method list
 meth <- c(
     "", "", "", "", "", "",
@@ -34,12 +36,6 @@ write.mice.imputation(mi.finlit, name="finlit")
 
 # Clean up imputation data sets
 setwdOS(lin = "~/", win = "C:/Users/Tony/", ext = "finlit")
-
-# Use the correct end-of-line marker depending on the operating system
-switch(Sys.info()[["sysname"]],
-    Linux = {EOL = "\r\n"},
-    Windows = {EOL = "\n"}
-)
 
 imp1 <- fread("finlit__IMPDATA1.dat")
 imp1 <- imp1[, c(1:5, 6, 16, 26, 36:52)]

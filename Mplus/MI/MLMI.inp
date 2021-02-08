@@ -1,0 +1,79 @@
+
+TITLE:
+    Multilevel multiple imputation
+
+DATA:
+    file = "C:\Users\tctan\finlit.dat";
+
+
+VARIABLE:
+    names =
+        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
+        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
+        PV1READ PV2READ PV3READ PV4READ PV5READ
+        PV6READ PV7READ PV8READ PV9READ PV10READ
+        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
+        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
+        MALE IMMI ESCS                      ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
+        ;
+
+    usevar =
+        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
+        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
+        PV1READ PV2READ PV3READ PV4READ PV5READ
+        PV6READ PV7READ PV8READ PV9READ PV10READ
+        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
+        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
+        MALE IMMI ESCS
+        FCFMLRTY FLCONFIN
+        FLSCHOOL NOBULLY FLFAMILY
+        STRATIO EDUSHORT
+        ;
+
+    auxiliary =
+        FKI CNTRYID CNTSTUID W_STU
+        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
+        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
+        PV1READ PV2READ PV3READ PV4READ PV5READ
+        PV6READ PV7READ PV8READ PV9READ PV10READ
+        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
+        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
+        W_SCH
+        ;
+
+    missing = all (-99);
+
+    cluster = CNTSCHID;
+
+
+ANALYSIS:
+    processors = 4;
+
+    type = basic twolevel;
+
+    fbiterations = 50000;                ! Number of burn-in iterations
+    chains = 4;
+    bseed = 1234;
+
+
+DATA IMPUTATION:
+    impute =
+        MALE (c) IMMI (c) ESCS
+        FCFMLRTY FLCONFIN
+        FLSCHOOL NOBULLY FLFAMILY
+        STRATIO EDUSHORT
+        ;
+    ndatasets = 10;
+    save = FLIT_MI_*.dat;
+    thin = 5000;                         ! Separations to avoid autocorrelation
+
+
+OUTPUT:
+    tech8;
