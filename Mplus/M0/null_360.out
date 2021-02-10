@@ -1,6 +1,6 @@
 Mplus VERSION 8.3
 MUTHEN & MUTHEN
-01/22/2021   3:29 PM
+02/10/2021   7:17 PM
 
 INPUT INSTRUCTIONS
 
@@ -15,7 +15,7 @@ INPUT INSTRUCTIONS
 
   VARIABLE:
       names =
-          FKI CNTRYID CNTSCHID CNTSTUID W_STU
+          FKI CNTRYID CNTSCHID W_STU
           MATH READ FLIT                      ! PISA achievement variables
           MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
           FCFMLRTY FLCONFIN                   ! Affect
@@ -31,8 +31,6 @@ INPUT INSTRUCTIONS
       usevar =
           FLIT                                ! Financial literacy outcome
           ;
-
-      missing = all (-99);
 
       weight = W_STU;                         ! Student weight
       wtscale = cluster;                      ! Scale L1 weight to cluster size
@@ -58,7 +56,9 @@ INPUT INSTRUCTIONS
 
 
   OUTPUT:
-      stdyx;                                  ! Fully standardised solution
+      stdyx                                   ! Fully standardised solution
+      mod(all)                                ! Mod indices (all)
+      ;
 
 
 
@@ -67,7 +67,10 @@ INPUT INSTRUCTIONS
 *** WARNING in MODEL command
   At least one variable is uncorrelated with all other variables in the model.
   Check that this is what is intended.
-   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+*** WARNING in OUTPUT command
+  MODINDICES option is not available for multiple imputation.
+  Request for MODINDICES is ignored.
+   3 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
 
 
 
@@ -123,7 +126,6 @@ Input data format  FREE
 
 SUMMARY OF DATA FOR THE FIRST DATA SET
 
-     Number of missing data patterns             1
      Number of clusters                        395
 
      Average cluster size       18.056
@@ -135,35 +137,6 @@ SUMMARY OF DATA FOR THE FIRST DATA SET
 
      FLIT         0.463
 
-
-
-SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
-
-
-     MISSING DATA PATTERNS (x = not missing)
-
-           1
- FLIT      x
-
-
-     MISSING DATA PATTERN FREQUENCIES
-
-    Pattern   Frequency
-          1        7132
-
-
-COVARIANCE COVERAGE OF DATA FOR THE FIRST DATA SET
-
-Minimum covariance coverage value   0.100
-
-
-     PROPORTION OF DATA PRESENT
-
-
-           Covariance Coverage
-              FLIT
-              ________
- FLIT           1.000
 
 
 SAMPLE STATISTICS
@@ -208,7 +181,7 @@ NOTE:  These are average results over 10 data sets.
            Covariances
               FLIT
               ________
- FLIT        2955.140
+ FLIT        2955.141
 
 
            Correlations
@@ -541,7 +514,31 @@ TECHNICAL 1 OUTPUT
                     0
 
 
+           LAMBDA
+              FLIT
+              ________
+ FLIT               0
+
+
            THETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           ALPHA
+              FLIT
+              ________
+                    0
+
+
+           BETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           PSI
               FLIT
               ________
  FLIT               1
@@ -553,10 +550,34 @@ TECHNICAL 1 OUTPUT
            NU
               FLIT
               ________
-                    2
+                    0
+
+
+           LAMBDA
+              FLIT
+              ________
+ FLIT               0
 
 
            THETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           ALPHA
+              FLIT
+              ________
+                    2
+
+
+           BETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           PSI
               FLIT
               ________
  FLIT               3
@@ -571,7 +592,31 @@ TECHNICAL 1 OUTPUT
                 0.000
 
 
+           LAMBDA
+              FLIT
+              ________
+ FLIT           1.000
+
+
            THETA
+              FLIT
+              ________
+ FLIT           0.000
+
+
+           ALPHA
+              FLIT
+              ________
+                0.000
+
+
+           BETA
+              FLIT
+              ________
+ FLIT           0.000
+
+
+           PSI
               FLIT
               ________
  FLIT        3799.592
@@ -583,18 +628,42 @@ TECHNICAL 1 OUTPUT
            NU
               FLIT
               ________
-              412.830
+                0.000
+
+
+           LAMBDA
+              FLIT
+              ________
+ FLIT           1.000
 
 
            THETA
               FLIT
               ________
+ FLIT           0.000
+
+
+           ALPHA
+              FLIT
+              ________
+              412.830
+
+
+           BETA
+              FLIT
+              ________
+ FLIT           0.000
+
+
+           PSI
+              FLIT
+              ________
  FLIT        3799.592
 
 
-     Beginning Time:  15:29:34
-        Ending Time:  15:30:11
-       Elapsed Time:  00:00:37
+     Beginning Time:  19:17:17
+        Ending Time:  19:18:00
+       Elapsed Time:  00:00:43
 
 
 

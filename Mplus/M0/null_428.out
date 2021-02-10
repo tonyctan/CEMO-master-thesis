@@ -1,6 +1,6 @@
 Mplus VERSION 8.3
 MUTHEN & MUTHEN
-01/22/2021   3:29 PM
+02/10/2021   7:17 PM
 
 INPUT INSTRUCTIONS
 
@@ -15,7 +15,7 @@ INPUT INSTRUCTIONS
 
   VARIABLE:
       names =
-          FKI CNTRYID CNTSCHID CNTSTUID W_STU
+          FKI CNTRYID CNTSCHID W_STU
           MATH READ FLIT                      ! PISA achievement variables
           MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
           FCFMLRTY FLCONFIN                   ! Affect
@@ -31,8 +31,6 @@ INPUT INSTRUCTIONS
       usevar =
           FLIT                                ! Financial literacy outcome
           ;
-
-      missing = all (-99);
 
       weight = W_STU;                         ! Student weight
       wtscale = cluster;                      ! Scale L1 weight to cluster size
@@ -58,7 +56,9 @@ INPUT INSTRUCTIONS
 
 
   OUTPUT:
-      stdyx;                                  ! Fully standardised solution
+      stdyx                                   ! Fully standardised solution
+      mod(all)                                ! Mod indices (all)
+      ;
 
 
 
@@ -67,7 +67,10 @@ INPUT INSTRUCTIONS
 *** WARNING in MODEL command
   At least one variable is uncorrelated with all other variables in the model.
   Check that this is what is intended.
-   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+*** WARNING in OUTPUT command
+  MODINDICES option is not available for multiple imputation.
+  Request for MODINDICES is ignored.
+   3 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
 
 
 
@@ -123,7 +126,6 @@ Input data format  FREE
 
 SUMMARY OF DATA FOR THE FIRST DATA SET
 
-     Number of missing data patterns             1
      Number of clusters                        307
 
      Average cluster size       10.264
@@ -135,35 +137,6 @@ SUMMARY OF DATA FOR THE FIRST DATA SET
 
      FLIT         0.196
 
-
-
-SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
-
-
-     MISSING DATA PATTERNS (x = not missing)
-
-           1
- FLIT      x
-
-
-     MISSING DATA PATTERN FREQUENCIES
-
-    Pattern   Frequency
-          1        3151
-
-
-COVARIANCE COVERAGE OF DATA FOR THE FIRST DATA SET
-
-Minimum covariance coverage value   0.100
-
-
-     PROPORTION OF DATA PRESENT
-
-
-           Covariance Coverage
-              FLIT
-              ________
- FLIT           1.000
 
 
 SAMPLE STATISTICS
@@ -187,7 +160,7 @@ NOTE:  These are average results over 10 data sets.
            Covariances
               FLIT
               ________
- FLIT        4987.460
+ FLIT        4987.465
 
 
            Correlations
@@ -208,7 +181,7 @@ NOTE:  These are average results over 10 data sets.
            Covariances
               FLIT
               ________
- FLIT        1257.109
+ FLIT        1257.095
 
 
            Correlations
@@ -227,121 +200,121 @@ Loglikelihood
 
     H0 Value
 
-        Mean                            -18062.206
-        Std Dev                             31.044
+        Mean                            -18062.207
+        Std Dev                             31.045
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000       -18134.424     -18105.972
-           0.980       1.000       -18125.961     -18105.972
-           0.950       1.000       -18113.270     -18105.972
-           0.900       0.800       -18101.992     -18105.972
-           0.800       0.700       -18088.333     -18105.972
-           0.700       0.600       -18078.486     -18093.999
-           0.500       0.500       -18062.206     -18064.480
-           0.300       0.400       -18045.927     -18041.700
-           0.200       0.300       -18036.079     -18028.693
-           0.100       0.100       -18022.420     -18023.259
-           0.050       0.000       -18011.142     -18023.259
-           0.020       0.000       -17998.451     -18023.259
-           0.010       0.000       -17989.988     -18023.259
+           0.990       1.000       -18134.426     -18105.974
+           0.980       1.000       -18125.963     -18105.974
+           0.950       1.000       -18113.272     -18105.974
+           0.900       0.800       -18101.994     -18105.974
+           0.800       0.700       -18088.334     -18105.974
+           0.700       0.600       -18078.487     -18094.001
+           0.500       0.500       -18062.207     -18064.480
+           0.300       0.400       -18045.927     -18041.702
+           0.200       0.300       -18036.080     -18028.693
+           0.100       0.100       -18022.420     -18023.260
+           0.050       0.000       -18011.142     -18023.260
+           0.020       0.000       -17998.451     -18023.260
+           0.010       0.000       -17989.988     -18023.260
 
     H1 Value
 
-        Mean                            -18062.175
-        Std Dev                             31.026
+        Mean                            -18062.176
+        Std Dev                             31.027
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000       -18134.351     -18105.928
-           0.980       1.000       -18125.893     -18105.928
-           0.950       1.000       -18113.210     -18105.928
-           0.900       0.800       -18101.938     -18105.928
-           0.800       0.700       -18088.286     -18105.928
-           0.700       0.600       -18078.445     -18093.998
-           0.500       0.500       -18062.175     -18064.469
-           0.300       0.400       -18045.905     -18041.696
-           0.200       0.300       -18036.063     -18028.692
-           0.100       0.100       -18022.412     -18023.259
-           0.050       0.000       -18011.140     -18023.259
-           0.020       0.000       -17998.457     -18023.259
-           0.010       0.000       -17989.999     -18023.259
+           0.990       1.000       -18134.353     -18105.929
+           0.980       1.000       -18125.895     -18105.929
+           0.950       1.000       -18113.211     -18105.929
+           0.900       0.800       -18101.939     -18105.929
+           0.800       0.700       -18088.288     -18105.929
+           0.700       0.600       -18078.446     -18094.000
+           0.500       0.500       -18062.176     -18064.469
+           0.300       0.400       -18045.905     -18041.698
+           0.200       0.300       -18036.064     -18028.693
+           0.100       0.100       -18022.412     -18023.260
+           0.050       0.000       -18011.140     -18023.260
+           0.020       0.000       -17998.456     -18023.260
+           0.010       0.000       -17989.999     -18023.260
 
 Information Criteria
 
     Akaike (AIC)
 
-        Mean                             36130.412
-        Std Dev                             62.088
+        Mean                             36130.414
+        Std Dev                             62.089
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000        35985.977      36049.047
-           0.980       1.000        36002.902      36049.047
-           0.950       1.000        36028.284      36049.047
-           0.900       0.900        36050.840      36049.047
-           0.800       0.700        36078.159      36049.047
-           0.700       0.600        36097.853      36063.385
-           0.500       0.500        36130.412      36125.769
-           0.300       0.400        36162.971      36164.272
-           0.200       0.300        36182.666      36193.997
-           0.100       0.200        36209.984      36212.832
-           0.050       0.000        36232.541      36212.832
-           0.020       0.000        36257.923      36212.832
-           0.010       0.000        36274.848      36212.832
+           0.990       1.000        35985.976      36049.045
+           0.980       1.000        36002.902      36049.045
+           0.950       1.000        36028.284      36049.045
+           0.900       0.900        36050.841      36049.045
+           0.800       0.700        36078.160      36049.045
+           0.700       0.600        36097.855      36063.386
+           0.500       0.500        36130.414      36125.768
+           0.300       0.400        36162.973      36164.274
+           0.200       0.300        36182.668      36194.001
+           0.100       0.200        36209.987      36212.836
+           0.050       0.000        36232.544      36212.836
+           0.020       0.000        36257.926      36212.836
+           0.010       0.000        36274.852      36212.836
 
     Bayesian (BIC)
 
-        Mean                             36148.579
-        Std Dev                             62.088
+        Mean                             36148.580
+        Std Dev                             62.089
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000        36004.143      36067.213
-           0.980       1.000        36021.068      36067.213
-           0.950       1.000        36046.450      36067.213
-           0.900       0.900        36069.007      36067.213
-           0.800       0.700        36096.325      36067.213
-           0.700       0.600        36116.020      36081.551
-           0.500       0.500        36148.579      36143.935
-           0.300       0.400        36181.138      36182.438
-           0.200       0.300        36200.832      36212.164
-           0.100       0.200        36228.151      36230.999
-           0.050       0.000        36250.707      36230.999
-           0.020       0.000        36276.089      36230.999
-           0.010       0.000        36293.014      36230.999
+           0.990       1.000        36004.143      36067.212
+           0.980       1.000        36021.068      36067.212
+           0.950       1.000        36046.450      36067.212
+           0.900       0.900        36069.007      36067.212
+           0.800       0.700        36096.326      36067.212
+           0.700       0.600        36116.021      36081.552
+           0.500       0.500        36148.580      36143.934
+           0.300       0.400        36181.140      36182.440
+           0.200       0.300        36200.835      36212.168
+           0.100       0.200        36228.154      36231.003
+           0.050       0.000        36250.711      36231.003
+           0.020       0.000        36276.093      36231.003
+           0.010       0.000        36293.018      36231.003
 
     Sample-Size Adjusted BIC (n* = (n + 2) / 24)
 
-        Mean                             36139.046
-        Std Dev                             62.088
+        Mean                             36139.048
+        Std Dev                             62.089
         Number of successful computations       10
 
              Proportions                   Percentiles
         Expected    Observed         Expected       Observed
-           0.990       1.000        35994.611      36057.681
-           0.980       1.000        36011.536      36057.681
-           0.950       1.000        36036.918      36057.681
-           0.900       0.900        36059.474      36057.681
-           0.800       0.700        36086.793      36057.681
-           0.700       0.600        36106.487      36072.019
-           0.500       0.500        36139.046      36134.403
-           0.300       0.400        36171.605      36172.906
-           0.200       0.300        36191.300      36202.631
-           0.100       0.200        36218.618      36221.466
-           0.050       0.000        36241.175      36221.466
-           0.020       0.000        36266.557      36221.466
-           0.010       0.000        36283.482      36221.466
+           0.990       1.000        35994.610      36057.679
+           0.980       1.000        36011.536      36057.679
+           0.950       1.000        36036.918      36057.679
+           0.900       0.900        36059.475      36057.679
+           0.800       0.700        36086.794      36057.679
+           0.700       0.600        36106.489      36072.020
+           0.500       0.500        36139.048      36134.402
+           0.300       0.400        36171.608      36172.908
+           0.200       0.300        36191.302      36202.635
+           0.100       0.200        36218.621      36221.470
+           0.050       0.000        36241.178      36221.470
+           0.020       0.000        36266.560      36221.470
+           0.010       0.000        36283.486      36221.470
 
 Chi-Square Test of Model Fit
 
         Degrees of freedom                       0
 
-        Mean                                 0.062
+        Mean                                 0.063
         Std Dev                              0.070
         Number of successful computations       10
 
@@ -483,15 +456,15 @@ MODEL RESULTS
 Within Level
 
  Variances
-    FLIT            4995.224    180.905     27.612      0.000      0.362
+    FLIT            4995.228    180.907     27.612      0.000      0.362
 
 Between Level
 
  Means
-    FLIT             503.052      2.955    170.249      0.000      0.097
+    FLIT             503.052      2.955    170.248      0.000      0.097
 
  Variances
-    FLIT            1246.165    240.698      5.177      0.000      0.007
+    FLIT            1246.163    240.696      5.177      0.000      0.007
 
 
 STANDARDIZED MODEL RESULTS
@@ -510,7 +483,7 @@ Within Level
 Between Level
 
  Means
-    FLIT              14.251      1.354     10.522      0.000      0.007
+    FLIT              14.251      1.354     10.523      0.000      0.007
 
  Variances
     FLIT               1.000      0.000  *********      0.000      0.000
@@ -541,7 +514,31 @@ TECHNICAL 1 OUTPUT
                     0
 
 
+           LAMBDA
+              FLIT
+              ________
+ FLIT               0
+
+
            THETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           ALPHA
+              FLIT
+              ________
+                    0
+
+
+           BETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           PSI
               FLIT
               ________
  FLIT               1
@@ -553,10 +550,34 @@ TECHNICAL 1 OUTPUT
            NU
               FLIT
               ________
-                    2
+                    0
+
+
+           LAMBDA
+              FLIT
+              ________
+ FLIT               0
 
 
            THETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           ALPHA
+              FLIT
+              ________
+                    2
+
+
+           BETA
+              FLIT
+              ________
+ FLIT               0
+
+
+           PSI
               FLIT
               ________
  FLIT               3
@@ -571,10 +592,34 @@ TECHNICAL 1 OUTPUT
                 0.000
 
 
+           LAMBDA
+              FLIT
+              ________
+ FLIT           1.000
+
+
            THETA
               FLIT
               ________
- FLIT        3156.239
+ FLIT           0.000
+
+
+           ALPHA
+              FLIT
+              ________
+                0.000
+
+
+           BETA
+              FLIT
+              ________
+ FLIT           0.000
+
+
+           PSI
+              FLIT
+              ________
+ FLIT        3156.242
 
 
      STARTING VALUES FOR BETWEEN
@@ -583,18 +628,42 @@ TECHNICAL 1 OUTPUT
            NU
               FLIT
               ________
-              499.284
+                0.000
+
+
+           LAMBDA
+              FLIT
+              ________
+ FLIT           1.000
 
 
            THETA
               FLIT
               ________
- FLIT        3156.239
+ FLIT           0.000
 
 
-     Beginning Time:  15:29:35
-        Ending Time:  15:30:12
-       Elapsed Time:  00:00:37
+           ALPHA
+              FLIT
+              ________
+              499.284
+
+
+           BETA
+              FLIT
+              ________
+ FLIT           0.000
+
+
+           PSI
+              FLIT
+              ________
+ FLIT        3156.242
+
+
+     Beginning Time:  19:17:17
+        Ending Time:  19:18:00
+       Elapsed Time:  00:00:43
 
 
 

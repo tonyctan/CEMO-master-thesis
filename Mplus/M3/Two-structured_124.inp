@@ -10,7 +10,7 @@ DATA:
 
 VARIABLE:
     names =
-        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        FKI CNTRYID CNTSCHID W_STU
         MATH READ FLIT                      ! PISA achievement variables
         MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
         FCFMLRTY FLCONFIN                   ! Affect
@@ -28,7 +28,7 @@ VARIABLE:
         FLSCHOOL                            !   Lat var "Academic"
         NOBULLY                             !   Lat var "Safety"
         FLFAMILY                            !   Lat var "Community"
-        EDUSHORT                            !   Lat var "Inst env"
+        EDUSHORT STRATIO                    !   Lat var "Inst env"
         FCFMLRTY FLCONFIN                   ! Affect
         MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
         ;
@@ -41,10 +41,8 @@ VARIABLE:
 
     ! Vars that ONLY appear in L2
     between =
-        EDUSHORT                            ! L2: school
+        EDUSHORT STRATIO                    ! L2: school
         ;
-
-    missing = all (-99);
 
     weight = W_STU;                         ! Student weight
     wtscale = cluster;                      ! Scale L1 weight to cluster size
@@ -103,6 +101,8 @@ MODEL:
 
     FLSCHOOL with FLFAMILY;
     NOBULLY with EDUSHORT;
+
+    FLSCHOOL with EDUSHORT;
 
 
 MODEL INDIRECT:

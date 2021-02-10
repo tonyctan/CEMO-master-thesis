@@ -112,12 +112,3 @@ write.table(finlit,
     row.names = F, col.names = F,
     sep= ",", na = "-99", eol = EOL
 )
-
-
-
-
-
-# Use data.table for better RAM management
-library(data.table); setDTthreads(0) # 0 means all the available cores
-# Export data into a CSV file for faster import next time
-fwrite(finlit, file = "finlit.csv", na = "NA", row.names = F, col.names = T)
