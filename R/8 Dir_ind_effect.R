@@ -261,7 +261,7 @@ for (i in 1:20) {
         xlim = c(-0.2, 0.15), ylim = c(-0.02, 0.15),
         xlab = "",
         ylab = "",
-        main = paste0(effect_fki[i, 2], " (FKI=", position[i, 3], ")"),
+        main = paste0(effect_fki[i, 2], " (FKI=", effect_fki[i, 4], ")"),
         newplot = T
     )
     abline(h = 0, col = "red", lty = 2)
