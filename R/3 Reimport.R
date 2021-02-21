@@ -84,10 +84,23 @@ MALE <- finlit$ST004D01T - 1
 # Revert coding direction: bigger number => safer school
 NOBULLY <- finlit$BEINGBULLIED * (-1)
 
+# Recode IMMIG to 1st and 2nd generation
+IMMI1GEN <- recode(finlit$IMMIG, "
+    1 = 0;
+    2 = 0;
+    3 = 1
+")
+
+IMMI2GEN <- recode(finlit$IMMIG, "
+    1 = 0;
+    2 = 1;
+    3 = 0
+")
+
 # Stitch spreadsheet together
 names(finlit)
 finlit <- cbind(
-    FKI, finlit[, c(2:35)], MALE, finlit[, c(37:41)], NOBULLY, finlit[, c(43:46)]
+    FKI, finlit[, c(2:35)], MALE, IMMI1GEN, IMMI2GEN, finlit[, c(38:41)], NOBULLY, finlit[, c(43:46)]
 )
 head(finlit)
 names(finlit)
@@ -98,6 +111,8 @@ finlit <- finlit[complete.cases(finlit$W_FSTUWT_SCH_SUM), ]
 obs1 <- dim(finlit)[1]
 obs0 - obs1 # 12 cases contained missing school weights and have been dropped
 rm(obs0, obs1)
+
+# === Option 1: Export data into Mplus-ready format
 
 # Prepare dataset for Mplus multilevel multiple imputation
 
@@ -111,4 +126,12 @@ write.table(finlit,
     "finlit.dat",
     row.names = F, col.names = F,
     sep= ",", na = "-99", eol = EOL
+)
+
+# === Option 2: Export data into jomo-ready format
+
+write.table(finlit,
+    "finlit.csv",
+    row.names=F,col.names=T,
+    sep=",", na="NA"
 )

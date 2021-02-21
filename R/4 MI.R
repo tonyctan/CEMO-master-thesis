@@ -12,6 +12,7 @@ library(data.table); setDTthreads(0)
 # Import imputation No.1
 finlit_mmi_1 <- fread("FLIT_MMI_1.dat")
 # Add header to data
+# I copy-pasted this list from Mplus output file, hence the vertical layout.
 names(finlit_mmi_1) <- c(
     "STRATIO",
     "EDUSHORT",
