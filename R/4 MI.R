@@ -17,7 +17,8 @@ names(finlit_mmi_1) <- c(
     "STRATIO",
     "EDUSHORT",
     "MALE",
-    "IMMI",
+    "IMMI1GEN",
+    "IMMI2GEN",
     "ESCS",
     "FCFMLRTY",
     "FLCONFIN",
@@ -66,12 +67,13 @@ head(finlit_mmi_1); dim(finlit_mmi_1)
 
 # Rearrange data
 names(finlit_mmi_1)
-fl1 <- finlit_mmi_1[, c(11:12, 46, 14, 15, 25, 35, 3:10, 45, 1:2)]
+fl1 <- finlit_mmi_1[, c(12:13, 47, 15, 16, 26, 36, 3:11, 46, 1:2)]
 head(fl1); dim(fl1)
 
 # Now I am happy. I can apply the same procedure to all 10 versions
 
 finlit_mmi_2 <- fread("FLIT_MMI_2.dat")
+names(finlit_mmi_2) <- names(finlit_mmi_1) # Give version 2 a heading
 finlit_mmi_3 <- fread("FLIT_MMI_3.dat")
 finlit_mmi_4 <- fread("FLIT_MMI_4.dat")
 finlit_mmi_5 <- fread("FLIT_MMI_5.dat")
@@ -80,46 +82,19 @@ finlit_mmi_7 <- fread("FLIT_MMI_7.dat")
 finlit_mmi_8 <- fread("FLIT_MMI_8.dat")
 finlit_mmi_9 <- fread("FLIT_MMI_9.dat")
 finlit_mmi_10 <- fread("FLIT_MMI_10.dat")
+names(finlit_mmi_10) <- names(finlit_mmi_1) # Give version 10 a heading
 
-fl2 <- finlit_mmi_2[, c(11:12, 46, 14, 16, 26, 36, 3:10, 45, 1:2)]
-fl3 <- finlit_mmi_3[, c(11:12, 46, 14, 17, 27, 37, 3:10, 45, 1:2)]
-fl4 <- finlit_mmi_4[, c(11:12, 46, 14, 18, 28, 38, 3:10, 45, 1:2)]
-fl5 <- finlit_mmi_5[, c(11:12, 46, 14, 19, 29, 39, 3:10, 45, 1:2)]
-fl6 <- finlit_mmi_6[, c(11:12, 46, 14, 20, 30, 40, 3:10, 45, 1:2)]
-fl7 <- finlit_mmi_7[, c(11:12, 46, 14, 21, 31, 41, 3:10, 45, 1:2)]
-fl8 <- finlit_mmi_8[, c(11:12, 46, 14, 22, 32, 42, 3:10, 45, 1:2)]
-fl9 <- finlit_mmi_9[, c(11:12, 46, 14, 23, 33, 43, 3:10, 45, 1:2)]
-fl10 <- finlit_mmi_10[, c(11:12, 46, 14, 24, 34, 44, 3:10, 45, 1:2)]
+fl2 <- finlit_mmi_2[, c(12:13, 47, 15, 17, 27, 37, 3:11, 46, 1:2)]
+fl3 <- finlit_mmi_3[, c(12:13, 47, 15, 18, 28, 38, 3:11, 46, 1:2)]
+fl4 <- finlit_mmi_4[, c(12:13, 47, 15, 19, 29, 39, 3:11, 46, 1:2)]
+fl5 <- finlit_mmi_5[, c(12:13, 47, 15, 20, 30, 40, 3:11, 46, 1:2)]
+fl6 <- finlit_mmi_6[, c(12:13, 47, 15, 21, 31, 41, 3:11, 46, 1:2)]
+fl7 <- finlit_mmi_7[, c(12:13, 47, 15, 22, 32, 42, 3:11, 46, 1:2)]
+fl8 <- finlit_mmi_8[, c(12:13, 47, 15, 23, 33, 43, 3:11, 46, 1:2)]
+fl9 <- finlit_mmi_9[, c(12:13, 47, 15, 24, 34, 44, 3:11, 46, 1:2)]
+fl10 <- finlit_mmi_10[, c(12:13, 47, 15, 25, 35, 45, 3:11, 46, 1:2)]
 
-
-# Recode IMMIG to 1st and 2nd generation
-library(car)
-
-for (i in 1:10) {
-    IMMI <- get(paste0("fl", i))[, 9]
-    IMMI <- as.numeric(unlist(IMMI)) # Turn this column to numbers
-
-    IMMI1GEN <- recode(IMMI, "
-    1 = 0;
-    2 = 0;
-    3 = 1
-    ")
-
-    IMMI2GEN <- recode(IMMI, "
-    1 = 0;
-    2 = 1;
-    3 = 0
-    ")
-
-    assign(
-        paste0("finlit", i),
-        cbind(
-            get(paste0("fl", i))[, c(1:8)],
-            IMMI1GEN, IMMI2GEN,
-            get(paste0("fl", i))[, c(10:18)]
-        )
-    )
-}
+head(fl2); head(fl10) # Inspect version 2 and 10 to make sure they make sense
 
 # Save these clean data sets to the Data folder
 setwdOS(lin = "~/uio", win = "M:/", ext = "pc/Dokumenter/MSc/Thesis/Data/Mplus/")
@@ -130,60 +105,60 @@ switch(Sys.info()[["sysname"]],
     Windows = {EOL = "\n"}
 )
 
-write.table(finlit1, "finlit1.dat",
+write.table(fl1, "finlit1.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit2,
+write.table(fl2,
     "finlit2.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit3,
+write.table(fl3,
     "finlit3.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit4,
+write.table(fl4,
     "finlit4.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit5,
+write.table(fl5,
     "finlit5.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit6,
+write.table(fl6,
     "finlit6.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit7,
+write.table(fl7,
     "finlit7.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit8,
+write.table(fl8,
     "finlit8.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit9,
+write.table(fl9,
     "finlit9.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
 )
 
-write.table(finlit10,
+write.table(fl10,
     "finlit10.dat",
     row.names = F, col.names = F,
     sep= ",", eol = EOL
