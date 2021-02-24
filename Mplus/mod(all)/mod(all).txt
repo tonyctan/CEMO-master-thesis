@@ -57,8 +57,6 @@ VARIABLE:
         EDUSHORT STRATIO                    ! L2: school
         ;
 
-    missing = all (-99);
-
     weight = W_STU;                         ! Student weight
     wtscale = cluster;                      ! Scale L1 weight to cluster size
     bweight = W_SCH;                        ! School weight
@@ -101,7 +99,9 @@ MODEL:
         ! Between mediators
     FCFMLRTY with FLCONFIN;
         ! ESCS with FLFAMILY
-    ESCS with FLFAMILY
+    ESCS with FLFAMILY;
+        ! ESCS with IMMI1GEN and IMMI2GEN
+    ESCS with IMMI1GEN IMMI2GEN;
 
 %Between%                                   ! === L2: School-level ===
 

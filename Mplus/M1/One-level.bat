@@ -6,6 +6,7 @@ start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M1" mplus One-level_233.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M1" mplus One-level_246.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M1" mplus One-level_268.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M1" mplus One-level_360.inp
+start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M1" mplus One-level_380.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M1" mplus One-level_428.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M1" mplus One-level_440.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M1" mplus One-level_528.inp

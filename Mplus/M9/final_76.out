@@ -1,0 +1,2988 @@
+Mplus VERSION 8.3
+MUTHEN & MUTHEN
+02/23/2021   9:52 PM
+
+INPUT INSTRUCTIONS
+
+
+  TITLE:
+      Two-level structured model 76
+
+  DATA:
+      file = "C:\Users\tctan\implist.dat";
+
+      type = imputation;
+
+
+  VARIABLE:
+      names =
+          FKI CNTRYID CNTSCHID W_STU
+          MATH READ FLIT                      ! PISA achievement variables
+          MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+          FCFMLRTY FLCONFIN                   ! Affect
+          FLSCHOOL                            !   Lat var "Academic"
+          NOBULLY                             !   Lat var "Safety"
+          FLFAMILY                            !   Lat var "Community"
+          W_SCH STRATIO                       ! School character
+          EDUSHORT                            !   Lat var "inst. env."
+          ;
+
+      useobs = CNTRYID eq 76;          ! Pull out one country at a time
+
+      usevar =
+          FLIT                                ! PISA achievement variables
+          FLSCHOOL                            !   Lat var "Academic"
+          NOBULLY                             !   Lat var "Safety"
+          FLFAMILY                            !   Lat var "Community"
+          EDUSHORT STRATIO                    !   Lat var "Inst env"
+          FCFMLRTY FLCONFIN                   ! Affect
+          MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+          ;
+
+      ! Vars that ONLY appear in L1
+      within =
+          FCFMLRTY FLCONFIN                   ! Affective vars
+          MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
+          ;
+
+      ! Vars that ONLY appear in L2
+      between =
+          EDUSHORT STRATIO                    ! L2: school
+          ;
+
+      weight = W_STU;                         ! Student weight
+      wtscale = cluster;                      ! Scale L1 weight to cluster size
+      bweight = W_SCH;                        ! School weight
+      bwtscale = sample;                      ! Scale L2 weight to sample
+
+      cluster = CNTSCHID;                     ! Cluster by school ID
+
+
+  ANALYSIS:
+      processors = 4;
+
+      type = twolevel;
+
+
+  MODEL:
+
+  %Within%                                    ! === L1: Student-level ===
+
+      ! Indirect pathways (1st half): school climate vars onto mediators
+          ! Onto mediator FAMILIARITY
+      FCFMLRTY on
+          FLSCHOOL NOBULLY FLFAMILY
+          MALE IMMI2GEN ESCS
+          ;
+          ! Onto mediator CONFIDENCE
+      FLCONFIN on
+          FLSCHOOL NOBULLY FLFAMILY
+          MALE IMMI2GEN ESCS
+          ;
+
+      ! Total effect
+      FLIT on
+          ! Direct pathways: school climate vars onto financial literacy
+          FLSCHOOL NOBULLY FLFAMILY
+          ! Indirect pathways (2nd half): affective vars onto financial literacy
+          FCFMLRTY FLCONFIN
+          ! Control vars (demographic info)
+          IMMI1GEN ESCS
+          ;
+
+      ! Covariances
+          ! Between school climate vars
+      FLSCHOOL with NOBULLY;
+      FLSCHOOL with FLFAMILY;
+      NOBULLY with FLFAMILY;
+          ! Between mediators
+      FCFMLRTY with FLCONFIN;
+
+      ! Covariances suggested by modification indices
+          ! ESCS with FLSCHOOL
+      ESCS with FLSCHOOL;
+          ! ESCS with FLFAMILY
+      ESCS with FLFAMILY;
+          ! ESCS with IMMI1GEN and IMMI2GEN
+      ESCS with IMMI1GEN IMMI2GEN;
+
+  %Between%                                   ! === L2: School-level ===
+
+      FLIT on
+          FLSCHOOL NOBULLY FLFAMILY EDUSHORT  ! School climate variables
+          STRATIO                             ! Control: Student-teacher ratio
+          ;
+
+      FLSCHOOL with NOBULLY;
+      NOBULLY with FLFAMILY;
+      FLFAMILY with EDUSHORT;
+
+      FLSCHOOL with FLFAMILY;
+      NOBULLY with EDUSHORT;
+
+      FLSCHOOL with EDUSHORT;
+
+
+  MODEL INDIRECT:
+
+      ! Indirect effects
+      FLIT ind FLSCHOOL;
+      FLIT ind NOBULLY;
+      FLIT ind FLFAMILY;
+
+
+  OUTPUT:
+      stdyx                                   ! Fully standardised solution
+      ;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+Two-level structured model 76
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Average number of observations                                8310
+
+Number of replications
+    Requested                                                   10
+    Completed                                                    9
+
+Number of dependent variables                                    3
+Number of independent variables                                  9
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   FLIT        FCFMLRTY    FLCONFIN
+
+Observed independent variables
+   FLSCHOOL    NOBULLY     FLFAMILY    EDUSHORT    STRATIO     MALE
+   IMMI1GEN    IMMI2GEN    ESCS
+
+Variables with special functions
+
+  Cluster variable      CNTSCHID
+  Weight variable (cluster-size scaling)
+    W_STU
+  Between weight variable (sample-size scaling)
+    W_SCH
+
+  Within variables
+   FCFMLRTY    FLCONFIN    MALE        IMMI1GEN    IMMI2GEN    ESCS
+
+  Between variables
+   EDUSHORT    STRATIO
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                   100
+Convergence criterion                                    0.100D-05
+Maximum number of EM iterations                                500
+Convergence criteria for the EM algorithm
+  Loglikelihood change                                   0.100D-02
+  Relative loglikelihood change                          0.100D-05
+  Derivative                                             0.100D-03
+Minimum variance                                         0.100D-03
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  Multiple data files from
+    C:\Users\tctan\implist.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA FOR THE FIRST DATA SET
+
+     Number of clusters                        595
+
+     Average cluster size       13.966
+
+     Estimated Intraclass Correlations for the Y Variables
+
+                Intraclass              Intraclass              Intraclass
+     Variable  Correlation   Variable  Correlation   Variable  Correlation
+
+     FLIT         0.314      FCFMLRTY     0.000      FLCONFIN     0.000
+     FLSCHOOL     0.013      NOBULLY      0.011      FLFAMILY     0.016
+     IMMI1GEN     0.000      IMMI2GEN     0.000      ESCS         0.000
+
+
+
+SAMPLE STATISTICS
+
+NOTE:  The sample statistics for within and between refer to the
+       maximum-likelihood estimated within and between covariance
+       matrices, respectively.
+
+NOTE:  These are average results over 10 data sets.
+
+
+     ESTIMATED SAMPLE STATISTICS FOR WITHIN
+
+
+           Means
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+                0.000         0.000         6.521        -0.217         0.000
+
+
+           Means
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.003         0.007        -1.048
+
+
+           Means
+              MALE          STRATIO
+              ________      ________
+                0.488         0.000
+
+
+           Covariances
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000
+ FLIT           0.000      5704.886
+ FCFMLRTY       0.000        97.983        31.156
+ FLCONFIN       0.000         9.181         1.549         1.116
+ FLSCHOOL       0.000        -4.343         1.417         0.210         1.018
+ NOBULLY        0.000         4.276         0.040        -0.041        -0.093
+ FLFAMILY       0.000         7.617         1.555         0.264         0.283
+ IMMI1GEN       0.000        -0.091        -0.001         0.000         0.000
+ IMMI2GEN       0.000        -0.300        -0.010        -0.001         0.000
+ ESCS           0.000        19.356         1.729         0.180         0.086
+ MALE           0.000         1.053        -0.011         0.055         0.028
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Covariances
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ NOBULLY        1.167
+ FLFAMILY      -0.057         1.346
+ IMMI1GEN      -0.001         0.000         0.003
+ IMMI2GEN       0.001        -0.001         0.000         0.007
+ ESCS          -0.004         0.183        -0.001         0.001         1.486
+ MALE          -0.052        -0.040         0.000        -0.001         0.032
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Covariances
+              MALE          STRATIO
+              ________      ________
+ MALE           0.250
+ STRATIO        0.000         0.000
+
+
+           Correlations
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000
+ FLIT           0.000         1.000
+ FCFMLRTY       0.000         0.232         1.000
+ FLCONFIN       0.000         0.115         0.263         1.000
+ FLSCHOOL       0.000        -0.057         0.252         0.197         1.000
+ NOBULLY        0.000         0.052         0.007        -0.036        -0.085
+ FLFAMILY       0.000         0.087         0.240         0.216         0.242
+ IMMI1GEN       0.000        -0.023        -0.003         0.005         0.006
+ IMMI2GEN       0.000        -0.049        -0.022        -0.010         0.005
+ ESCS           0.000         0.210         0.254         0.140         0.070
+ MALE           0.000         0.028        -0.004         0.104         0.055
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Correlations
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ NOBULLY        1.000
+ FLFAMILY      -0.046         1.000
+ IMMI1GEN      -0.017        -0.006         1.000
+ IMMI2GEN       0.013        -0.008        -0.004         1.000
+ ESCS          -0.003         0.130        -0.010         0.007         1.000
+ MALE          -0.096        -0.068         0.008        -0.016         0.052
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Correlations
+              MALE          STRATIO
+              ________      ________
+ MALE           1.000
+ STRATIO        0.000         0.000
+
+
+     ESTIMATED SAMPLE STATISTICS FOR BETWEEN
+
+
+           Means
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+                0.013       423.288         0.000         0.000        -0.137
+
+
+           Means
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+               -0.141         0.226         0.000         0.000         0.000
+
+
+           Means
+              MALE          STRATIO
+              ________      ________
+                0.000        26.872
+
+
+           Covariances
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       1.261
+ FLIT         -21.932      2715.121
+ FCFMLRTY       0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000
+ FLSCHOOL       0.023        -2.981         0.000         0.000         0.017
+ NOBULLY       -0.028         3.179         0.000         0.000        -0.007
+ FLFAMILY       0.011         1.307         0.000         0.000        -0.005
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.835      -221.414         0.000         0.000         0.358
+
+
+           Covariances
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ NOBULLY        0.012
+ FLFAMILY       0.005         0.018
+ IMMI1GEN       0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.124        -0.313         0.000         0.000         0.000
+
+
+           Covariances
+              MALE          STRATIO
+              ________      ________
+ MALE           0.000
+ STRATIO        0.000       275.698
+
+
+           Correlations
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       1.000
+ FLIT          -0.375         1.000
+ FCFMLRTY       0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000
+ FLSCHOOL       0.155        -0.440         0.000         0.000         1.000
+ NOBULLY       -0.228         0.551         0.000         0.000        -0.476
+ FLFAMILY       0.074         0.185         0.000         0.000        -0.259
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.045        -0.256         0.000         0.000         0.166
+
+
+           Correlations
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ NOBULLY        1.000
+ FLFAMILY       0.345         1.000
+ IMMI1GEN       0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.067        -0.139         0.000         0.000         0.000
+
+
+           Correlations
+              MALE          STRATIO
+              ________      ________
+ MALE           0.000
+ STRATIO        0.000         1.000
+
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       62
+
+Loglikelihood
+
+    H0 Value
+
+        Mean                           -114654.382
+        Std Dev                            384.300
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      -115548.378    -115187.702
+           0.980       1.000      -115443.618    -115187.702
+           0.950       1.000      -115286.517    -115187.702
+           0.900       0.778      -115146.900    -115187.702
+           0.800       0.667      -114977.809    -115187.702
+           0.700       0.667      -114855.909    -115150.984
+           0.500       0.556      -114654.382    -114703.192
+           0.300       0.333      -114452.855    -114489.701
+           0.200       0.111      -114330.955    -114386.701
+           0.100       0.111      -114161.863    -114335.556
+           0.050       0.111      -114022.247    -114335.556
+           0.020       0.000      -113865.145    -114335.556
+           0.010       0.000      -113760.385    -114335.556
+
+    H1 Value
+
+        Mean                           -114535.124
+        Std Dev                            385.922
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      -115432.894    -115073.944
+           0.980       1.000      -115327.692    -115073.944
+           0.950       1.000      -115169.927    -115073.944
+           0.900       0.778      -115029.722    -115073.944
+           0.800       0.667      -114859.916    -115073.944
+           0.700       0.667      -114737.502    -115033.988
+           0.500       0.556      -114535.124    -114578.866
+           0.300       0.333      -114332.747    -114382.631
+           0.200       0.222      -114210.333    -114266.111
+           0.100       0.111      -114040.527    -114207.145
+           0.050       0.111      -113900.322    -114207.145
+           0.020       0.000      -113742.557    -114207.145
+           0.010       0.000      -113637.354    -114207.145
+
+Information Criteria
+
+    Akaike (AIC)
+
+        Mean                            229432.764
+        Std Dev                            768.600
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       227644.770     228109.871
+           0.980       1.000       227854.290     228109.871
+           0.950       0.889       228168.494     228109.871
+           0.900       0.889       228447.726     228109.871
+           0.800       0.889       228785.910     228109.871
+           0.700       0.667       229029.710     228795.111
+           0.500       0.444       229432.764     229103.402
+           0.300       0.333       229835.817     229530.383
+           0.200       0.333       230079.617     230218.488
+           0.100       0.222       230417.801     230425.968
+           0.050       0.000       230697.033     230425.968
+           0.020       0.000       231011.237     230425.968
+           0.010       0.000       231220.757     230425.968
+
+    Bayesian (BIC)
+
+        Mean                            229868.327
+        Std Dev                            768.600
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       228080.333     228545.434
+           0.980       1.000       228289.854     228545.434
+           0.950       0.889       228604.057     228545.434
+           0.900       0.889       228883.290     228545.434
+           0.800       0.889       229221.473     228545.434
+           0.700       0.667       229465.273     229230.674
+           0.500       0.444       229868.327     229538.965
+           0.300       0.333       230271.381     229965.947
+           0.200       0.333       230515.180     230654.051
+           0.100       0.222       230853.364     230861.531
+           0.050       0.000       231132.596     230861.531
+           0.020       0.000       231446.800     230861.531
+           0.010       0.000       231656.320     230861.531
+
+    Sample-Size Adjusted BIC (n* = (n + 2) / 24)
+
+        Mean                            229671.302
+        Std Dev                            768.600
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       227883.309     228348.410
+           0.980       1.000       228092.829     228348.410
+           0.950       0.889       228407.033     228348.410
+           0.900       0.889       228686.265     228348.410
+           0.800       0.889       229024.449     228348.410
+           0.700       0.667       229268.249     229033.650
+           0.500       0.444       229671.302     229341.941
+           0.300       0.333       230074.356     229768.922
+           0.200       0.333       230318.156     230457.027
+           0.100       0.222       230656.340     230664.506
+           0.050       0.000       230935.572     230664.506
+           0.020       0.000       231249.776     230664.506
+           0.010       0.000       231459.296     230664.506
+
+Chi-Square Test of Model Fit
+
+        Degrees of freedom                      22
+
+        Mean                               221.785
+        Std Dev                             20.669
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            9.542        192.628
+           0.980       1.000           10.600        192.628
+           0.950       1.000           12.338        192.628
+           0.900       1.000           14.041        192.628
+           0.800       1.000           16.314        192.628
+           0.700       1.000           18.101        201.600
+           0.500       1.000           21.337        210.735
+           0.300       1.000           24.939        228.050
+           0.200       1.000           27.301        229.631
+           0.100       1.000           30.813        239.821
+           0.050       1.000           33.924        239.821
+           0.020       1.000           37.659        239.821
+           0.010       1.000           40.289        239.821
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+        Mean                                 0.033
+        Std Dev                              0.002
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.029          0.031
+           0.980       1.000            0.030          0.031
+           0.950       1.000            0.030          0.031
+           0.900       0.889            0.031          0.031
+           0.800       0.778            0.032          0.031
+           0.700       0.667            0.032          0.031
+           0.500       0.556            0.033          0.032
+           0.300       0.222            0.034          0.034
+           0.200       0.222            0.034          0.034
+           0.100       0.111            0.035          0.035
+           0.050       0.111            0.036          0.035
+           0.020       0.000            0.036          0.035
+           0.010       0.000            0.037          0.035
+
+CFI/TLI
+
+    CFI
+
+        Mean                                 0.940
+        Std Dev                              0.005
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.929          0.931
+           0.980       1.000            0.930          0.931
+           0.950       0.889            0.932          0.931
+           0.900       0.889            0.934          0.931
+           0.800       0.778            0.936          0.931
+           0.700       0.778            0.937          0.934
+           0.500       0.556            0.940          0.939
+           0.300       0.333            0.943          0.941
+           0.200       0.333            0.944          0.944
+           0.100       0.000            0.946          0.945
+           0.050       0.000            0.948          0.945
+           0.020       0.000            0.950          0.945
+           0.010       0.000            0.951          0.945
+
+    TLI
+
+        Mean                                 0.836
+        Std Dev                              0.013
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.805          0.811
+           0.980       1.000            0.809          0.811
+           0.950       0.889            0.814          0.811
+           0.900       0.889            0.819          0.811
+           0.800       0.778            0.825          0.811
+           0.700       0.778            0.829          0.820
+           0.500       0.556            0.836          0.833
+           0.300       0.333            0.843          0.840
+           0.200       0.333            0.848          0.848
+           0.100       0.000            0.854          0.851
+           0.050       0.000            0.858          0.851
+           0.020       0.000            0.864          0.851
+           0.010       0.000            0.868          0.851
+
+SRMR (Standardized Root Mean Square Residual) for the WITHIN level
+
+        Mean                                 0.021
+        Std Dev                              0.001
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.019          0.019
+           0.980       1.000            0.019          0.019
+           0.950       1.000            0.019          0.019
+           0.900       0.889            0.020          0.019
+           0.800       0.778            0.020          0.019
+           0.700       0.778            0.020          0.020
+           0.500       0.333            0.021          0.020
+           0.300       0.333            0.021          0.020
+           0.200       0.222            0.021          0.021
+           0.100       0.111            0.021          0.021
+           0.050       0.111            0.022          0.021
+           0.020       0.000            0.022          0.021
+           0.010       0.000            0.022          0.021
+
+SRMR (Standardized Root Mean Square Residual) for the BETWEEN level
+
+        Mean                                 0.063
+        Std Dev                              0.009
+        Number of successful computations        9
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.043          0.048
+           0.980       1.000            0.045          0.048
+           0.950       0.889            0.048          0.048
+           0.900       0.778            0.052          0.048
+           0.800       0.778            0.055          0.048
+           0.700       0.778            0.058          0.048
+           0.500       0.667            0.063          0.063
+           0.300       0.222            0.067          0.066
+           0.200       0.222            0.070          0.067
+           0.100       0.111            0.074          0.071
+           0.050       0.000            0.077          0.071
+           0.020       0.000            0.080          0.071
+           0.010       0.000            0.083          0.071
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Within Level
+
+ FCFMLRTY   ON
+    FLSCHOOL           1.104      0.075     14.710      0.000      0.120
+    NOBULLY            0.153      0.074      2.074      0.038      0.309
+    FLFAMILY           0.783      0.070     11.245      0.000      0.303
+    MALE              -0.150      0.142     -1.056      0.291      0.125
+    IMMI2GEN          -1.788      0.836     -2.139      0.032      0.296
+    ESCS               1.014      0.068     14.971      0.000      0.076
+
+ FLCONFIN   ON
+    FLSCHOOL           0.147      0.017      8.663      0.000      0.355
+    NOBULLY           -0.005      0.014     -0.387      0.698      0.234
+    FLFAMILY           0.160      0.013     12.292      0.000      0.142
+    MALE               0.215      0.030      7.107      0.000      0.332
+    IMMI2GEN          -0.131      0.186     -0.706      0.480      0.437
+    ESCS               0.089      0.012      7.234      0.000      0.164
+
+ FLIT       ON
+    FLSCHOOL         -10.150      1.038     -9.783      0.000      0.157
+    NOBULLY            2.896      1.186      2.442      0.015      0.473
+    FLFAMILY           2.433      1.071      2.272      0.023      0.374
+    FCFMLRTY           2.729      0.222     12.270      0.000      0.330
+    FLCONFIN           4.306      1.133      3.801      0.000      0.370
+    IMMI1GEN         -25.611     21.834     -1.173      0.241      0.288
+    ESCS               9.675      1.353      7.149      0.000      0.472
+
+ FLSCHOOL WITH
+    NOBULLY           -0.093      0.020     -4.672      0.000      0.486
+    FLFAMILY           0.283      0.017     16.591      0.000      0.028
+    ESCS               0.084      0.021      3.945      0.000      0.193
+
+ NOBULLY  WITH
+    FLFAMILY          -0.057      0.018     -3.176      0.001      0.149
+
+ FCFMLRTY WITH
+    FLCONFIN           0.942      0.082     11.533      0.000      0.295
+
+ ESCS     WITH
+    FLFAMILY           0.179      0.024      7.550      0.000      0.103
+    IMMI1GEN          -0.001      0.003     -0.189      0.850      0.024
+    IMMI2GEN           0.001      0.001      0.700      0.484      0.196
+
+ Means
+    IMMI1GEN           0.003      0.003      0.984      0.325      0.014
+    IMMI2GEN           0.007      0.001      5.628      0.000      0.145
+    ESCS              -1.048      0.042    -25.142      0.000      0.003
+
+ Intercepts
+    FCFMLRTY           7.667      0.142     53.900      0.000      0.082
+    FLCONFIN          -0.229      0.025     -9.228      0.000      0.116
+
+ Variances
+    FLSCHOOL           1.019      0.020     52.047      0.000      0.203
+    NOBULLY            1.168      0.026     44.925      0.000      0.258
+    FLFAMILY           1.346      0.023     58.929      0.000      0.070
+    IMMI1GEN           0.003      1.269      0.002      0.998      0.000
+    IMMI2GEN           0.007      1.406      0.005      0.996      0.000
+    ESCS               1.486      0.046     32.308      0.000      0.015
+
+ Residual Variances
+    FLIT            5124.303    136.520     37.535      0.000      0.434
+    FCFMLRTY          26.588      0.452     58.837      0.000      0.108
+    FLCONFIN           1.014      0.021     48.696      0.000      0.262
+
+Between Level
+
+ FLIT       ON
+    FLSCHOOL          19.348    295.599      0.065      0.948      0.638
+    NOBULLY          413.666    672.488      0.615      0.538      0.504
+    FLFAMILY        -111.880    392.986     -0.285      0.776      0.447
+    EDUSHORT          -6.803     15.085     -0.451      0.652      0.682
+    STRATIO           -0.687      0.138     -4.967      0.000      0.176
+
+ FLSCHOOL WITH
+    NOBULLY           -0.008      0.254     -0.031      0.975      0.000
+    FLFAMILY          -0.005      0.494     -0.011      0.991      0.000
+    EDUSHORT           0.024      0.498      0.047      0.962      0.000
+
+ NOBULLY  WITH
+    FLFAMILY           0.007      0.461      0.015      0.988      0.000
+    EDUSHORT          -0.028      2.526     -0.011      0.991      0.000
+
+ FLFAMILY WITH
+    EDUSHORT           0.009      0.598      0.015      0.988      0.000
+
+ Means
+    EDUSHORT           0.013      0.055      0.234      0.815      0.052
+    FLSCHOOL          -0.136      0.015     -9.290      0.000      0.122
+    NOBULLY           -0.143      0.017     -8.569      0.000      0.236
+    FLFAMILY           0.225      0.019     11.747      0.000      0.181
+
+ Intercepts
+    FLIT             521.818    217.309      2.401      0.016      0.527
+
+ Variances
+    EDUSHORT           1.261      0.070     18.078      0.000      0.053
+    FLSCHOOL           0.018      0.134      0.132      0.895      0.000
+    NOBULLY            0.013      0.212      0.063      0.950      0.000
+    FLFAMILY           0.020      0.552      0.036      0.971      0.000
+
+ Residual Variances
+    FLIT            1074.336    993.596      1.081      0.280      0.308
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Within Level
+
+ FCFMLRTY   ON
+    FLSCHOOL           0.200      0.017     11.581      0.000      0.057
+    NOBULLY            0.030      0.014      2.072      0.038      0.298
+    FLFAMILY           0.163      0.017      9.667      0.000      0.204
+    MALE              -0.013      0.013     -1.056      0.291      0.124
+    IMMI2GEN          -0.026      2.404     -0.011      0.991      0.000
+    ESCS               0.221      0.020     11.320      0.000      0.033
+
+ FLCONFIN   ON
+    FLSCHOOL           0.140      0.016      8.809      0.000      0.333
+    NOBULLY           -0.005      0.014     -0.388      0.698      0.234
+    FLFAMILY           0.176      0.014     12.520      0.000      0.125
+    MALE               0.102      0.014      7.112      0.000      0.334
+    IMMI2GEN          -0.010      1.126     -0.009      0.993      0.000
+    ESCS               0.102      0.014      7.308      0.000      0.164
+
+ FLIT       ON
+    FLSCHOOL          -0.136      0.020     -6.919      0.000      0.078
+    NOBULLY            0.041      0.018      2.364      0.018      0.449
+    FLFAMILY           0.037      0.017      2.192      0.028      0.351
+    FCFMLRTY           0.202      0.019     10.653      0.000      0.199
+    FLCONFIN           0.060      0.017      3.621      0.000      0.324
+    IMMI1GEN          -0.018      4.833     -0.004      0.997      0.000
+    ESCS               0.156      0.027      5.746      0.000      0.295
+
+ FLSCHOOL WITH
+    NOBULLY           -0.085      0.018     -4.685      0.000      0.503
+    FLFAMILY           0.242      0.014     17.523      0.000      0.027
+    ESCS               0.069      0.017      4.024      0.000      0.203
+
+ NOBULLY  WITH
+    FLFAMILY          -0.045      0.014     -3.213      0.001      0.143
+
+ FCFMLRTY WITH
+    FLCONFIN           0.181      0.015     11.896      0.000      0.270
+
+ ESCS     WITH
+    FLFAMILY           0.127      0.016      7.817      0.000      0.118
+    IMMI1GEN          -0.008      1.070     -0.007      0.994      0.000
+    IMMI2GEN           0.008      0.213      0.037      0.971      0.001
+
+ Means
+    IMMI1GEN           0.054     11.987      0.004      0.996      0.000
+    IMMI2GEN           0.082      8.781      0.009      0.993      0.000
+    ESCS              -0.859      0.038    -22.635      0.000      0.008
+
+ Intercepts
+    FCFMLRTY           1.373      0.077     17.733      0.000      0.009
+    FLCONFIN          -0.217      0.024     -9.159      0.000      0.113
+
+ Variances
+    FLSCHOOL           1.000      0.000  *********      0.000      0.000
+    NOBULLY            1.000      0.000  *********      0.000      0.000
+    FLFAMILY           1.000      0.000  *********      0.000      0.000
+    IMMI1GEN           1.000      0.000  *********      0.000      0.000
+    IMMI2GEN           1.000      0.000  *********      0.000      0.000
+    ESCS               1.000      0.000  *********      0.000      0.000
+
+ Residual Variances
+    FLIT               0.899      0.190      4.730      0.000      0.001
+    FCFMLRTY           0.853      0.092      9.323      0.000      0.002
+    FLCONFIN           0.909      0.023     40.157      0.000      0.013
+
+Between Level
+
+ FLIT       ON
+    FLSCHOOL           0.075    422.743      0.000      1.000      0.000
+    NOBULLY            0.928    983.113      0.001      0.999      0.000
+    FLFAMILY          -0.313    542.292     -0.001      1.000      0.000
+    EDUSHORT          -0.146    135.985     -0.001      0.999      0.000
+    STRATIO           -0.222     57.311     -0.004      0.997      0.000
+
+ FLSCHOOL WITH
+    NOBULLY           -0.514     17.803     -0.029      0.977      0.000
+    FLFAMILY          -0.295     19.710     -0.015      0.988      0.000
+    EDUSHORT           0.160      2.833      0.056      0.955      0.001
+
+ NOBULLY  WITH
+    FLFAMILY           0.435     28.873      0.015      0.988      0.000
+    EDUSHORT          -0.220     18.507     -0.012      0.991      0.000
+
+ FLFAMILY WITH
+    EDUSHORT           0.057      3.471      0.016      0.987      0.000
+
+ Means
+    EDUSHORT           0.011      0.049      0.235      0.814      0.053
+    FLSCHOOL          -1.029      3.172     -0.325      0.746      0.001
+    NOBULLY           -1.257      8.581     -0.146      0.884      0.000
+    FLFAMILY           1.616     16.978      0.095      0.924      0.000
+
+ Intercepts
+    FLIT              10.155   4625.124      0.002      0.998      0.000
+
+ Variances
+    EDUSHORT           1.000      0.000  *********      0.000      0.000
+    FLSCHOOL           1.000      0.000  *********      0.000      0.000
+    NOBULLY            1.000      0.000  *********      0.000      0.000
+    FLFAMILY           1.000      0.000  *********      0.000      0.000
+
+ Residual Variances
+    FLIT               0.402      0.376      1.067      0.286      0.293
+
+
+R-SQUARE
+
+Within Level
+
+    Observed                                        Two-Tailed   Rate of
+    Variable        Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+    FLIT               0.101      0.190      0.530      0.596      0.001
+    FCFMLRTY           0.147      0.092      1.602      0.109      0.002
+    FLCONFIN           0.091      0.023      4.001      0.000      0.013
+
+Between Level
+
+    Observed                                        Two-Tailed   Rate of
+    Variable        Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+    FLIT               0.598      0.376      1.590      0.112      0.293
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Average Condition Number for the Information Matrix     -0.246E-01
+       (ratio of smallest to largest eigenvalue)
+
+
+TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+WITHIN
+
+Effects from FLSCHOOL to FLIT
+
+  Total               -6.504      1.076     -6.045      0.000      0.221
+  Total indirect       3.646      0.371      9.825      0.000      0.343
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLSCHOOL           3.014      0.320      9.416      0.000      0.272
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLSCHOOL           0.632      0.180      3.517      0.000      0.360
+
+  Direct
+    FLIT
+    FLSCHOOL         -10.150      1.038     -9.783      0.000      0.157
+
+
+Effects from NOBULLY to FLIT
+
+  Total                3.291      1.137      2.893      0.004      0.405
+  Total indirect       0.395      0.225      1.753      0.080      0.302
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    NOBULLY            0.420      0.208      2.016      0.044      0.347
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    NOBULLY           -0.025      0.062     -0.408      0.683      0.278
+
+  Direct
+    FLIT
+    NOBULLY            2.896      1.186      2.442      0.015      0.473
+
+
+Effects from FLFAMILY to FLIT
+
+  Total                5.258      1.137      4.623      0.000      0.423
+  Total indirect       2.825      0.313      9.027      0.000      0.357
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLFAMILY           2.136      0.255      8.374      0.000      0.310
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLFAMILY           0.689      0.182      3.777      0.000      0.326
+
+  Direct
+    FLIT
+    FLFAMILY           2.433      1.071      2.272      0.023      0.374
+
+
+BETWEEN
+
+Effects from FLSCHOOL to FLIT
+
+  Total               19.348    295.599      0.065      0.948      0.638
+  Total indirect       0.000      0.000      0.230      0.818      0.182
+
+  Direct
+    FLIT
+    FLSCHOOL          19.348    295.599      0.065      0.948      0.638
+
+
+Effects from NOBULLY to FLIT
+
+  Total              413.666    672.488      0.615      0.538      0.504
+  Total indirect       0.000      0.000     -0.662      0.508      0.182
+
+  Direct
+    FLIT
+    NOBULLY          413.666    672.488      0.615      0.538      0.504
+
+
+Effects from FLFAMILY to FLIT
+
+  Total             -111.880    392.986     -0.285      0.776      0.447
+  Total indirect       0.000      0.000     -0.233      0.815      0.182
+
+  Direct
+    FLIT
+    FLFAMILY        -111.880    392.986     -0.285      0.776      0.447
+
+
+
+STANDARDIZED TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+WITHIN
+
+Effects from FLSCHOOL to FLIT
+
+  Total               -0.087      0.017     -5.167      0.000      0.171
+  Total indirect       0.049      0.007      6.816      0.000      0.136
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLSCHOOL           0.040      0.006      6.647      0.000      0.103
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLSCHOOL           0.008      0.003      3.307      0.001      0.321
+
+  Direct
+    FLIT
+    FLSCHOOL          -0.136      0.020     -6.919      0.000      0.078
+
+
+Effects from NOBULLY to FLIT
+
+  Total                0.047      0.017      2.768      0.006      0.374
+  Total indirect       0.006      0.003      1.729      0.084      0.283
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    NOBULLY            0.006      0.003      1.981      0.048      0.321
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    NOBULLY            0.000      0.001     -0.407      0.684      0.275
+
+  Direct
+    FLIT
+    NOBULLY            0.041      0.018      2.364      0.018      0.449
+
+
+Effects from FLFAMILY to FLIT
+
+  Total                0.081      0.020      4.108      0.000      0.333
+  Total indirect       0.043      0.007      6.623      0.000      0.153
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLFAMILY           0.033      0.005      6.269      0.000      0.140
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLFAMILY           0.011      0.003      3.563      0.000      0.278
+
+  Direct
+    FLIT
+    FLFAMILY           0.037      0.017      2.192      0.028      0.351
+
+
+BETWEEN
+
+Effects from FLSCHOOL to FLIT
+
+  Total                0.075    422.743      0.000      1.000      0.000
+  Total indirect       0.000      0.000      0.000      1.000      0.182
+
+  Direct
+    FLIT
+    FLSCHOOL           0.075    422.743      0.000      1.000      0.000
+
+
+Effects from NOBULLY to FLIT
+
+  Total                0.928    983.113      0.001      0.999      0.000
+  Total indirect       0.000      0.000      0.000      1.000      0.182
+
+  Direct
+    FLIT
+    NOBULLY            0.928    983.113      0.001      0.999      0.000
+
+
+Effects from FLFAMILY to FLIT
+
+  Total               -0.313    542.292     -0.001      1.000      0.000
+  Total indirect       0.000      0.000      0.000      1.000      0.182
+
+  Direct
+    FLIT
+    FLFAMILY          -0.313    542.292     -0.001      1.000      0.000
+
+
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION FOR WITHIN
+
+
+           NU
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           NU
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           LAMBDA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT               0             0             0             0             0
+ FCFMLRTY           0             0             0             0             0
+ FLCONFIN           0             0             0             0             0
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           LAMBDA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLIT               0             0             0             0             0
+ FCFMLRTY           0             0             0             0             0
+ FLCONFIN           0             0             0             0             0
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           THETA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT               0
+ FCFMLRTY           0             0
+ FLCONFIN           0             0             0
+ FLSCHOOL           0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           THETA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLFAMILY           0
+ IMMI1GEN           0             0
+ IMMI2GEN           0             0             0
+ ESCS               0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           ALPHA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+                    0             1             2             0             0
+
+
+           ALPHA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+                    0             3             4             5             0
+
+
+           BETA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT               0             6             7             8             9
+ FCFMLRTY           0             0             0            13            14
+ FLCONFIN           0             0             0            19            20
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           BETA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLIT              10            11             0            12             0
+ FCFMLRTY          15             0            16            17            18
+ FLCONFIN          21             0            22            23            24
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           PSI
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT              25
+ FCFMLRTY           0            26
+ FLCONFIN           0            27            28
+ FLSCHOOL           0             0             0            29
+ NOBULLY            0             0             0            30            31
+ FLFAMILY           0             0             0            32            33
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0            37             0
+ MALE               0             0             0             0             0
+
+
+           PSI
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLFAMILY          34
+ IMMI1GEN           0            35
+ IMMI2GEN           0             0            36
+ ESCS              38            39            40            41
+ MALE               0             0             0             0             0
+
+
+     PARAMETER SPECIFICATION FOR BETWEEN
+
+
+           NU
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           NU
+              STRATIO
+              ________
+                    0
+
+
+           LAMBDA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT           0             0             0             0             0
+ FLIT               0             0             0             0             0
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ STRATIO            0             0             0             0             0
+
+
+           LAMBDA
+              STRATIO
+              ________
+ EDUSHORT           0
+ FLIT               0
+ FLSCHOOL           0
+ NOBULLY            0
+ FLFAMILY           0
+ STRATIO            0
+
+
+           THETA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT           0
+ FLIT               0             0
+ FLSCHOOL           0             0             0
+ NOBULLY            0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ STRATIO            0             0             0             0             0
+
+
+           THETA
+              STRATIO
+              ________
+ STRATIO            0
+
+
+           ALPHA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+                   42            43            44            45            46
+
+
+           ALPHA
+              STRATIO
+              ________
+                    0
+
+
+           BETA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT           0             0             0             0             0
+ FLIT              47             0            48            49            50
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ STRATIO            0             0             0             0             0
+
+
+           BETA
+              STRATIO
+              ________
+ EDUSHORT           0
+ FLIT              51
+ FLSCHOOL           0
+ NOBULLY            0
+ FLFAMILY           0
+ STRATIO            0
+
+
+           PSI
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT          52
+ FLIT               0            53
+ FLSCHOOL          54             0            55
+ NOBULLY           56             0            57            58
+ FLFAMILY          59             0            60            61            62
+ STRATIO            0             0             0             0             0
+
+
+           PSI
+              STRATIO
+              ________
+ STRATIO            0
+
+
+     STARTING VALUES FOR WITHIN
+
+
+           NU
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT           1.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         1.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         1.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         1.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         1.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       1.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         1.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         1.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         1.000         0.000
+ MALE           0.000         0.000         0.000         0.000         1.000
+
+
+           THETA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT           0.000
+ FCFMLRTY       0.000         0.000
+ FLCONFIN       0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLFAMILY       0.000
+ IMMI1GEN       0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+                0.000         6.321        -0.233         0.000         0.000
+
+
+           ALPHA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+                0.000         0.003         0.006        -1.116         0.000
+
+
+           BETA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT        4401.411
+ FCFMLRTY       0.000        15.382
+ FLCONFIN       0.000         0.000         0.556
+ FLSCHOOL       0.000         0.000         0.000         0.516
+ NOBULLY        0.000         0.000         0.000         0.000         0.590
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLFAMILY       0.694
+ IMMI1GEN       0.000         0.001
+ IMMI2GEN       0.000         0.000         0.003
+ ESCS           0.000         0.000         0.000         0.723
+ MALE           0.000         0.000         0.000         0.000         0.125
+
+
+     STARTING VALUES FOR BETWEEN
+
+
+           NU
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              STRATIO
+              ________
+                0.000
+
+
+           LAMBDA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT       1.000         0.000         0.000         0.000         0.000
+ FLIT           0.000         1.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         1.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         1.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         1.000
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              STRATIO
+              ________
+ EDUSHORT       0.000
+ FLIT           0.000
+ FLSCHOOL       0.000
+ NOBULLY        0.000
+ FLFAMILY       0.000
+ STRATIO        1.000
+
+
+           THETA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000
+ FLIT           0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              STRATIO
+              ________
+ STRATIO        0.000
+
+
+           ALPHA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+                0.027       421.817        -0.154        -0.146         0.201
+
+
+           ALPHA
+              STRATIO
+              ________
+                0.000
+
+
+           BETA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000         0.000         0.000         0.000         0.000
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              STRATIO
+              ________
+ EDUSHORT       0.000
+ FLIT           0.000
+ FLSCHOOL       0.000
+ NOBULLY        0.000
+ FLFAMILY       0.000
+ STRATIO        0.000
+
+
+           PSI
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.593
+ FLIT           0.000      4401.411
+ FLSCHOOL       0.000         0.000         0.516
+ NOBULLY        0.000         0.000         0.000         0.590
+ FLFAMILY       0.000         0.000         0.000         0.000         0.694
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              STRATIO
+              ________
+ STRATIO      139.991
+
+
+THE FOLLOWING DATA SET(S) DID NOT RESULT IN A COMPLETED REPLICATION:
+
+  C:\Users\tctan\finlit9.dat
+
+
+TECHNICAL 9 OUTPUT
+
+
+Errors for replication with data file C:\Users\tctan\finlit1.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600535 7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054
+                  7600486 7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433
+                  7600623 7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053
+                  7600010 7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405
+                  7600597 7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288
+                  7600588 7600184 7600592 7600372 7600301 7600324 7600459 7600401 7600265 7600309
+                  7600143 7600474 7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292
+                  7600303 7600424 7600571 7600261 7600390 7600105 7600240 7600463 7600145 7600537
+                  7600050 7600539 7600354 7600095 7600304 7600567 7600568 7600305 7600402 7600069
+                  7600007 7600076 7600593 7600490 7600134 7600215 7600135 7600086 7600087 7600226
+                  7600100 7600453 7600039 7600460 7600550 7600553 7600462 7600071 7600244 7600319
+                  7600452 7600358 7600610 7600116 7600415 7600067 7600466 7600529 7600194 7600383
+                  7600314 7600206 7600322 7600572 7600475 7600161 7600416 7600177 7600352 7600425
+                  7600232 7600428 7600006 7600357 7600447 7600193 7600377 7600458 7600378 7600098
+                  7600374 7600451 7600306 7600040 7600315 7600387 7600461 7600389 7600262 7600074
+                  7600467 7600400 7600268 7600061 7600329 7600330 7600272 7600336 7600016 7600151
+                  7600345 7600625 7600051 7600123 7600165 7600300 7600246 7600172 7600520 7600180
+                  7600035 7600189 7600037 7600334 7600335 7600008 7600541 7600070 7600009 7600429
+                  7600431 7600270 7600559 7600197 7600044 7600446 7600448 7600130 7600132 7600573
+                  7600359 7600589 7600454 7600455 7600081 7600595 7600367 7600369 7600607 7600370
+                  7600298 7600139 7600085 7600624 7600380 7600302 7600147 7600089 7600159 7600160
+                  7600243 7600057 7600101 7600026 7600366 7600217 7600291 7600072 7600614 7600615
+                  7600617 7600371 7600622 7600155 7600464 7600223 7600032 7600379 7600471 7600121
+                  7600473 7600163 7600382 7600012 7600479 7600481 7600483 7600237 7600038 7600124
+                  7600391 7600496 7600498 7600502 7600503 7600504 7600310 7600312 7600173 7600514
+                  7600397 7600398 7600242 7600175 7600527 7600528 7600055 7600531 7600021 7600058
+                  7600023 7600043 7600253 7600097 7600138 7600196 7600001 7600337 7600338 7600046
+                  7600144 7600434 7600207 7600350 7600208 7600583 7600031 7600356 7600279 7600284
+                  7600110 7600286 7600457 7600602 7600154 7600590 7600084 7600213 7600450 7600033
+                  7600034 7600601 7600604 7600606 7600219 7600280 7600281 7600361 7600364 7600092
+                  7600170 7600368 7600287 7600094 7600468 7600013 7600229 7600293 7600096 7600296
+                  7600233 7600299 7600060 7600478 7600029 7600178 7600239 7600384 7600385 7600099
+                  7600388 7600492 7600493 7600002 7600499 7600500 7600307 7600308 7600393 7600507
+                  7600136 7600077 7600311 7600399 7600518 7600519 7600313 7600104 7600066 7600523
+                  7600403 7600316 7600251 7600195 7600320 7600106 7600254 7600255 7600540 7600418
+                  7600545 7600547 7600107 7600109 7600331 7600557 7600260 7600427 7600202 7600563
+                  7600146 7600430 7600263 7600432 7600083 7600112 7600437 7600267 7600582 7600113
+                  7600586 7600587 7600444 7600221 7600598 7600269 7600093 7600179 7600011 7600605
+                  7600273 7600181 7600516 7600611 7600612 7600517 7600276 7600326 7600183 7600618
+                  7600117 7600386 7600185 7600525 7600186 7600062 7600063 7600530 7600456 7600533
+                  7600534 7600149 7600080 7600153 7600395 7600289 7600542 7600340 7600546 7600290
+                  7600343 7600549 7600041 7600551 7600199 7600248 7600404 7600200 7600250 7600297
+                  7600158 7600412 7600566 7600128 7600204 7600103 7600068 7600485 7600575 7600577
+                  7600578 7600579 7600133 7600420 7600363 7600167 7600025 7600088 7600036 7600174
+                  7600090 7600047 7600596 7600480 7600114 7600188 7600555 7600556 7600164 7600190
+                  7600127 7600560 7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225
+                  7600022 7600339 7600574 7600443 7600227 7600445 7600505 7600506 7600581 7600148
+                  7600508 7600509 7600131 7600230 7600198 7600150 7600349 7600234 7600042 7600594
+                  7600236 7600353 7600176 7600118 7600119 7600005 7600524 7600603 7600205 7600526
+                  7600078 7600360 7600406 7600407 7600408 7600532 7600156 7600019 7600318 7600413
+                  7600620 7600621 7600247 7600323 7600027 7600543 7600325 7600477 7600373 7600552
+                  7600108 7600231 7600282 7600210 7600436 7600222 7600584 7600608 7600439 7600440
+                  7600111 7600140 7600341 7600187 7600616 7600075 7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600212 7600054 7600486 7600381
+                  7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623 7600294
+                  7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010 7600558
+                  7600045 7600252 7600565 7600059 7600405 7600597 7600422 7600619 7600538 7600245
+                  7600249 7600342 7600570 7600288 7600588 7600184 7600592 7600372 7600301 7600324
+                  7600459 7600401 7600265 7600309 7600143 7600474 7600365 7600488 7600015 7600426
+                  7600218 7600201 7600292 7600303 7600424 7600571 7600261 7600390 7600105 7600240
+                  7600463 7600145 7600537 7600050 7600539 7600354 7600095 7600304 7600567 7600568
+                  7600305 7600402 7600069 7600007 7600076 7600593 7600490 7600134 7600215 7600135
+                  7600086 7600087 7600226 7600100 7600453 7600039 7600460 7600550 7600553 7600462
+                  7600071 7600244 7600319 7600452 7600610 7600116 7600415 7600067 7600466 7600529
+                  7600194 7600383 7600314 7600322 7600572 7600475 7600161 7600177 7600352 7600425
+                  7600232 7600428 7600006 7600357 7600447 7600193 7600377 7600458 7600378 7600098
+                  7600451 7600306 7600040 7600315 7600387 7600461 7600317 7600262 7600074 7600467
+                  7600400 7600268 7600061 7600329 7600330 7600272 7600274 7600336 7600016 7600151
+                  7600345 7600625 7600051 7600165 7600246 7600180 7600035 7600189 7600037 7600334
+                  7600335 7600008 7600541 7600070 7600009 7600431 7600270 7600559 7600197 7600044
+                  7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455 7600081
+                  7600595 7600369 7600370 7600298 7600139 7600085 7600624 7600380 7600302 7600147
+                  7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366 7600217 7600291
+                  7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464 7600223 7600376
+                  7600032 7600379 7600471 7600473 7600163 7600382 7600012 7600479 7600481 7600483
+                  7600038 7600124 7600391 7600498 7600502 7600504 7600173 7600514 7600397 7600398
+                  7600242 7600175 7600528 7600055 7600531 7600021 7600058 7600023 7600043 7600253
+                  7600064 7600097 7600419 7600138 7600001 7600337 7600338 7600144 7600434 7600207
+                  7600208 7600583 7600031 7600356 7600279 7600110 7600286 7600457 7600602 7600154
+                  7600590 7600084 7600348 7600213 7600450 7600033 7600034 7600601 7600277 7600604
+                  7600606 7600219 7600280 7600281 7600283 7600361 7600364 7600092 7600170 7600368
+                  7600287 7600094 7600468 7600013 7600229 7600293 7600096 7600296 7600233 7600299
+                  7600060 7600478 7600029 7600178 7600239 7600384 7600385 7600099 7600388 7600492
+                  7600493 7600182 7600002 7600499 7600500 7600307 7600308 7600393 7600507 7600136
+                  7600077 7600311 7600399 7600518 7600519 7600313 7600104 7600523 7600403 7600316
+                  7600251 7600195 7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545
+                  7600547 7600109 7600259 7600331 7600557 7600260 7600427 7600202 7600563 7600430
+                  7600263 7600432 7600112 7600267 7600582 7600113 7600586 7600587 7600444 7600221
+                  7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516 7600611
+                  7600612 7600517 7600326 7600183 7600618 7600117 7600386 7600185 7600525 7600186
+                  7600062 7600530 7600456 7600533 7600534 7600149 7600080 7600395 7600289 7600542
+                  7600340 7600546 7600290 7600343 7600549 7600041 7600551 7600199 7600248 7600404
+                  7600250 7600297 7600158 7600412 7600566 7600128 7600204 7600103 7600068 7600485
+                  7600575 7600577 7600579 7600133 7600363 7600167 7600025 7600088 7600036 7600174
+                  7600090 7600047 7600596 7600480 7600114 7600188 7600555 7600556 7600164 7600190
+                  7600127 7600560 7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225
+                  7600022 7600339 7600501 7600574 7600443 7600227 7600445 7600505 7600506 7600581
+                  7600148 7600508 7600509 7600131 7600230 7600198 7600150 7600349 7600234 7600042
+                  7600594 7600236 7600353 7600176 7600118 7600119 7600005 7600524 7600603 7600205
+                  7600526 7600078 7600360 7600406 7600407 7600408 7600532 7600156 7600019 7600318
+                  7600413 7600211 7600620 7600621 7600247 7600323 7600027 7600543 7600325 7600477
+                  7600214 7600373 7600552 7600108 7600231 7600282 7600210 7600436 7600222 7600584
+                  7600608 7600439 7600440 7600111 7600140 7600341 7600187 7600616 7600075 7600362
+                  7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.535D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 41, %WITHIN%: ESCS
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit2.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405 7600422
+                  7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600588 7600184
+                  7600592 7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474
+                  7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292 7600303 7600571
+                  7600261 7600390 7600105 7600240 7600463 7600145 7600537 7600050 7600539 7600354
+                  7600095 7600304 7600567 7600568 7600305 7600402 7600076 7600593 7600490 7600134
+                  7600215 7600135 7600086 7600087 7600226 7600100 7600453 7600039 7600460 7600550
+                  7600553 7600462 7600071 7600244 7600319 7600452 7600358 7600610 7600116 7600415
+                  7600067 7600466 7600529 7600194 7600383 7600206 7600322 7600572 7600475 7600161
+                  7600416 7600177 7600352 7600425 7600232 7600428 7600006 7600357 7600447 7600377
+                  7600458 7600378 7600098 7600374 7600451 7600040 7600315 7600387 7600461 7600389
+                  7600317 7600262 7600074 7600467 7600400 7600268 7600061 7600329 7600330 7600272
+                  7600336 7600016 7600151 7600345 7600625 7600051 7600123 7600165 7600300 7600246
+                  7600172 7600520 7600180 7600035 7600189 7600037 7600334 7600335 7600008 7600541
+                  7600070 7600009 7600429 7600431 7600270 7600559 7600197 7600044 7600448 7600130
+                  7600132 7600573 7600359 7600589 7600454 7600455 7600081 7600595 7600367 7600369
+                  7600607 7600370 7600298 7600139 7600085 7600624 7600380 7600302 7600147 7600089
+                  7600159 7600243 7600057 7600101 7600026 7600366 7600217 7600291 7600072 7600614
+                  7600615 7600617 7600371 7600622 7600155 7600464 7600223 7600376 7600032 7600379
+                  7600471 7600121 7600473 7600163 7600382 7600012 7600479 7600481 7600483 7600237
+                  7600038 7600124 7600391 7600496 7600498 7600502 7600503 7600504 7600310 7600312
+                  7600173 7600514 7600397 7600398 7600242 7600175 7600527 7600528 7600055 7600531
+                  7600021 7600058 7600023 7600043 7600253 7600097 7600419 7600138 7600196 7600001
+                  7600337 7600338 7600046 7600144 7600434 7600207 7600350 7600208 7600583 7600275
+                  7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602 7600154 7600590
+                  7600084 7600213 7600450 7600033 7600034 7600601 7600277 7600604 7600606 7600219
+                  7600280 7600281 7600361 7600364 7600092 7600170 7600368 7600287 7600094 7600468
+                  7600013 7600229 7600293 7600096 7600296 7600233 7600299 7600060 7600478 7600029
+                  7600178 7600239 7600384 7600385 7600099 7600388 7600492 7600493 7600182 7600002
+                  7600499 7600500 7600307 7600308 7600393 7600507 7600136 7600077 7600311 7600399
+                  7600518 7600519 7600313 7600104 7600066 7600523 7600403 7600316 7600251 7600195
+                  7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545 7600547 7600107
+                  7600109 7600331 7600557 7600260 7600427 7600202 7600563 7600146 7600430 7600263
+                  7600432 7600083 7600112 7600437 7600267 7600582 7600113 7600586 7600587 7600444
+                  7600221 7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516
+                  7600611 7600612 7600517 7600276 7600326 7600183 7600618 7600117 7600386 7600185
+                  7600525 7600186 7600062 7600063 7600530 7600456 7600533 7600534 7600149 7600080
+                  7600153 7600395 7600289 7600340 7600546 7600290 7600343 7600549 7600041 7600551
+                  7600199 7600248 7600404 7600200 7600250 7600297 7600158 7600412 7600566 7600128
+                  7600204 7600103 7600068 7600485 7600575 7600577 7600578 7600579 7600133 7600420
+                  7600363 7600167 7600025 7600088 7600036 7600174 7600090 7600047 7600596 7600480
+                  7600114 7600375 7600216 7600188 7600555 7600556 7600164 7600190 7600127 7600560
+                  7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225 7600022 7600339
+                  7600574 7600443 7600227 7600445 7600505 7600506 7600581 7600148 7600508 7600509
+                  7600131 7600230 7600198 7600150 7600349 7600234 7600042 7600594 7600236 7600353
+                  7600176 7600118 7600119 7600005 7600524 7600603 7600205 7600526 7600078 7600360
+                  7600406 7600407 7600408 7600532 7600156 7600019 7600318 7600413 7600211 7600620
+                  7600621 7600247 7600323 7600027 7600543 7600325 7600477 7600373 7600552 7600108
+                  7600231 7600282 7600210 7600436 7600222 7600584 7600608 7600439 7600440 7600111
+                  7600140 7600341 7600187 7600616 7600075 7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600558 7600045 7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619
+                  7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600184 7600592 7600372
+                  7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600365 7600488
+                  7600015 7600426 7600218 7600201 7600292 7600303 7600424 7600571 7600261 7600390
+                  7600105 7600240 7600463 7600145 7600537 7600050 7600539 7600354 7600095 7600304
+                  7600567 7600568 7600305 7600402 7600069 7600007 7600076 7600593 7600490 7600134
+                  7600215 7600135 7600086 7600087 7600226 7600100 7600453 7600039 7600460 7600550
+                  7600553 7600462 7600071 7600244 7600319 7600452 7600610 7600116 7600415 7600067
+                  7600466 7600529 7600194 7600383 7600314 7600322 7600572 7600475 7600161 7600177
+                  7600352 7600425 7600232 7600428 7600006 7600357 7600447 7600193 7600377 7600458
+                  7600378 7600098 7600374 7600306 7600040 7600315 7600387 7600461 7600317 7600262
+                  7600074 7600467 7600400 7600268 7600061 7600329 7600330 7600272 7600274 7600336
+                  7600016 7600151 7600345 7600625 7600051 7600123 7600165 7600300 7600246 7600172
+                  7600180 7600035 7600189 7600037 7600334 7600335 7600008 7600541 7600070 7600009
+                  7600431 7600270 7600559 7600197 7600044 7600446 7600448 7600130 7600132 7600573
+                  7600359 7600589 7600454 7600081 7600595 7600369 7600607 7600370 7600139 7600085
+                  7600624 7600380 7600302 7600147 7600089 7600159 7600160 7600243 7600057 7600101
+                  7600026 7600366 7600217 7600291 7600072 7600614 7600615 7600617 7600371 7600622
+                  7600155 7600464 7600223 7600376 7600032 7600379 7600471 7600473 7600382 7600012
+                  7600479 7600481 7600483 7600038 7600124 7600391 7600498 7600502 7600503 7600504
+                  7600173 7600514 7600397 7600398 7600242 7600175 7600527 7600528 7600055 7600531
+                  7600021 7600058 7600023 7600043 7600253 7600064 7600097 7600419 7600138 7600001
+                  7600337 7600338 7600144 7600434 7600207 7600208 7600583 7600031 7600356 7600279
+                  7600284 7600110 7600286 7600457 7600602 7600154 7600590 7600084 7600348 7600213
+                  7600450 7600033 7600034 7600601 7600277 7600604 7600606 7600219 7600280 7600281
+                  7600283 7600361 7600364 7600092 7600170 7600368 7600287 7600094 7600468 7600013
+                  7600229 7600293 7600096 7600296 7600233 7600299 7600060 7600478 7600029 7600178
+                  7600239 7600384 7600385 7600099 7600388 7600492 7600493 7600182 7600002 7600499
+                  7600500 7600307 7600308 7600393 7600507 7600136 7600077 7600311 7600399 7600518
+                  7600519 7600313 7600104 7600523 7600403 7600316 7600251 7600195 7600320 7600414
+                  7600106 7600254 7600255 7600540 7600418 7600545 7600547 7600259 7600331 7600557
+                  7600260 7600427 7600202 7600563 7600430 7600263 7600432 7600083 7600112 7600267
+                  7600582 7600113 7600586 7600587 7600444 7600221 7600598 7600269 7600093 7600179
+                  7600011 7600605 7600273 7600181 7600516 7600611 7600612 7600517 7600326 7600183
+                  7600618 7600117 7600386 7600185 7600525 7600186 7600062 7600063 7600530 7600456
+                  7600533 7600534 7600149 7600080 7600395 7600289 7600542 7600340 7600290 7600343
+                  7600549 7600041 7600551 7600199 7600248 7600404 7600250 7600297 7600158 7600412
+                  7600566 7600128 7600204 7600103 7600068 7600485 7600575 7600579 7600133 7600167
+                  7600025 7600088 7600036 7600174 7600090 7600047 7600596 7600480 7600114 7600375
+                  7600188 7600555 7600556 7600164 7600190 7600127 7600560 7600166 7600562 7600295
+                  7600048 7600495 7600129 7600497 7600225 7600022 7600339 7600501 7600574 7600443
+                  7600227 7600445 7600505 7600581 7600148 7600508 7600509 7600131 7600230 7600198
+                  7600150 7600349 7600234 7600042 7600594 7600236 7600353 7600176 7600118 7600119
+                  7600005 7600524 7600603 7600205 7600526 7600360 7600406 7600407 7600408 7600532
+                  7600156 7600019 7600318 7600413 7600247 7600323 7600027 7600543 7600325 7600477
+                  7600214 7600373 7600552 7600108 7600231 7600282 7600210 7600436 7600222 7600584
+                  7600608 7600439 7600440 7600111 7600140 7600341 7600187 7600616 7600075 7600362
+                  7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.282D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit3.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600535 7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054
+                  7600486 7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433
+                  7600623 7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053
+                  7600010 7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405
+                  7600597 7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288
+                  7600588 7600184 7600592 7600372 7600301 7600324 7600459 7600401 7600265 7600309
+                  7600143 7600474 7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292
+                  7600303 7600424 7600571 7600261 7600390 7600105 7600240 7600463 7600145 7600537
+                  7600050 7600539 7600354 7600095 7600304 7600567 7600568 7600305 7600402 7600069
+                  7600007 7600076 7600593 7600490 7600134 7600215 7600135 7600086 7600087 7600226
+                  7600100 7600453 7600039 7600460 7600550 7600553 7600462 7600071 7600244 7600319
+                  7600452 7600358 7600610 7600116 7600415 7600067 7600466 7600529 7600194 7600383
+                  7600314 7600206 7600322 7600572 7600475 7600161 7600416 7600177 7600352 7600425
+                  7600232 7600428 7600006 7600357 7600447 7600193 7600377 7600458 7600378 7600098
+                  7600374 7600451 7600306 7600040 7600315 7600387 7600461 7600389 7600317 7600262
+                  7600074 7600467 7600400 7600268 7600061 7600329 7600330 7600272 7600336 7600016
+                  7600151 7600345 7600625 7600051 7600123 7600165 7600300 7600246 7600172 7600520
+                  7600180 7600035 7600189 7600037 7600334 7600335 7600008 7600541 7600070 7600009
+                  7600429 7600431 7600270 7600559 7600197 7600044 7600446 7600448 7600130 7600132
+                  7600573 7600359 7600589 7600454 7600455 7600081 7600595 7600367 7600369 7600607
+                  7600370 7600298 7600139 7600085 7600624 7600380 7600302 7600147 7600089 7600159
+                  7600160 7600243 7600057 7600101 7600026 7600366 7600217 7600291 7600072 7600614
+                  7600615 7600617 7600371 7600622 7600155 7600464 7600223 7600376 7600379 7600471
+                  7600121 7600473 7600163 7600382 7600012 7600479 7600481 7600483 7600237 7600038
+                  7600124 7600391 7600496 7600498 7600502 7600503 7600504 7600312 7600173 7600514
+                  7600397 7600398 7600242 7600175 7600527 7600528 7600055 7600531 7600021 7600058
+                  7600043 7600253 7600097 7600419 7600138 7600196 7600001 7600337 7600338 7600046
+                  7600144 7600434 7600207 7600350 7600208 7600583 7600275 7600031 7600356 7600279
+                  7600284 7600110 7600286 7600457 7600602 7600154 7600590 7600084 7600213 7600450
+                  7600033 7600034 7600601 7600277 7600604 7600606 7600219 7600280 7600281 7600361
+                  7600364 7600092 7600170 7600368 7600287 7600094 7600468 7600013 7600229 7600293
+                  7600096 7600296 7600233 7600299 7600060 7600478 7600029 7600178 7600239 7600384
+                  7600385 7600099 7600388 7600492 7600493 7600182 7600002 7600499 7600500 7600307
+                  7600308 7600393 7600507 7600136 7600077 7600311 7600399 7600518 7600519 7600313
+                  7600104 7600066 7600523 7600403 7600316 7600251 7600195 7600320 7600414 7600106
+                  7600254 7600255 7600540 7600418 7600545 7600547 7600107 7600109 7600331 7600557
+                  7600260 7600427 7600202 7600563 7600146 7600430 7600263 7600432 7600083 7600112
+                  7600437 7600267 7600582 7600113 7600586 7600587 7600444 7600221 7600598 7600269
+                  7600093 7600179 7600011 7600605 7600273 7600181 7600516 7600611 7600612 7600517
+                  7600276 7600326 7600183 7600618 7600117 7600386 7600185 7600186 7600062 7600063
+                  7600530 7600456 7600533 7600534 7600149 7600080 7600153 7600395 7600289 7600542
+                  7600340 7600546 7600290 7600343 7600549 7600041 7600551 7600199 7600248 7600404
+                  7600200 7600250 7600297 7600158 7600412 7600566 7600128 7600204 7600103 7600068
+                  7600485 7600575 7600577 7600578 7600579 7600133 7600420 7600363 7600167 7600025
+                  7600088 7600036 7600174 7600090 7600047 7600596 7600480 7600114 7600375 7600216
+                  7600188 7600555 7600556 7600164 7600190 7600127 7600560 7600166 7600562 7600295
+                  7600048 7600495 7600129 7600497 7600022 7600339 7600574 7600443 7600227 7600445
+                  7600505 7600506 7600581 7600148 7600508 7600509 7600131 7600230 7600198 7600150
+                  7600349 7600234 7600042 7600594 7600236 7600353 7600176 7600118 7600119 7600005
+                  7600524 7600603 7600205 7600526 7600078 7600360 7600406 7600407 7600408 7600532
+                  7600156 7600019 7600318 7600413 7600211 7600620 7600621 7600247 7600323 7600543
+                  7600325 7600477 7600373 7600552 7600108 7600231 7600282 7600210 7600436 7600222
+                  7600584 7600608 7600439 7600440 7600111 7600140 7600341 7600187 7600616 7600075
+                  7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600558 7600045 7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619
+                  7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600588 7600184 7600592
+                  7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600365
+                  7600488 7600015 7600218 7600201 7600292 7600303 7600424 7600105 7600240 7600463
+                  7600537 7600050 7600539 7600354 7600095 7600304 7600567 7600568 7600305 7600402
+                  7600069 7600007 7600076 7600593 7600490 7600134 7600215 7600135 7600086 7600087
+                  7600226 7600100 7600453 7600039 7600460 7600550 7600553 7600071 7600452 7600610
+                  7600116 7600415 7600067 7600466 7600529 7600194 7600383 7600314 7600572 7600475
+                  7600177 7600352 7600425 7600232 7600428 7600006 7600357 7600447 7600193 7600377
+                  7600458 7600378 7600098 7600374 7600306 7600040 7600315 7600387 7600461 7600262
+                  7600074 7600467 7600400 7600268 7600061 7600329 7600330 7600272 7600274 7600336
+                  7600016 7600151 7600345 7600625 7600051 7600123 7600165 7600246 7600172 7600180
+                  7600035 7600189 7600037 7600335 7600008 7600541 7600070 7600009 7600431 7600270
+                  7600559 7600197 7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589
+                  7600454 7600455 7600081 7600595 7600369 7600370 7600298 7600139 7600085 7600624
+                  7600380 7600302 7600147 7600089 7600159 7600160 7600057 7600101 7600026 7600366
+                  7600217 7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464
+                  7600223 7600376 7600032 7600379 7600471 7600473 7600163 7600382 7600012 7600479
+                  7600481 7600483 7600038 7600124 7600391 7600498 7600502 7600503 7600173 7600514
+                  7600397 7600398 7600242 7600175 7600527 7600528 7600055 7600531 7600021 7600058
+                  7600023 7600043 7600253 7600064 7600097 7600419 7600138 7600001 7600337 7600338
+                  7600144 7600434 7600207 7600208 7600583 7600031 7600279 7600284 7600110 7600286
+                  7600457 7600602 7600154 7600590 7600084 7600348 7600213 7600450 7600033 7600601
+                  7600277 7600604 7600606 7600219 7600280 7600281 7600283 7600361 7600364 7600092
+                  7600170 7600368 7600287 7600094 7600468 7600013 7600229 7600096 7600296 7600233
+                  7600299 7600060 7600478 7600029 7600178 7600239 7600384 7600385 7600099 7600388
+                  7600492 7600493 7600182 7600002 7600499 7600500 7600307 7600308 7600393 7600507
+                  7600136 7600077 7600311 7600399 7600518 7600519 7600313 7600104 7600523 7600403
+                  7600316 7600251 7600195 7600320 7600414 7600106 7600254 7600255 7600540 7600418
+                  7600545 7600547 7600109 7600259 7600331 7600557 7600260 7600427 7600563 7600263
+                  7600432 7600083 7600112 7600267 7600582 7600113 7600586 7600587 7600221 7600598
+                  7600269 7600093 7600011 7600605 7600273 7600181 7600516 7600611 7600612 7600517
+                  7600326 7600183 7600618 7600117 7600386 7600185 7600525 7600186 7600062 7600063
+                  7600530 7600456 7600533 7600534 7600149 7600080 7600395 7600289 7600542 7600340
+                  7600546 7600290 7600343 7600549 7600041 7600551 7600199 7600248 7600404 7600250
+                  7600297 7600158 7600412 7600566 7600128 7600204 7600103 7600068 7600485 7600575
+                  7600577 7600579 7600133 7600363 7600167 7600025 7600088 7600036 7600174 7600090
+                  7600047 7600596 7600480 7600114 7600375 7600188 7600555 7600556 7600164 7600190
+                  7600127 7600560 7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225
+                  7600022 7600339 7600501 7600574 7600443 7600227 7600445 7600505 7600506 7600581
+                  7600148 7600508 7600509 7600131 7600230 7600198 7600150 7600349 7600234 7600042
+                  7600594 7600236 7600353 7600176 7600118 7600119 7600005 7600524 7600603 7600526
+                  7600078 7600360 7600406 7600407 7600408 7600532 7600156 7600019 7600318 7600413
+                  7600211 7600620 7600621 7600247 7600027 7600543 7600325 7600477 7600214 7600373
+                  7600552 7600108 7600231 7600282 7600210 7600436 7600222 7600584 7600608 7600439
+                  7600440 7600111 7600140 7600341 7600187 7600616 7600075 7600362 7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.821D-17.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit4.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600535 7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054
+                  7600486 7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433
+                  7600623 7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053
+                  7600010 7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405
+                  7600597 7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288
+                  7600588 7600184 7600592 7600372 7600324 7600459 7600401 7600265 7600309 7600143
+                  7600474 7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292 7600303
+                  7600571 7600261 7600390 7600105 7600240 7600463 7600145 7600537 7600050 7600539
+                  7600354 7600095 7600304 7600567 7600568 7600305 7600402 7600069 7600007 7600076
+                  7600593 7600490 7600134 7600215 7600135 7600086 7600087 7600226 7600100 7600039
+                  7600460 7600550 7600553 7600462 7600071 7600244 7600319 7600452 7600358 7600610
+                  7600116 7600415 7600067 7600466 7600529 7600194 7600383 7600314 7600206 7600322
+                  7600572 7600475 7600161 7600416 7600177 7600352 7600425 7600232 7600428 7600006
+                  7600357 7600447 7600193 7600377 7600458 7600378 7600098 7600451 7600306 7600040
+                  7600315 7600387 7600461 7600389 7600317 7600262 7600467 7600400 7600268 7600061
+                  7600329 7600330 7600272 7600336 7600016 7600151 7600345 7600625 7600051 7600123
+                  7600165 7600300 7600246 7600172 7600520 7600180 7600035 7600189 7600037 7600334
+                  7600335 7600008 7600541 7600070 7600009 7600429 7600431 7600270 7600559 7600197
+                  7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455
+                  7600081 7600595 7600369 7600607 7600370 7600298 7600139 7600085 7600624 7600380
+                  7600302 7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366
+                  7600217 7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464
+                  7600223 7600376 7600032 7600379 7600471 7600121 7600473 7600163 7600382 7600012
+                  7600479 7600481 7600483 7600237 7600038 7600124 7600391 7600496 7600498 7600502
+                  7600503 7600504 7600310 7600312 7600173 7600514 7600397 7600398 7600242 7600527
+                  7600528 7600055 7600531 7600021 7600058 7600023 7600043 7600253 7600097 7600419
+                  7600138 7600196 7600001 7600337 7600338 7600144 7600434 7600207 7600350 7600208
+                  7600583 7600275 7600031 7600356 7600279 7600110 7600286 7600457 7600602 7600154
+                  7600590 7600084 7600213 7600033 7600601 7600277 7600604 7600606 7600219 7600280
+                  7600281 7600361 7600364 7600092 7600170 7600368 7600287 7600094 7600468 7600013
+                  7600229 7600293 7600096 7600296 7600233 7600299 7600060 7600478 7600029 7600178
+                  7600239 7600384 7600385 7600099 7600388 7600492 7600493 7600182 7600002 7600499
+                  7600500 7600307 7600308 7600393 7600507 7600136 7600077 7600311 7600399 7600518
+                  7600519 7600313 7600104 7600066 7600523 7600403 7600316 7600251 7600195 7600320
+                  7600414 7600106 7600254 7600255 7600540 7600418 7600545 7600547 7600107 7600109
+                  7600331 7600557 7600260 7600427 7600202 7600563 7600146 7600430 7600263 7600432
+                  7600083 7600112 7600437 7600267 7600582 7600113 7600586 7600587 7600444 7600221
+                  7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516 7600611
+                  7600612 7600517 7600276 7600326 7600183 7600618 7600117 7600386 7600185 7600525
+                  7600186 7600062 7600063 7600530 7600456 7600533 7600534 7600149 7600080 7600153
+                  7600395 7600289 7600542 7600340 7600546 7600290 7600343 7600549 7600041 7600551
+                  7600199 7600248 7600404 7600200 7600250 7600297 7600158 7600412 7600566 7600128
+                  7600204 7600103 7600068 7600485 7600575 7600577 7600578 7600579 7600133 7600420
+                  7600363 7600167 7600025 7600088 7600036 7600174 7600090 7600047 7600596 7600480
+                  7600114 7600375 7600216 7600188 7600555 7600556 7600164 7600190 7600127 7600560
+                  7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225 7600022 7600339
+                  7600574 7600443 7600227 7600445 7600505 7600506 7600581 7600148 7600508 7600509
+                  7600131 7600230 7600198 7600150 7600349 7600234 7600042 7600594 7600236 7600353
+                  7600176 7600118 7600119 7600005 7600524 7600603 7600205 7600526 7600078 7600360
+                  7600406 7600407 7600408 7600532 7600156 7600019 7600318 7600413 7600211 7600620
+                  7600621 7600247 7600323 7600027 7600543 7600325 7600477 7600373 7600552 7600108
+                  7600231 7600282 7600210 7600436 7600222 7600584 7600608 7600439 7600440 7600111
+                  7600140 7600341 7600187 7600616 7600075 7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600558 7600045 7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619
+                  7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600588 7600184 7600592
+                  7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600365
+                  7600488 7600015 7600426 7600218 7600201 7600292 7600303 7600424 7600571 7600261
+                  7600390 7600105 7600240 7600463 7600145 7600537 7600050 7600539 7600354 7600095
+                  7600304 7600567 7600568 7600305 7600402 7600069 7600007 7600076 7600593 7600490
+                  7600134 7600215 7600135 7600086 7600087 7600226 7600100 7600453 7600460 7600550
+                  7600553 7600462 7600071 7600319 7600452 7600610 7600116 7600067 7600466 7600529
+                  7600194 7600383 7600314 7600322 7600572 7600475 7600161 7600177 7600352 7600425
+                  7600232 7600428 7600006 7600357 7600447 7600193 7600377 7600458 7600378 7600098
+                  7600374 7600451 7600306 7600040 7600315 7600387 7600461 7600317 7600262 7600074
+                  7600467 7600400 7600268 7600329 7600330 7600272 7600274 7600336 7600016 7600151
+                  7600345 7600625 7600051 7600123 7600165 7600300 7600246 7600172 7600180 7600035
+                  7600189 7600037 7600334 7600335 7600008 7600541 7600070 7600009 7600431 7600270
+                  7600559 7600197 7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589
+                  7600454 7600455 7600081 7600595 7600369 7600607 7600370 7600298 7600139 7600085
+                  7600624 7600380 7600302 7600147 7600089 7600159 7600160 7600243 7600057 7600101
+                  7600026 7600366 7600217 7600291 7600072 7600614 7600615 7600617 7600622 7600155
+                  7600464 7600223 7600376 7600032 7600379 7600471 7600473 7600163 7600382 7600012
+                  7600479 7600481 7600483 7600038 7600124 7600391 7600498 7600502 7600503 7600504
+                  7600173 7600514 7600397 7600398 7600242 7600175 7600527 7600528 7600055 7600021
+                  7600058 7600023 7600043 7600253 7600064 7600097 7600419 7600138 7600337 7600338
+                  7600144 7600434 7600207 7600208 7600583 7600031 7600356 7600279 7600284 7600110
+                  7600286 7600457 7600602 7600154 7600590 7600084 7600348 7600213 7600450 7600033
+                  7600034 7600601 7600604 7600606 7600219 7600280 7600281 7600283 7600361 7600364
+                  7600092 7600170 7600368 7600287 7600094 7600468 7600013 7600229 7600293 7600296
+                  7600233 7600299 7600060 7600478 7600029 7600178 7600239 7600384 7600385 7600099
+                  7600388 7600492 7600493 7600182 7600002 7600499 7600500 7600307 7600308 7600393
+                  7600507 7600136 7600077 7600311 7600399 7600518 7600519 7600313 7600104 7600523
+                  7600403 7600316 7600251 7600195 7600320 7600414 7600106 7600254 7600255 7600540
+                  7600418 7600545 7600547 7600109 7600259 7600331 7600557 7600260 7600563 7600430
+                  7600263 7600432 7600083 7600112 7600267 7600582 7600113 7600587 7600444 7600221
+                  7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516 7600611
+                  7600612 7600326 7600183 7600618 7600117 7600386 7600185 7600525 7600186 7600062
+                  7600063 7600530 7600456 7600533 7600534 7600149 7600080 7600395 7600289 7600542
+                  7600340 7600546 7600290 7600343 7600549 7600041 7600551 7600199 7600248 7600404
+                  7600250 7600297 7600158 7600566 7600128 7600204 7600103 7600068 7600485 7600575
+                  7600577 7600579 7600133 7600363 7600167 7600025 7600088 7600036 7600174 7600090
+                  7600047 7600596 7600480 7600114 7600375 7600188 7600555 7600556 7600164 7600190
+                  7600127 7600560 7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225
+                  7600022 7600339 7600501 7600574 7600443 7600227 7600445 7600505 7600506 7600581
+                  7600148 7600508 7600509 7600131 7600230 7600198 7600150 7600349 7600234 7600042
+                  7600594 7600236 7600353 7600176 7600118 7600119 7600005 7600524 7600603 7600205
+                  7600526 7600078 7600360 7600406 7600407 7600408 7600532 7600156 7600019 7600318
+                  7600413 7600211 7600620 7600621 7600247 7600323 7600027 7600543 7600325 7600477
+                  7600214 7600373 7600552 7600108 7600231 7600282 7600210 7600436 7600222 7600584
+                  7600608 7600439 7600440 7600111 7600140 7600341 7600187 7600616 7600075 7600362
+                  7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     WARNING: THE MODEL ESTIMATION HAS REACHED A SADDLE POINT OR A POINT WHERE THE
+     OBSERVED AND THE EXPECTED INFORMATION MATRICES DO NOT MATCH.
+     AN ADJUSTMENT TO THE ESTIMATION OF THE INFORMATION MATRIX HAS BEEN MADE.
+     THE CONDITION NUMBER IS      -0.222D+00.
+     THE PROBLEM MAY ALSO BE RESOLVED BY DECREASING THE VALUE OF THE
+     MCONVERGENCE OR LOGCRITERION OPTIONS OR BY CHANGING THE STARTING VALUES
+     OR BY USING THE MLF ESTIMATOR.
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.150D-19.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit5.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600535 7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054
+                  7600486 7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433
+                  7600623 7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053
+                  7600010 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405 7600597
+                  7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600588
+                  7600184 7600592 7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600143
+                  7600474 7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292 7600303
+                  7600424 7600571 7600261 7600390 7600105 7600240 7600463 7600145 7600537 7600050
+                  7600539 7600354 7600095 7600304 7600567 7600568 7600305 7600402 7600069 7600007
+                  7600076 7600593 7600134 7600215 7600135 7600086 7600087 7600226 7600100 7600453
+                  7600039 7600460 7600550 7600553 7600462 7600071 7600244 7600319 7600452 7600358
+                  7600610 7600116 7600415 7600067 7600466 7600529 7600194 7600314 7600206 7600322
+                  7600572 7600475 7600161 7600416 7600177 7600352 7600425 7600232 7600428 7600006
+                  7600357 7600447 7600193 7600377 7600458 7600378 7600098 7600374 7600451 7600306
+                  7600040 7600315 7600387 7600461 7600389 7600317 7600262 7600074 7600400 7600268
+                  7600061 7600329 7600330 7600272 7600336 7600016 7600151 7600345 7600625 7600051
+                  7600123 7600165 7600300 7600246 7600172 7600520 7600180 7600035 7600189 7600037
+                  7600334 7600335 7600008 7600541 7600070 7600009 7600429 7600431 7600559 7600197
+                  7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455
+                  7600595 7600367 7600369 7600370 7600298 7600139 7600085 7600624 7600380 7600302
+                  7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366 7600217
+                  7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464 7600223
+                  7600376 7600032 7600379 7600471 7600121 7600473 7600163 7600382 7600012 7600479
+                  7600481 7600483 7600237 7600038 7600124 7600391 7600496 7600498 7600502 7600504
+                  7600312 7600173 7600514 7600397 7600398 7600242 7600175 7600527 7600528 7600055
+                  7600531 7600021 7600058 7600023 7600043 7600253 7600097 7600419 7600138 7600196
+                  7600001 7600337 7600338 7600046 7600144 7600434 7600207 7600350 7600208 7600583
+                  7600275 7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602 7600154
+                  7600590 7600084 7600213 7600450 7600033 7600034 7600601 7600277 7600604 7600606
+                  7600219 7600280 7600281 7600361 7600364 7600092 7600170 7600368 7600287 7600094
+                  7600468 7600013 7600229 7600293 7600096 7600296 7600233 7600299 7600060 7600478
+                  7600029 7600178 7600239 7600384 7600385 7600099 7600388 7600492 7600493 7600182
+                  7600002 7600499 7600500 7600307 7600308 7600393 7600507 7600136 7600077 7600311
+                  7600399 7600518 7600519 7600313 7600104 7600066 7600523 7600403 7600316 7600251
+                  7600195 7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545 7600547
+                  7600107 7600109 7600331 7600557 7600260 7600427 7600563 7600146 7600430 7600263
+                  7600432 7600083 7600112 7600437 7600267 7600582 7600113 7600586 7600587 7600444
+                  7600221 7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516
+                  7600611 7600612 7600517 7600276 7600326 7600183 7600618 7600117 7600386 7600185
+                  7600186 7600530 7600456 7600533 7600534 7600149 7600080 7600153 7600395 7600542
+                  7600340 7600546 7600290 7600343 7600549 7600041 7600551 7600199 7600248 7600404
+                  7600200 7600250 7600297 7600158 7600412 7600566 7600128 7600204 7600103 7600068
+                  7600485 7600575 7600577 7600578 7600579 7600133 7600420 7600363 7600167 7600025
+                  7600088 7600036 7600174 7600090 7600047 7600596 7600480 7600114 7600375 7600216
+                  7600188 7600555 7600556 7600164 7600190 7600127 7600560 7600166 7600562 7600295
+                  7600048 7600495 7600129 7600497 7600225 7600022 7600574 7600443 7600227 7600445
+                  7600505 7600506 7600581 7600148 7600508 7600509 7600131 7600230 7600198 7600150
+                  7600349 7600234 7600042 7600594 7600236 7600353 7600176 7600118 7600119 7600005
+                  7600524 7600603 7600205 7600526 7600078 7600360 7600406 7600407 7600408 7600532
+                  7600156 7600019 7600318 7600413 7600211 7600621 7600247 7600323 7600027 7600543
+                  7600325 7600477 7600373 7600552 7600108 7600231 7600282 7600210 7600436 7600222
+                  7600584 7600608 7600439 7600440 7600111 7600140 7600341 7600187 7600616 7600075
+                  7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600558 7600045 7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619
+                  7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600588 7600184 7600592
+                  7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600488
+                  7600015 7600426 7600218 7600201 7600292 7600303 7600424 7600571 7600390 7600105
+                  7600240 7600463 7600145 7600537 7600050 7600539 7600354 7600095 7600304 7600567
+                  7600568 7600305 7600402 7600069 7600007 7600076 7600593 7600490 7600134 7600215
+                  7600086 7600087 7600226 7600100 7600453 7600039 7600460 7600550 7600553 7600462
+                  7600071 7600244 7600319 7600452 7600610 7600116 7600415 7600067 7600466 7600529
+                  7600194 7600383 7600314 7600322 7600572 7600475 7600161 7600177 7600352 7600425
+                  7600232 7600428 7600357 7600447 7600193 7600377 7600458 7600378 7600098 7600374
+                  7600451 7600306 7600040 7600315 7600387 7600461 7600317 7600262 7600074 7600467
+                  7600400 7600061 7600329 7600330 7600272 7600274 7600336 7600016 7600151 7600345
+                  7600625 7600123 7600165 7600300 7600246 7600172 7600180 7600035 7600189 7600037
+                  7600334 7600335 7600541 7600070 7600009 7600431 7600270 7600559 7600197 7600044
+                  7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455 7600081
+                  7600595 7600369 7600370 7600298 7600139 7600085 7600624 7600380 7600302 7600147
+                  7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366 7600217 7600291
+                  7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464 7600223 7600376
+                  7600032 7600379 7600471 7600473 7600382 7600012 7600479 7600481 7600483 7600038
+                  7600124 7600391 7600498 7600502 7600173 7600514 7600397 7600398 7600242 7600175
+                  7600527 7600528 7600055 7600531 7600021 7600058 7600023 7600043 7600253 7600064
+                  7600097 7600419 7600138 7600001 7600337 7600338 7600144 7600434 7600207 7600208
+                  7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602 7600154 7600590
+                  7600084 7600348 7600213 7600450 7600033 7600034 7600601 7600277 7600604 7600606
+                  7600219 7600280 7600281 7600283 7600361 7600364 7600092 7600170 7600368 7600287
+                  7600094 7600468 7600013 7600229 7600293 7600096 7600296 7600233 7600299 7600060
+                  7600478 7600029 7600178 7600239 7600384 7600385 7600099 7600388 7600492 7600493
+                  7600182 7600002 7600499 7600500 7600307 7600308 7600393 7600507 7600136 7600077
+                  7600311 7600399 7600518 7600519 7600313 7600523 7600403 7600316 7600251 7600195
+                  7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545 7600547 7600109
+                  7600259 7600331 7600557 7600260 7600427 7600202 7600563 7600430 7600263 7600432
+                  7600083 7600112 7600267 7600582 7600113 7600586 7600587 7600444 7600221 7600598
+                  7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516 7600611 7600612
+                  7600517 7600326 7600183 7600618 7600117 7600386 7600185 7600525 7600186 7600062
+                  7600063 7600530 7600456 7600533 7600534 7600149 7600080 7600395 7600289 7600542
+                  7600340 7600546 7600290 7600343 7600549 7600041 7600551 7600199 7600248 7600404
+                  7600250 7600297 7600158 7600412 7600566 7600128 7600204 7600103 7600068 7600485
+                  7600575 7600577 7600579 7600133 7600363 7600167 7600025 7600088 7600036 7600174
+                  7600090 7600047 7600596 7600480 7600114 7600375 7600188 7600555 7600556 7600164
+                  7600190 7600127 7600560 7600166 7600562 7600295 7600048 7600495 7600129 7600497
+                  7600225 7600022 7600339 7600501 7600574 7600443 7600227 7600445 7600505 7600506
+                  7600581 7600148 7600508 7600509 7600131 7600230 7600198 7600150 7600349 7600234
+                  7600042 7600594 7600236 7600353 7600176 7600118 7600119 7600005 7600524 7600603
+                  7600205 7600526 7600078 7600360 7600406 7600407 7600408 7600532 7600156 7600019
+                  7600318 7600413 7600211 7600620 7600621 7600247 7600323 7600027 7600543 7600325
+                  7600477 7600214 7600373 7600552 7600108 7600231 7600282 7600210 7600436 7600222
+                  7600584 7600608 7600439 7600440 7600341 7600187 7600616 7600075 7600362 7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.133D-17.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit6.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405 7600597
+                  7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600588
+                  7600184 7600592 7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600474
+                  7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292 7600303 7600424
+                  7600571 7600261 7600390 7600105 7600240 7600463 7600145 7600537 7600050 7600539
+                  7600354 7600095 7600304 7600567 7600568 7600305 7600402 7600069 7600007 7600076
+                  7600593 7600490 7600134 7600215 7600135 7600086 7600087 7600226 7600100 7600453
+                  7600460 7600550 7600553 7600462 7600071 7600244 7600319 7600452 7600358 7600610
+                  7600116 7600415 7600067 7600466 7600529 7600194 7600383 7600314 7600206 7600322
+                  7600572 7600475 7600161 7600416 7600177 7600352 7600425 7600428 7600006 7600357
+                  7600447 7600193 7600377 7600458 7600378 7600098 7600374 7600451 7600306 7600040
+                  7600315 7600387 7600461 7600389 7600317 7600262 7600074 7600467 7600400 7600268
+                  7600061 7600329 7600330 7600272 7600336 7600016 7600151 7600345 7600625 7600051
+                  7600123 7600165 7600300 7600246 7600172 7600520 7600180 7600035 7600189 7600037
+                  7600334 7600335 7600008 7600541 7600070 7600009 7600429 7600431 7600270 7600559
+                  7600197 7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454
+                  7600455 7600081 7600595 7600367 7600369 7600607 7600370 7600298 7600139 7600085
+                  7600624 7600380 7600302 7600147 7600089 7600159 7600160 7600243 7600057 7600101
+                  7600026 7600366 7600217 7600291 7600072 7600614 7600615 7600617 7600371 7600622
+                  7600155 7600464 7600223 7600376 7600032 7600379 7600471 7600121 7600473 7600163
+                  7600382 7600012 7600479 7600481 7600483 7600237 7600038 7600124 7600391 7600496
+                  7600498 7600502 7600503 7600504 7600310 7600312 7600173 7600514 7600397 7600398
+                  7600242 7600175 7600527 7600528 7600055 7600021 7600058 7600023 7600253 7600097
+                  7600419 7600196 7600001 7600337 7600046 7600144 7600434 7600207 7600350 7600208
+                  7600583 7600275 7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602
+                  7600154 7600590 7600084 7600213 7600450 7600033 7600034 7600601 7600277 7600604
+                  7600606 7600219 7600280 7600281 7600361 7600364 7600092 7600170 7600368 7600287
+                  7600094 7600468 7600013 7600229 7600293 7600096 7600296 7600233 7600299 7600060
+                  7600478 7600029 7600178 7600239 7600384 7600385 7600099 7600388 7600492 7600493
+                  7600182 7600002 7600499 7600500 7600307 7600308 7600393 7600507 7600136 7600077
+                  7600311 7600399 7600518 7600519 7600313 7600104 7600066 7600523 7600403 7600316
+                  7600251 7600195 7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545
+                  7600547 7600107 7600109 7600331 7600557 7600260 7600202 7600563 7600146 7600430
+                  7600263 7600432 7600083 7600112 7600437 7600267 7600582 7600113 7600586 7600587
+                  7600444 7600221 7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181
+                  7600516 7600611 7600612 7600517 7600276 7600326 7600183 7600618 7600117 7600386
+                  7600525 7600186 7600062 7600063 7600530 7600456 7600533 7600534 7600149 7600080
+                  7600153 7600395 7600289 7600542 7600340 7600546 7600290 7600343 7600549 7600041
+                  7600551 7600199 7600248 7600404 7600200 7600250 7600297 7600158 7600412 7600566
+                  7600128 7600204 7600103 7600068 7600485 7600575 7600577 7600578 7600579 7600133
+                  7600420 7600363 7600167 7600025 7600088 7600036 7600174 7600090 7600047 7600596
+                  7600480 7600114 7600375 7600216 7600188 7600555 7600556 7600164 7600190 7600127
+                  7600560 7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225 7600022
+                  7600339 7600574 7600443 7600227 7600445 7600505 7600506 7600581 7600148 7600508
+                  7600509 7600131 7600230 7600198 7600150 7600349 7600234 7600042 7600594 7600236
+                  7600353 7600176 7600118 7600119 7600005 7600524 7600603 7600205 7600526 7600078
+                  7600360 7600406 7600407 7600408 7600532 7600156 7600019 7600318 7600413 7600211
+                  7600620 7600621 7600247 7600323 7600027 7600543 7600325 7600477 7600373 7600552
+                  7600108 7600231 7600282 7600210 7600436 7600222 7600584 7600608 7600439 7600440
+                  7600111 7600140 7600341 7600187 7600616 7600075 7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600558 7600045 7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619
+                  7600538 7600245 7600249 7600342 7600570 7600288 7600588 7600184 7600592 7600372
+                  7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600365 7600488
+                  7600015 7600426 7600218 7600201 7600292 7600303 7600424 7600571 7600261 7600390
+                  7600105 7600240 7600463 7600145 7600537 7600050 7600539 7600354 7600095 7600304
+                  7600567 7600568 7600305 7600402 7600069 7600007 7600076 7600593 7600490 7600134
+                  7600215 7600135 7600086 7600087 7600226 7600100 7600453 7600039 7600460 7600550
+                  7600553 7600462 7600071 7600244 7600319 7600452 7600610 7600116 7600415 7600067
+                  7600466 7600529 7600194 7600383 7600314 7600322 7600572 7600475 7600161 7600177
+                  7600352 7600425 7600232 7600428 7600006 7600357 7600447 7600193 7600377 7600458
+                  7600378 7600098 7600374 7600306 7600040 7600315 7600387 7600461 7600317 7600074
+                  7600467 7600400 7600268 7600061 7600329 7600330 7600272 7600274 7600336 7600016
+                  7600151 7600345 7600625 7600051 7600123 7600165 7600300 7600246 7600180 7600035
+                  7600189 7600037 7600334 7600335 7600008 7600541 7600070 7600009 7600431 7600270
+                  7600559 7600197 7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589
+                  7600454 7600455 7600081 7600595 7600369 7600607 7600370 7600298 7600085 7600624
+                  7600380 7600302 7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600026
+                  7600366 7600217 7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600155
+                  7600464 7600223 7600376 7600032 7600379 7600471 7600473 7600163 7600382 7600012
+                  7600479 7600481 7600483 7600038 7600124 7600391 7600498 7600502 7600504 7600173
+                  7600514 7600397 7600398 7600242 7600175 7600527 7600528 7600055 7600531 7600021
+                  7600058 7600023 7600043 7600253 7600064 7600097 7600419 7600138 7600001 7600337
+                  7600338 7600144 7600434 7600207 7600208 7600583 7600031 7600356 7600279 7600284
+                  7600110 7600286 7600457 7600602 7600154 7600590 7600084 7600348 7600213 7600450
+                  7600033 7600034 7600601 7600277 7600604 7600606 7600219 7600280 7600281 7600283
+                  7600361 7600364 7600092 7600170 7600368 7600287 7600094 7600468 7600013 7600229
+                  7600293 7600096 7600296 7600233 7600299 7600060 7600478 7600029 7600178 7600239
+                  7600384 7600385 7600099 7600388 7600492 7600493 7600182 7600002 7600499 7600500
+                  7600307 7600308 7600393 7600507 7600136 7600077 7600311 7600399 7600518 7600519
+                  7600313 7600104 7600523 7600403 7600316 7600251 7600195 7600320 7600414 7600106
+                  7600254 7600255 7600540 7600418 7600545 7600547 7600259 7600331 7600557 7600260
+                  7600427 7600563 7600430 7600263 7600432 7600083 7600267 7600582 7600113 7600586
+                  7600587 7600444 7600221 7600598 7600269 7600093 7600179 7600011 7600605 7600273
+                  7600181 7600516 7600611 7600612 7600517 7600326 7600183 7600618 7600117 7600386
+                  7600185 7600525 7600186 7600062 7600063 7600530 7600456 7600533 7600534 7600149
+                  7600080 7600395 7600289 7600542 7600340 7600546 7600290 7600343 7600549 7600041
+                  7600551 7600199 7600248 7600404 7600250 7600297 7600158 7600412 7600566 7600128
+                  7600204 7600103 7600068 7600485 7600575 7600577 7600579 7600133 7600363 7600167
+                  7600025 7600088 7600036 7600174 7600090 7600047 7600596 7600480 7600114 7600375
+                  7600188 7600555 7600556 7600164 7600190 7600127 7600560 7600166 7600562 7600295
+                  7600048 7600495 7600129 7600497 7600225 7600022 7600339 7600501 7600574 7600443
+                  7600445 7600505 7600506 7600581 7600148 7600508 7600509 7600131 7600230 7600198
+                  7600150 7600349 7600234 7600042 7600594 7600236 7600353 7600176 7600118 7600119
+                  7600005 7600524 7600603 7600205 7600526 7600078 7600360 7600406 7600407 7600408
+                  7600532 7600156 7600019 7600318 7600413 7600211 7600621 7600247 7600323 7600027
+                  7600543 7600325 7600477 7600214 7600373 7600552 7600108 7600231 7600282 7600210
+                  7600436 7600222 7600584 7600608 7600439 7600440 7600111 7600140 7600341 7600187
+                  7600616 7600075 7600362 7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.928D-17.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit7.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600535 7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054
+                  7600486 7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433
+                  7600623 7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053
+                  7600010 7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405
+                  7600597 7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288
+                  7600588 7600184 7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600143
+                  7600474 7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292 7600303
+                  7600424 7600571 7600261 7600105 7600240 7600463 7600145 7600537 7600050 7600539
+                  7600354 7600095 7600304 7600567 7600568 7600305 7600402 7600069 7600007 7600076
+                  7600593 7600490 7600134 7600215 7600135 7600086 7600087 7600226 7600100 7600453
+                  7600039 7600460 7600550 7600553 7600462 7600071 7600244 7600319 7600452 7600358
+                  7600610 7600415 7600067 7600466 7600529 7600194 7600383 7600314 7600322 7600572
+                  7600475 7600416 7600177 7600352 7600425 7600232 7600428 7600006 7600357 7600447
+                  7600193 7600377 7600458 7600378 7600098 7600306 7600040 7600315 7600387 7600461
+                  7600389 7600317 7600262 7600074 7600467 7600400 7600268 7600061 7600329 7600330
+                  7600272 7600336 7600016 7600151 7600345 7600625 7600051 7600123 7600165 7600300
+                  7600246 7600172 7600520 7600180 7600035 7600189 7600037 7600334 7600335 7600008
+                  7600541 7600070 7600009 7600429 7600431 7600270 7600559 7600197 7600044 7600446
+                  7600448 7600130 7600132 7600573 7600589 7600454 7600455 7600081 7600595 7600367
+                  7600369 7600607 7600370 7600298 7600139 7600085 7600624 7600380 7600302 7600147
+                  7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366 7600217 7600291
+                  7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464 7600223 7600376
+                  7600032 7600379 7600471 7600121 7600473 7600163 7600382 7600012 7600479 7600481
+                  7600483 7600237 7600038 7600124 7600391 7600496 7600498 7600502 7600503 7600504
+                  7600310 7600312 7600173 7600514 7600397 7600398 7600242 7600175 7600527 7600528
+                  7600055 7600531 7600021 7600058 7600023 7600253 7600097 7600419 7600138 7600196
+                  7600001 7600337 7600338 7600046 7600144 7600434 7600207 7600350 7600208 7600583
+                  7600275 7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602 7600154
+                  7600590 7600084 7600213 7600450 7600033 7600034 7600601 7600277 7600604 7600606
+                  7600219 7600280 7600281 7600361 7600364 7600092 7600170 7600368 7600287 7600094
+                  7600468 7600013 7600229 7600293 7600096 7600296 7600233 7600299 7600060 7600478
+                  7600029 7600178 7600239 7600384 7600385 7600388 7600492 7600493 7600182 7600002
+                  7600499 7600500 7600307 7600308 7600393 7600507 7600136 7600077 7600311 7600399
+                  7600518 7600519 7600313 7600104 7600066 7600523 7600403 7600316 7600251 7600195
+                  7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545 7600547 7600107
+                  7600331 7600557 7600260 7600427 7600202 7600563 7600146 7600430 7600263 7600432
+                  7600083 7600112 7600437 7600267 7600582 7600113 7600586 7600587 7600444 7600221
+                  7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516 7600611
+                  7600612 7600517 7600276 7600326 7600183 7600618 7600117 7600386 7600185 7600525
+                  7600186 7600062 7600063 7600530 7600456 7600533 7600534 7600149 7600080 7600153
+                  7600395 7600289 7600542 7600340 7600546 7600290 7600343 7600549 7600041 7600551
+                  7600199 7600248 7600404 7600200 7600250 7600297 7600158 7600412 7600566 7600128
+                  7600204 7600103 7600068 7600485 7600575 7600577 7600578 7600579 7600133 7600420
+                  7600363 7600167 7600025 7600088 7600036 7600090 7600047 7600480 7600114 7600375
+                  7600216 7600188 7600555 7600556 7600164 7600190 7600127 7600560 7600166 7600562
+                  7600295 7600048 7600495 7600129 7600497 7600225 7600022 7600339 7600574 7600443
+                  7600227 7600445 7600505 7600506 7600581 7600148 7600508 7600509 7600131 7600230
+                  7600198 7600150 7600349 7600234 7600042 7600594 7600236 7600353 7600176 7600118
+                  7600119 7600005 7600524 7600603 7600205 7600526 7600078 7600360 7600406 7600407
+                  7600408 7600532 7600156 7600019 7600318 7600413 7600211 7600620 7600621 7600247
+                  7600323 7600027 7600543 7600325 7600477 7600373 7600552 7600108 7600231 7600282
+                  7600210 7600436 7600222 7600584 7600608 7600439 7600440 7600111 7600140 7600341
+                  7600187 7600616 7600075 7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600212 7600054 7600486 7600381
+                  7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623 7600294
+                  7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010 7600558
+                  7600045 7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619 7600538
+                  7600245 7600472 7600249 7600342 7600570 7600288 7600588 7600184 7600592 7600372
+                  7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600365 7600488
+                  7600015 7600426 7600218 7600201 7600292 7600303 7600424 7600571 7600261 7600390
+                  7600105 7600240 7600463 7600145 7600050 7600539 7600354 7600095 7600304 7600567
+                  7600568 7600305 7600402 7600069 7600007 7600076 7600490 7600134 7600215 7600135
+                  7600086 7600087 7600226 7600100 7600453 7600039 7600460 7600550 7600553 7600462
+                  7600071 7600244 7600319 7600452 7600610 7600116 7600415 7600067 7600466 7600529
+                  7600194 7600383 7600314 7600322 7600572 7600475 7600161 7600177 7600352 7600425
+                  7600232 7600428 7600006 7600357 7600447 7600193 7600377 7600458 7600378 7600098
+                  7600374 7600451 7600306 7600040 7600315 7600387 7600461 7600317 7600262 7600074
+                  7600467 7600400 7600061 7600329 7600330 7600272 7600336 7600016 7600151 7600345
+                  7600625 7600051 7600123 7600165 7600300 7600246 7600172 7600180 7600189 7600037
+                  7600334 7600335 7600008 7600541 7600070 7600009 7600431 7600270 7600559 7600197
+                  7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600081
+                  7600595 7600369 7600607 7600370 7600298 7600139 7600085 7600624 7600380 7600302
+                  7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366 7600217
+                  7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464 7600223
+                  7600376 7600032 7600379 7600471 7600473 7600163 7600382 7600012 7600479 7600481
+                  7600483 7600038 7600124 7600391 7600498 7600502 7600504 7600173 7600514 7600397
+                  7600398 7600242 7600175 7600527 7600528 7600055 7600531 7600021 7600058 7600023
+                  7600043 7600253 7600064 7600097 7600419 7600138 7600001 7600337 7600338 7600144
+                  7600434 7600207 7600208 7600583 7600031 7600356 7600279 7600284 7600110 7600286
+                  7600457 7600602 7600154 7600590 7600084 7600348 7600213 7600450 7600033 7600034
+                  7600601 7600277 7600604 7600606 7600219 7600280 7600281 7600283 7600361 7600364
+                  7600092 7600170 7600368 7600287 7600094 7600468 7600013 7600229 7600293 7600096
+                  7600296 7600233 7600299 7600060 7600478 7600029 7600178 7600239 7600384 7600385
+                  7600099 7600388 7600492 7600493 7600182 7600002 7600499 7600500 7600307 7600308
+                  7600393 7600507 7600136 7600077 7600311 7600399 7600518 7600519 7600313 7600104
+                  7600523 7600403 7600316 7600251 7600195 7600320 7600414 7600106 7600254 7600255
+                  7600540 7600418 7600545 7600547 7600109 7600259 7600331 7600557 7600260 7600427
+                  7600202 7600563 7600430 7600263 7600432 7600083 7600112 7600267 7600582 7600113
+                  7600586 7600587 7600444 7600221 7600598 7600269 7600093 7600179 7600011 7600605
+                  7600273 7600181 7600516 7600611 7600612 7600517 7600326 7600183 7600618 7600117
+                  7600386 7600185 7600525 7600186 7600062 7600063 7600530 7600456 7600533 7600534
+                  7600149 7600080 7600395 7600542 7600340 7600546 7600290 7600343 7600549 7600041
+                  7600551 7600199 7600248 7600404 7600250 7600297 7600158 7600412 7600566 7600128
+                  7600204 7600103 7600068 7600485 7600575 7600577 7600579 7600133 7600363 7600167
+                  7600025 7600088 7600036 7600174 7600090 7600047 7600596 7600480 7600114 7600375
+                  7600188 7600555 7600556 7600190 7600127 7600560 7600166 7600562 7600295 7600048
+                  7600495 7600129 7600022 7600339 7600501 7600574 7600443 7600227 7600445 7600505
+                  7600506 7600581 7600148 7600508 7600509 7600131 7600230 7600198 7600150 7600349
+                  7600234 7600042 7600594 7600236 7600353 7600176 7600118 7600119 7600005 7600524
+                  7600603 7600205 7600526 7600078 7600360 7600406 7600407 7600408 7600532 7600156
+                  7600019 7600318 7600413 7600211 7600620 7600621 7600247 7600323 7600027 7600543
+                  7600325 7600477 7600214 7600373 7600552 7600108 7600231 7600282 7600210 7600436
+                  7600222 7600584 7600608 7600439 7600440 7600111 7600140 7600341 7600187 7600616
+                  7600075 7600362 7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.174D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit8.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600535 7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054
+                  7600486 7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433
+                  7600623 7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053
+                  7600010 7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405
+                  7600597 7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288
+                  7600588 7600184 7600592 7600372 7600301 7600324 7600459 7600401 7600265 7600309
+                  7600143 7600474 7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292
+                  7600303 7600424 7600571 7600261 7600390 7600105 7600240 7600463 7600145 7600537
+                  7600050 7600539 7600354 7600095 7600304 7600567 7600568 7600305 7600402 7600069
+                  7600007 7600076 7600490 7600134 7600215 7600135 7600086 7600087 7600226 7600100
+                  7600453 7600039 7600460 7600550 7600553 7600462 7600071 7600244 7600452 7600610
+                  7600116 7600415 7600067 7600466 7600529 7600194 7600383 7600314 7600206 7600322
+                  7600572 7600475 7600161 7600416 7600177 7600352 7600425 7600232 7600428 7600006
+                  7600357 7600447 7600193 7600377 7600458 7600378 7600098 7600374 7600451 7600306
+                  7600040 7600315 7600387 7600461 7600317 7600262 7600074 7600467 7600400 7600268
+                  7600061 7600329 7600330 7600272 7600336 7600016 7600151 7600345 7600625 7600051
+                  7600123 7600165 7600300 7600246 7600172 7600520 7600180 7600035 7600189 7600037
+                  7600335 7600008 7600541 7600070 7600009 7600429 7600431 7600270 7600559 7600197
+                  7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455
+                  7600081 7600595 7600367 7600369 7600607 7600370 7600298 7600139 7600085 7600624
+                  7600380 7600302 7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600026
+                  7600366 7600217 7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600155
+                  7600464 7600223 7600376 7600032 7600379 7600471 7600121 7600473 7600163 7600382
+                  7600012 7600479 7600483 7600237 7600038 7600124 7600391 7600496 7600498 7600502
+                  7600504 7600310 7600312 7600173 7600514 7600397 7600398 7600242 7600175 7600527
+                  7600528 7600055 7600531 7600021 7600058 7600023 7600253 7600097 7600419 7600138
+                  7600196 7600001 7600337 7600338 7600046 7600144 7600434 7600207 7600350 7600208
+                  7600583 7600275 7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602
+                  7600154 7600590 7600084 7600213 7600450 7600033 7600034 7600601 7600277 7600604
+                  7600606 7600219 7600280 7600281 7600361 7600364 7600092 7600170 7600368 7600287
+                  7600094 7600468 7600013 7600229 7600293 7600096 7600296 7600233 7600299 7600060
+                  7600478 7600029 7600178 7600239 7600384 7600385 7600099 7600388 7600492 7600493
+                  7600182 7600002 7600499 7600500 7600307 7600308 7600393 7600507 7600136 7600077
+                  7600311 7600399 7600518 7600519 7600313 7600104 7600066 7600523 7600403 7600316
+                  7600251 7600195 7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545
+                  7600547 7600107 7600109 7600331 7600557 7600260 7600427 7600202 7600563 7600146
+                  7600430 7600263 7600432 7600083 7600437 7600267 7600582 7600113 7600586 7600587
+                  7600444 7600221 7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181
+                  7600516 7600611 7600612 7600517 7600276 7600326 7600183 7600618 7600117 7600386
+                  7600185 7600525 7600186 7600062 7600063 7600530 7600456 7600533 7600534 7600149
+                  7600080 7600153 7600395 7600289 7600542 7600340 7600546 7600290 7600343 7600549
+                  7600041 7600551 7600199 7600248 7600404 7600200 7600250 7600297 7600158 7600566
+                  7600128 7600204 7600103 7600068 7600485 7600575 7600577 7600578 7600579 7600133
+                  7600420 7600363 7600167 7600025 7600088 7600036 7600174 7600090 7600047 7600596
+                  7600480 7600114 7600216 7600188 7600555 7600556 7600164 7600190 7600127 7600560
+                  7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225 7600022 7600339
+                  7600574 7600443 7600227 7600445 7600505 7600506 7600581 7600148 7600508 7600509
+                  7600131 7600230 7600198 7600150 7600349 7600234 7600042 7600594 7600236 7600353
+                  7600176 7600118 7600119 7600005 7600524 7600603 7600205 7600526 7600078 7600360
+                  7600406 7600407 7600408 7600532 7600156 7600019 7600318 7600413 7600211 7600620
+                  7600621 7600247 7600323 7600027 7600543 7600325 7600477 7600373 7600552 7600108
+                  7600231 7600282 7600210 7600436 7600222 7600584 7600608 7600439 7600111 7600341
+                  7600187 7600616 7600075 7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600558 7600045 7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619
+                  7600538 7600245 7600472 7600249 7600570 7600288 7600588 7600184 7600592 7600372
+                  7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600365 7600488
+                  7600015 7600426 7600218 7600201 7600303 7600424 7600571 7600390 7600105 7600240
+                  7600463 7600145 7600537 7600050 7600539 7600354 7600095 7600304 7600567 7600568
+                  7600305 7600402 7600069 7600076 7600593 7600490 7600134 7600215 7600135 7600086
+                  7600087 7600226 7600100 7600453 7600039 7600460 7600550 7600462 7600071 7600319
+                  7600452 7600610 7600116 7600415 7600067 7600466 7600529 7600194 7600383 7600314
+                  7600322 7600572 7600475 7600161 7600177 7600352 7600425 7600428 7600006 7600357
+                  7600447 7600193 7600377 7600458 7600098 7600374 7600451 7600306 7600040 7600315
+                  7600387 7600461 7600317 7600262 7600074 7600467 7600400 7600268 7600061 7600329
+                  7600330 7600272 7600274 7600336 7600016 7600151 7600345 7600625 7600051 7600123
+                  7600165 7600300 7600246 7600172 7600180 7600035 7600189 7600037 7600334 7600335
+                  7600008 7600541 7600070 7600009 7600431 7600270 7600559 7600197 7600044 7600446
+                  7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455 7600081 7600595
+                  7600369 7600607 7600370 7600298 7600139 7600085 7600624 7600380 7600302 7600147
+                  7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366 7600217 7600291
+                  7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464 7600223 7600376
+                  7600032 7600379 7600471 7600473 7600163 7600382 7600012 7600479 7600481 7600483
+                  7600038 7600124 7600391 7600498 7600502 7600503 7600504 7600173 7600514 7600397
+                  7600398 7600242 7600175 7600527 7600528 7600055 7600531 7600058 7600023 7600043
+                  7600253 7600064 7600097 7600419 7600138 7600337 7600338 7600144 7600434 7600207
+                  7600208 7600583 7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602
+                  7600154 7600590 7600084 7600348 7600213 7600450 7600033 7600034 7600601 7600277
+                  7600604 7600606 7600219 7600280 7600281 7600283 7600361 7600364 7600092 7600170
+                  7600368 7600287 7600094 7600468 7600013 7600229 7600293 7600096 7600296 7600233
+                  7600299 7600060 7600478 7600029 7600178 7600239 7600384 7600385 7600099 7600388
+                  7600492 7600493 7600002 7600499 7600500 7600307 7600308 7600393 7600507 7600136
+                  7600077 7600311 7600399 7600518 7600519 7600313 7600523 7600403 7600316 7600251
+                  7600195 7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545 7600547
+                  7600109 7600259 7600331 7600557 7600427 7600563 7600430 7600263 7600432 7600083
+                  7600112 7600267 7600582 7600113 7600586 7600587 7600444 7600221 7600598 7600269
+                  7600093 7600179 7600011 7600605 7600273 7600181 7600516 7600611 7600612 7600517
+                  7600326 7600183 7600618 7600117 7600386 7600185 7600525 7600186 7600062 7600063
+                  7600530 7600456 7600533 7600534 7600149 7600080 7600395 7600289 7600542 7600340
+                  7600546 7600290 7600343 7600549 7600041 7600551 7600199 7600248 7600404 7600250
+                  7600297 7600158 7600412 7600566 7600128 7600204 7600103 7600068 7600575 7600577
+                  7600579 7600133 7600363 7600025 7600088 7600036 7600090 7600047 7600596 7600480
+                  7600114 7600375 7600188 7600555 7600556 7600164 7600190 7600127 7600560 7600166
+                  7600295 7600048 7600495 7600129 7600497 7600225 7600022 7600339 7600501 7600574
+                  7600443 7600227 7600445 7600505 7600506 7600581 7600148 7600508 7600509 7600131
+                  7600230 7600198 7600150 7600349 7600234 7600042 7600594 7600236 7600353 7600176
+                  7600118 7600119 7600005 7600524 7600603 7600205 7600526 7600078 7600360 7600406
+                  7600407 7600408 7600532 7600156 7600019 7600318 7600413 7600211 7600620 7600247
+                  7600323 7600027 7600543 7600325 7600477 7600214 7600552 7600108 7600231 7600282
+                  7600210 7600436 7600222 7600584 7600608 7600439 7600440 7600111 7600140 7600341
+                  7600187 7600616 7600362 7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.962D-17.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit9.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600535 7600141 7600271 7600028 7600049 7600122 7600613 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405 7600597
+                  7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600588
+                  7600184 7600592 7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600143
+                  7600474 7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292 7600303
+                  7600424 7600571 7600261 7600105 7600240 7600463 7600537 7600050 7600539 7600354
+                  7600095 7600304 7600567 7600568 7600305 7600402 7600069 7600007 7600076 7600593
+                  7600490 7600134 7600215 7600135 7600086 7600087 7600226 7600100 7600453 7600039
+                  7600460 7600550 7600553 7600462 7600071 7600244 7600319 7600452 7600358 7600610
+                  7600116 7600415 7600067 7600466 7600529 7600194 7600383 7600314 7600206 7600322
+                  7600572 7600475 7600161 7600416 7600177 7600352 7600425 7600428 7600006 7600357
+                  7600447 7600193 7600377 7600458 7600378 7600098 7600374 7600451 7600306 7600040
+                  7600315 7600387 7600461 7600389 7600317 7600262 7600074 7600467 7600400 7600268
+                  7600329 7600330 7600272 7600336 7600016 7600151 7600345 7600625 7600051 7600123
+                  7600165 7600300 7600246 7600172 7600520 7600180 7600035 7600189 7600037 7600334
+                  7600335 7600008 7600541 7600070 7600009 7600429 7600431 7600270 7600559 7600197
+                  7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455
+                  7600081 7600595 7600367 7600369 7600607 7600370 7600298 7600139 7600085 7600624
+                  7600380 7600302 7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600026
+                  7600366 7600217 7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600155
+                  7600464 7600223 7600032 7600379 7600471 7600121 7600473 7600163 7600382 7600012
+                  7600479 7600481 7600483 7600237 7600038 7600124 7600391 7600496 7600498 7600502
+                  7600503 7600504 7600310 7600312 7600173 7600514 7600397 7600398 7600242 7600175
+                  7600528 7600055 7600531 7600021 7600058 7600023 7600043 7600253 7600419 7600138
+                  7600196 7600001 7600337 7600338 7600046 7600144 7600434 7600207 7600350 7600208
+                  7600583 7600275 7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602
+                  7600154 7600590 7600084 7600213 7600450 7600033 7600034 7600601 7600277 7600604
+                  7600606 7600219 7600280 7600281 7600361 7600364 7600092 7600170 7600368 7600287
+                  7600094 7600468 7600013 7600229 7600293 7600096 7600296 7600233 7600299 7600060
+                  7600478 7600029 7600178 7600239 7600384 7600385 7600099 7600388 7600492 7600493
+                  7600182 7600499 7600500 7600307 7600308 7600393 7600507 7600077 7600311 7600399
+                  7600518 7600519 7600313 7600104 7600066 7600523 7600403 7600316 7600251 7600195
+                  7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545 7600547 7600107
+                  7600109 7600331 7600557 7600260 7600427 7600202 7600563 7600146 7600430 7600263
+                  7600432 7600083 7600112 7600437 7600267 7600582 7600113 7600586 7600587 7600444
+                  7600221 7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516
+                  7600611 7600612 7600517 7600276 7600326 7600183 7600618 7600117 7600386 7600185
+                  7600525 7600186 7600062 7600063 7600530 7600456 7600533 7600534 7600149 7600080
+                  7600153 7600395 7600289 7600542 7600340 7600546 7600290 7600343 7600549 7600041
+                  7600551 7600199 7600248 7600404 7600200 7600250 7600297 7600158 7600412 7600566
+                  7600128 7600204 7600103 7600068 7600485 7600575 7600577 7600578 7600579 7600133
+                  7600420 7600363 7600167 7600025 7600088 7600036 7600174 7600090 7600047 7600596
+                  7600480 7600114 7600216 7600188 7600555 7600556 7600164 7600190 7600127 7600560
+                  7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225 7600022 7600339
+                  7600574 7600443 7600227 7600445 7600505 7600506 7600581 7600148 7600508 7600509
+                  7600131 7600230 7600198 7600150 7600349 7600234 7600042 7600594 7600236 7600353
+                  7600176 7600118 7600119 7600005 7600524 7600603 7600205 7600526 7600078 7600360
+                  7600406 7600407 7600408 7600532 7600156 7600019 7600318 7600413 7600211 7600620
+                  7600621 7600247 7600323 7600027 7600543 7600325 7600477 7600552 7600108 7600231
+                  7600282 7600210 7600436 7600222 7600584 7600608 7600439 7600440 7600111 7600140
+                  7600341 7600187 7600616 7600075 7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600535
+                  7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486
+                  7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623
+                  7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053 7600010
+                  7600558 7600045 7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619
+                  7600538 7600245 7600472 7600249 7600342 7600570 7600288 7600588 7600184 7600592
+                  7600372 7600301 7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600365
+                  7600488 7600426 7600218 7600201 7600292 7600303 7600424 7600571 7600261 7600390
+                  7600105 7600240 7600463 7600145 7600537 7600050 7600539 7600354 7600095 7600304
+                  7600567 7600568 7600305 7600402 7600069 7600076 7600593 7600490 7600134 7600215
+                  7600135 7600086 7600087 7600226 7600100 7600039 7600460 7600550 7600553 7600462
+                  7600071 7600244 7600319 7600452 7600610 7600116 7600415 7600067 7600466 7600529
+                  7600194 7600383 7600314 7600322 7600572 7600475 7600161 7600177 7600352 7600425
+                  7600232 7600428 7600006 7600357 7600447 7600193 7600377 7600458 7600378 7600098
+                  7600374 7600306 7600040 7600315 7600387 7600461 7600317 7600262 7600467 7600268
+                  7600061 7600329 7600330 7600272 7600274 7600336 7600016 7600151 7600345 7600625
+                  7600051 7600123 7600165 7600300 7600246 7600172 7600180 7600035 7600189 7600037
+                  7600334 7600335 7600008 7600541 7600070 7600009 7600431 7600270 7600559 7600197
+                  7600044 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455 7600081
+                  7600595 7600369 7600607 7600370 7600298 7600139 7600085 7600624 7600380 7600302
+                  7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366 7600217
+                  7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464 7600223
+                  7600376 7600032 7600379 7600471 7600473 7600163 7600382 7600012 7600479 7600483
+                  7600038 7600124 7600391 7600498 7600502 7600503 7600504 7600173 7600514 7600397
+                  7600398 7600242 7600175 7600527 7600528 7600055 7600531 7600021 7600058 7600023
+                  7600043 7600253 7600064 7600097 7600419 7600138 7600001 7600337 7600338 7600144
+                  7600434 7600207 7600208 7600583 7600031 7600356 7600279 7600284 7600110 7600286
+                  7600457 7600602 7600154 7600590 7600084 7600348 7600213 7600450 7600033 7600034
+                  7600601 7600277 7600604 7600606 7600219 7600280 7600281 7600283 7600361 7600364
+                  7600092 7600170 7600368 7600287 7600094 7600468 7600013 7600229 7600293 7600096
+                  7600296 7600233 7600299 7600060 7600478 7600029 7600178 7600239 7600384 7600385
+                  7600099 7600388 7600492 7600493 7600002 7600499 7600307 7600308 7600393 7600507
+                  7600136 7600077 7600311 7600399 7600518 7600519 7600313 7600104 7600523 7600403
+                  7600316 7600251 7600195 7600320 7600414 7600106 7600254 7600255 7600540 7600418
+                  7600545 7600547 7600109 7600259 7600331 7600557 7600260 7600427 7600202 7600563
+                  7600430 7600263 7600432 7600083 7600112 7600267 7600582 7600113 7600586 7600587
+                  7600444 7600221 7600598 7600269 7600093 7600179 7600011 7600605 7600273 7600181
+                  7600516 7600611 7600612 7600517 7600326 7600183 7600618 7600117 7600386 7600185
+                  7600525 7600186 7600062 7600063 7600530 7600456 7600533 7600534 7600149 7600080
+                  7600395 7600289 7600542 7600546 7600290 7600343 7600549 7600041 7600551 7600199
+                  7600248 7600404 7600250 7600297 7600158 7600412 7600566 7600128 7600204 7600103
+                  7600068 7600485 7600575 7600577 7600579 7600133 7600363 7600167 7600025 7600088
+                  7600036 7600174 7600090 7600047 7600596 7600480 7600114 7600375 7600188 7600555
+                  7600556 7600164 7600190 7600127 7600560 7600166 7600562 7600295 7600048 7600495
+                  7600129 7600497 7600225 7600022 7600339 7600501 7600574 7600443 7600227 7600445
+                  7600505 7600581 7600148 7600508 7600509 7600131 7600230 7600198 7600150 7600349
+                  7600234 7600042 7600594 7600236 7600353 7600176 7600118 7600119 7600005 7600524
+                  7600603 7600205 7600526 7600078 7600360 7600406 7600407 7600408 7600532 7600156
+                  7600019 7600318 7600413 7600211 7600620 7600621 7600247 7600323 7600027 7600543
+                  7600325 7600477 7600214 7600373 7600552 7600108 7600231 7600282 7600210 7600436
+                  7600222 7600584 7600608 7600439 7600440 7600111 7600140 7600341 7600187 7600616
+                  7600075 7600362 7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE MODEL ESTIMATION DID NOT TERMINATE NORMALLY DUE TO AN ILL-CONDITIONED
+     FISHER INFORMATION MATRIX.  CHANGE YOUR MODEL AND/OR STARTING VALUES.
+
+     THE MODEL ESTIMATION DID NOT TERMINATE NORMALLY DUE TO A NON-POSITIVE
+     DEFINITE FISHER INFORMATION MATRIX.  THIS MAY BE DUE TO THE STARTING VALUES
+     BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE CONDITION
+     NUMBER IS       0.334D-10.
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES COULD NOT BE
+     COMPUTED.  THIS IS OFTEN DUE TO THE STARTING VALUES BUT MAY ALSO BE
+     AN INDICATION OF MODEL NONIDENTIFICATION.  CHANGE YOUR MODEL AND/OR
+     STARTING VALUES.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 53, %BETWEEN%: FLIT
+
+
+Errors for replication with data file C:\Users\tctan\finlit10.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    7600264 7600554
+      FLSCHOOL    7600264
+      NOBULLY     7600203 7600278 7600141
+      IMMI1GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600351 7600073
+                  7600535 7600141 7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054
+                  7600486 7600381 7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433
+                  7600623 7600294 7600521 7600258 7600018 7600548 7600209 7600449 7600224 7600053
+                  7600010 7600014 7600558 7600045 7600252 7600256 7600102 7600565 7600059 7600405
+                  7600597 7600422 7600619 7600538 7600245 7600472 7600249 7600342 7600570 7600288
+                  7600588 7600184 7600592 7600372 7600301 7600324 7600459 7600265 7600309 7600143
+                  7600474 7600365 7600417 7600488 7600015 7600426 7600218 7600201 7600292 7600303
+                  7600424 7600571 7600261 7600390 7600105 7600240 7600463 7600145 7600537 7600050
+                  7600539 7600354 7600095 7600304 7600567 7600568 7600305 7600402 7600069 7600007
+                  7600076 7600593 7600490 7600134 7600215 7600135 7600086 7600087 7600226 7600100
+                  7600453 7600039 7600460 7600550 7600553 7600462 7600071 7600244 7600319 7600452
+                  7600358 7600610 7600116 7600415 7600067 7600466 7600529 7600194 7600383 7600314
+                  7600322 7600572 7600475 7600161 7600416 7600177 7600352 7600425 7600232 7600428
+                  7600006 7600357 7600447 7600193 7600377 7600458 7600378 7600098 7600306 7600040
+                  7600315 7600387 7600461 7600389 7600317 7600262 7600074 7600400 7600268 7600061
+                  7600329 7600330 7600272 7600336 7600016 7600151 7600345 7600625 7600051 7600123
+                  7600165 7600300 7600246 7600172 7600520 7600180 7600035 7600189 7600037 7600334
+                  7600335 7600008 7600541 7600070 7600009 7600429 7600431 7600270 7600559 7600197
+                  7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600081
+                  7600595 7600367 7600369 7600607 7600370 7600139 7600085 7600624 7600380 7600302
+                  7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600026 7600366 7600217
+                  7600291 7600072 7600614 7600615 7600617 7600371 7600622 7600464 7600223 7600376
+                  7600032 7600379 7600471 7600121 7600473 7600163 7600382 7600012 7600479 7600481
+                  7600483 7600237 7600038 7600124 7600391 7600496 7600498 7600502 7600503 7600504
+                  7600310 7600312 7600173 7600514 7600397 7600398 7600242 7600175 7600527 7600528
+                  7600055 7600531 7600021 7600058 7600043 7600253 7600097 7600419 7600138 7600196
+                  7600001 7600337 7600338 7600046 7600144 7600434 7600207 7600350 7600208 7600583
+                  7600275 7600031 7600356 7600279 7600284 7600110 7600286 7600457 7600602 7600154
+                  7600590 7600084 7600213 7600450 7600033 7600034 7600601 7600277 7600604 7600606
+                  7600219 7600280 7600281 7600361 7600364 7600092 7600170 7600368 7600287 7600094
+                  7600468 7600013 7600229 7600293 7600096 7600296 7600233 7600299 7600060 7600478
+                  7600029 7600178 7600239 7600384 7600385 7600099 7600388 7600492 7600493 7600002
+                  7600499 7600500 7600307 7600308 7600393 7600507 7600136 7600077 7600311 7600399
+                  7600518 7600519 7600313 7600104 7600066 7600523 7600403 7600316 7600251 7600195
+                  7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545 7600547 7600107
+                  7600109 7600331 7600557 7600260 7600202 7600563 7600146 7600430 7600263 7600432
+                  7600083 7600112 7600437 7600267 7600582 7600113 7600586 7600587 7600444 7600221
+                  7600598 7600269 7600093 7600179 7600011 7600605 7600181 7600516 7600611 7600612
+                  7600517 7600276 7600326 7600183 7600618 7600117 7600386 7600185 7600525 7600186
+                  7600062 7600063 7600530 7600456 7600533 7600534 7600149 7600080 7600153 7600395
+                  7600289 7600542 7600340 7600546 7600290 7600343 7600549 7600041 7600551 7600199
+                  7600248 7600404 7600200 7600250 7600297 7600158 7600412 7600566 7600128 7600204
+                  7600103 7600068 7600485 7600575 7600577 7600578 7600579 7600133 7600420 7600363
+                  7600167 7600025 7600088 7600036 7600090 7600047 7600596 7600480 7600114 7600375
+                  7600216 7600188 7600555 7600556 7600164 7600190 7600127 7600560 7600166 7600562
+                  7600295 7600048 7600495 7600129 7600497 7600225 7600022 7600339 7600574 7600443
+                  7600227 7600445 7600505 7600506 7600581 7600148 7600508 7600509 7600131 7600230
+                  7600198 7600150 7600349 7600234 7600042 7600594 7600236 7600353 7600176 7600118
+                  7600119 7600005 7600524 7600603 7600205 7600526 7600078 7600360 7600406 7600407
+                  7600408 7600532 7600156 7600019 7600318 7600413 7600211 7600620 7600621 7600247
+                  7600323 7600027 7600543 7600325 7600477 7600373 7600552 7600108 7600231 7600282
+                  7600210 7600436 7600222 7600584 7600608 7600439 7600440 7600111 7600140 7600341
+                  7600187 7600616 7600075 7600362 7600347
+      IMMI2GEN    7600469 7600203 7600264 7600125 7600003 7600017 7600591 7600600 7600438 7600065
+                  7600220 7600409 7600410 7600411 7600228 7600442 7600465 7600238 7600470 7600241
+                  7600115 7600511 7600512 7600278 7600327 7600554 7600024 7600171 7600073 7600141
+                  7600271 7600028 7600049 7600122 7600613 7600332 7600212 7600054 7600486 7600381
+                  7600235 7600396 7600333 7600052 7600489 7600285 7600609 7600433 7600623 7600294
+                  7600521 7600258 7600548 7600209 7600449 7600224 7600053 7600010 7600558 7600045
+                  7600252 7600102 7600565 7600059 7600405 7600597 7600422 7600619 7600538 7600245
+                  7600472 7600249 7600342 7600570 7600288 7600588 7600184 7600592 7600372 7600301
+                  7600324 7600459 7600401 7600265 7600309 7600143 7600474 7600365 7600488 7600426
+                  7600218 7600201 7600292 7600303 7600424 7600261 7600390 7600105 7600240 7600463
+                  7600145 7600537 7600050 7600539 7600354 7600095 7600304 7600567 7600568 7600305
+                  7600402 7600069 7600007 7600076 7600593 7600490 7600134 7600215 7600135 7600086
+                  7600087 7600226 7600100 7600453 7600039 7600460 7600550 7600553 7600462 7600071
+                  7600244 7600319 7600452 7600610 7600116 7600415 7600067 7600466 7600529 7600194
+                  7600383 7600314 7600322 7600572 7600475 7600161 7600177 7600352 7600425 7600232
+                  7600428 7600006 7600357 7600447 7600193 7600377 7600458 7600378 7600098 7600374
+                  7600451 7600306 7600040 7600315 7600387 7600461 7600317 7600262 7600074 7600467
+                  7600400 7600268 7600061 7600329 7600330 7600272 7600274 7600336 7600016 7600345
+                  7600625 7600051 7600123 7600165 7600300 7600246 7600172 7600180 7600035 7600189
+                  7600037 7600334 7600335 7600008 7600541 7600070 7600009 7600270 7600559 7600197
+                  7600044 7600446 7600448 7600130 7600132 7600573 7600359 7600589 7600454 7600455
+                  7600081 7600595 7600369 7600607 7600370 7600298 7600085 7600624 7600380 7600302
+                  7600147 7600089 7600159 7600160 7600243 7600057 7600101 7600366 7600217 7600291
+                  7600072 7600614 7600615 7600617 7600371 7600622 7600155 7600464 7600223 7600376
+                  7600032 7600379 7600471 7600473 7600163 7600382 7600012 7600479 7600481 7600483
+                  7600038 7600124 7600391 7600498 7600502 7600503 7600504 7600173 7600514 7600397
+                  7600398 7600175 7600527 7600528 7600055 7600531 7600021 7600058 7600023 7600043
+                  7600253 7600064 7600097 7600419 7600138 7600001 7600337 7600338 7600144 7600434
+                  7600207 7600208 7600583 7600031 7600356 7600279 7600284 7600110 7600286 7600457
+                  7600602 7600154 7600590 7600084 7600348 7600450 7600033 7600034 7600601 7600277
+                  7600604 7600606 7600219 7600280 7600281 7600283 7600361 7600364 7600092 7600170
+                  7600368 7600287 7600094 7600468 7600013 7600229 7600293 7600096 7600296 7600233
+                  7600299 7600060 7600478 7600029 7600178 7600239 7600384 7600385 7600388 7600492
+                  7600493 7600182 7600002 7600499 7600500 7600307 7600308 7600393 7600507 7600136
+                  7600077 7600311 7600399 7600518 7600519 7600313 7600104 7600523 7600403 7600316
+                  7600251 7600195 7600320 7600414 7600106 7600254 7600255 7600540 7600418 7600545
+                  7600547 7600259 7600331 7600260 7600427 7600202 7600563 7600430 7600263 7600432
+                  7600083 7600112 7600267 7600582 7600113 7600586 7600587 7600444 7600221 7600598
+                  7600269 7600093 7600179 7600011 7600605 7600273 7600181 7600516 7600611 7600612
+                  7600517 7600326 7600183 7600618 7600117 7600386 7600185 7600525 7600186 7600062
+                  7600063 7600530 7600456 7600533 7600534 7600149 7600080 7600395 7600542 7600340
+                  7600546 7600290 7600343 7600549 7600041 7600551 7600199 7600248 7600404 7600250
+                  7600297 7600158 7600412 7600566 7600128 7600204 7600103 7600068 7600485 7600575
+                  7600577 7600579 7600133 7600363 7600167 7600025 7600088 7600036 7600174 7600090
+                  7600047 7600596 7600480 7600114 7600375 7600188 7600555 7600556 7600164 7600190
+                  7600127 7600560 7600166 7600562 7600295 7600048 7600495 7600129 7600497 7600225
+                  7600022 7600339 7600501 7600574 7600443 7600227 7600445 7600505 7600506 7600581
+                  7600148 7600508 7600509 7600131 7600230 7600198 7600150 7600349 7600234 7600042
+                  7600594 7600236 7600353 7600176 7600118 7600119 7600005 7600524 7600603 7600205
+                  7600526 7600078 7600360 7600406 7600407 7600408 7600532 7600156 7600019 7600318
+                  7600413 7600211 7600620 7600621 7600247 7600027 7600543 7600325 7600477 7600214
+                  7600552 7600108 7600231 7600282 7600210 7600436 7600222 7600584 7600608 7600439
+                  7600440 7600111 7600140 7600341 7600187 7600616 7600075 7600362 7600347
+      MALE        7600469 7600203 7600264 7600003 7600442 7600278 7600024 7600271 7600333 7600052
+                  7600010 7600405 7600336
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.782D-17.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 39, %WITHIN%: ESCS WITH IMMI1GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+     Beginning Time:  21:52:27
+        Ending Time:  22:00:14
+       Elapsed Time:  00:07:47
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2019 Muthen & Muthen

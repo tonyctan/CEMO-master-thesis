@@ -1,16 +1,14 @@
-
 TITLE:
-    Two-level structured model for all countries
+    Modification index: Investigate souces of misfit
+
 
 DATA:
-    file = "C:\Users\tctan\implist.dat";
-
-    type = imputation;
+    file = "C:\Users\tctan\finlit1.dat";
 
 
 VARIABLE:
     names =
-        FKI CNTRYID CNTSCHID CNTSTUID W_STU
+        FKI CNTRYID CNTSCHID W_STU
         MATH READ FLIT                      ! PISA achievement variables
         MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
         FCFMLRTY FLCONFIN                   ! Affect
@@ -42,8 +40,6 @@ VARIABLE:
         EDUSHORT STRATIO                    ! L2: school
         ;
 
-    missing = all (-99);
-
     weight = W_STU;                         ! Student weight
     wtscale = cluster;                      ! Scale L1 weight to cluster size
     bweight = W_SCH;                        ! School weight
@@ -64,9 +60,9 @@ MODEL:
 
     ! Indirect pathways (1st half): school climate vars onto mediators
         ! Onto mediator FAMILIARITY
-    FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
+    FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY IMMI2GEN MALE ESCS;
         ! Onto mediator CONFIDENCE
-    FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
+    FLCONFIN on FLSCHOOL NOBULLY FLFAMILY IMMI2GEN MALE ESCS;
 
     ! Total effect
     FLIT on
@@ -75,7 +71,7 @@ MODEL:
         ! Indirect pathways (2nd half): affective vars onto financial literacy
         FCFMLRTY FLCONFIN
         ! Control vars (demographic info)
-        MALE IMMI1GEN IMMI2GEN ESCS
+        IMMI1GEN IMMI2GEN ESCS
         ;
 
     ! Covariances
@@ -85,8 +81,12 @@ MODEL:
     NOBULLY with FLFAMILY;
         ! Between mediators
     FCFMLRTY with FLCONFIN;
+        ! ESCS with FLSCHOOL
+    ESCS with FLSCHOOL;
         ! ESCS with FLFAMILY
-    ESCS with FLFAMILY
+    ESCS with FLFAMILY;
+        ! ESCS with IMMI1GEN and IMMI2GEN
+    ESCS with IMMI1GEN IMMI2GEN;
 
 %Between%                                   ! === L2: School-level ===
 

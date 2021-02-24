@@ -43,9 +43,13 @@ MODEL:
 
     ! Indirect pathways (1st half): school climate vars onto mediators
         ! Onto mediator FAMILIARITY
-    FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY MALE;
+    FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY
+        MALE IMMI2GEN ESCS
+        ;
         ! Onto mediator CONFIDENCE
-    FLCONFIN on FLSCHOOL NOBULLY FLFAMILY MALE;
+    FLCONFIN on FLSCHOOL NOBULLY FLFAMILY
+        MALE IMMI2GEN ESCS
+        ;
 
     ! Total effect
     FLIT on
@@ -54,7 +58,7 @@ MODEL:
         ! Indirect pathways (2nd half): affective vars onto financial literacy
         FCFMLRTY FLCONFIN
         ! Control vars (demographic info)
-        MALE IMMI1GEN IMMI2GEN ESCS
+        IMMI1GEN ESCS
         ;
 
     ! Covariances
@@ -64,9 +68,13 @@ MODEL:
     NOBULLY with FLFAMILY;
         ! Between mediators
     FCFMLRTY with FLCONFIN;
-        ! SES with FLFAMILY
+
+    ! Covariances suggested by modification indices
+        ! ESCS with FLSCHOOL
+    ESCS with FLSCHOOL;
+        ! ESCS with FLFAMILY
     ESCS with FLFAMILY;
-        ! Between control vars
+        ! ESCS with IMMI1GEN and IMMI2GEN
     ESCS with IMMI1GEN IMMI2GEN;
 
 MODEL INDIRECT:
@@ -79,5 +87,4 @@ MODEL INDIRECT:
 
 OUTPUT:
     stdyx                                   ! Fully standardised solution
-    mod(all)                                ! Mod indices (all)
     ;

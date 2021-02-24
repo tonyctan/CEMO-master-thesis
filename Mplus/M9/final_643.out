@@ -1,0 +1,2836 @@
+Mplus VERSION 8.3
+MUTHEN & MUTHEN
+02/23/2021   9:52 PM
+
+INPUT INSTRUCTIONS
+
+
+  TITLE:
+      Two-level structured model 643
+
+  DATA:
+      file = "C:\Users\tctan\implist.dat";
+
+      type = imputation;
+
+
+  VARIABLE:
+      names =
+          FKI CNTRYID CNTSCHID W_STU
+          MATH READ FLIT                      ! PISA achievement variables
+          MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+          FCFMLRTY FLCONFIN                   ! Affect
+          FLSCHOOL                            !   Lat var "Academic"
+          NOBULLY                             !   Lat var "Safety"
+          FLFAMILY                            !   Lat var "Community"
+          W_SCH STRATIO                       ! School character
+          EDUSHORT                            !   Lat var "inst. env."
+          ;
+
+      useobs = CNTRYID eq 643;          ! Pull out one country at a time
+
+      usevar =
+          FLIT                                ! PISA achievement variables
+          FLSCHOOL                            !   Lat var "Academic"
+          NOBULLY                             !   Lat var "Safety"
+          FLFAMILY                            !   Lat var "Community"
+          EDUSHORT STRATIO                    !   Lat var "Inst env"
+          FCFMLRTY FLCONFIN                   ! Affect
+          MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+          ;
+
+      ! Vars that ONLY appear in L1
+      within =
+          FCFMLRTY FLCONFIN                   ! Affective vars
+          MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
+          ;
+
+      ! Vars that ONLY appear in L2
+      between =
+          EDUSHORT STRATIO                    ! L2: school
+          ;
+
+      weight = W_STU;                         ! Student weight
+      wtscale = cluster;                      ! Scale L1 weight to cluster size
+      bweight = W_SCH;                        ! School weight
+      bwtscale = sample;                      ! Scale L2 weight to sample
+
+      cluster = CNTSCHID;                     ! Cluster by school ID
+
+
+  ANALYSIS:
+      processors = 4;
+
+      type = twolevel;
+
+
+  MODEL:
+
+  %Within%                                    ! === L1: Student-level ===
+
+      ! Indirect pathways (1st half): school climate vars onto mediators
+          ! Onto mediator FAMILIARITY
+      FCFMLRTY on
+          FLSCHOOL NOBULLY FLFAMILY
+          MALE IMMI2GEN ESCS
+          ;
+          ! Onto mediator CONFIDENCE
+      FLCONFIN on
+          FLSCHOOL NOBULLY FLFAMILY
+          MALE IMMI2GEN ESCS
+          ;
+
+      ! Total effect
+      FLIT on
+          ! Direct pathways: school climate vars onto financial literacy
+          FLSCHOOL NOBULLY FLFAMILY
+          ! Indirect pathways (2nd half): affective vars onto financial literacy
+          FCFMLRTY FLCONFIN
+          ! Control vars (demographic info)
+          IMMI1GEN ESCS
+          ;
+
+      ! Covariances
+          ! Between school climate vars
+      FLSCHOOL with NOBULLY;
+      FLSCHOOL with FLFAMILY;
+      NOBULLY with FLFAMILY;
+          ! Between mediators
+      FCFMLRTY with FLCONFIN;
+
+      ! Covariances suggested by modification indices
+          ! ESCS with FLSCHOOL
+      ESCS with FLSCHOOL;
+          ! ESCS with FLFAMILY
+      ESCS with FLFAMILY;
+          ! ESCS with IMMI1GEN and IMMI2GEN
+      ESCS with IMMI1GEN IMMI2GEN;
+
+  %Between%                                   ! === L2: School-level ===
+
+      FLIT on
+          FLSCHOOL NOBULLY FLFAMILY EDUSHORT  ! School climate variables
+          STRATIO                             ! Control: Student-teacher ratio
+          ;
+
+      FLSCHOOL with NOBULLY;
+      NOBULLY with FLFAMILY;
+      FLFAMILY with EDUSHORT;
+
+      FLSCHOOL with FLFAMILY;
+      NOBULLY with EDUSHORT;
+
+      FLSCHOOL with EDUSHORT;
+
+
+  MODEL INDIRECT:
+
+      ! Indirect effects
+      FLIT ind FLSCHOOL;
+      FLIT ind NOBULLY;
+      FLIT ind FLFAMILY;
+
+
+  OUTPUT:
+      stdyx                                   ! Fully standardised solution
+      ;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+Two-level structured model 643
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Average number of observations                                9124
+
+Number of replications
+    Requested                                                   10
+    Completed                                                    7
+
+Number of dependent variables                                    3
+Number of independent variables                                  9
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   FLIT        FCFMLRTY    FLCONFIN
+
+Observed independent variables
+   FLSCHOOL    NOBULLY     FLFAMILY    EDUSHORT    STRATIO     MALE
+   IMMI1GEN    IMMI2GEN    ESCS
+
+Variables with special functions
+
+  Cluster variable      CNTSCHID
+  Weight variable (cluster-size scaling)
+    W_STU
+  Between weight variable (sample-size scaling)
+    W_SCH
+
+  Within variables
+   FCFMLRTY    FLCONFIN    MALE        IMMI1GEN    IMMI2GEN    ESCS
+
+  Between variables
+   EDUSHORT    STRATIO
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                   100
+Convergence criterion                                    0.100D-05
+Maximum number of EM iterations                                500
+Convergence criteria for the EM algorithm
+  Loglikelihood change                                   0.100D-02
+  Relative loglikelihood change                          0.100D-05
+  Derivative                                             0.100D-03
+Minimum variance                                         0.100D-03
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  Multiple data files from
+    C:\Users\tctan\implist.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA FOR THE FIRST DATA SET
+
+     Number of clusters                        558
+
+     Average cluster size       16.351
+
+     Estimated Intraclass Correlations for the Y Variables
+
+                Intraclass              Intraclass              Intraclass
+     Variable  Correlation   Variable  Correlation   Variable  Correlation
+
+     FLIT         0.194      FCFMLRTY     0.000      FLCONFIN     0.000
+     FLSCHOOL     0.029      NOBULLY      0.006      FLFAMILY     0.013
+     IMMI1GEN     0.000      IMMI2GEN     0.000      ESCS         0.000
+
+
+
+SAMPLE STATISTICS
+
+NOTE:  The sample statistics for within and between refer to the
+       maximum-likelihood estimated within and between covariance
+       matrices, respectively.
+
+NOTE:  These are average results over 10 data sets.
+
+
+     ESTIMATED SAMPLE STATISTICS FOR WITHIN
+
+
+           Means
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+                0.000         0.000         8.644         0.140         0.000
+
+
+           Means
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.026         0.036         0.199
+
+
+           Means
+              MALE          STRATIO
+              ________      ________
+                0.502         0.000
+
+
+           Covariances
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000
+ FLIT           0.000      5701.234
+ FCFMLRTY       0.000       100.345        34.361
+ FLCONFIN       0.000        12.055         1.509         0.952
+ FLSCHOOL       0.000         5.702         1.685         0.204         1.017
+ NOBULLY        0.000         3.330         0.403         0.047        -0.019
+ FLFAMILY       0.000         0.977         1.065         0.188         0.273
+ IMMI1GEN       0.000        -0.489        -0.019        -0.003         0.000
+ IMMI2GEN       0.000         0.502        -0.003         0.003        -0.003
+ ESCS           0.000        11.287         0.831         0.104         0.049
+ MALE           0.000         1.307         0.059         0.051         0.017
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Covariances
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ NOBULLY        1.196
+ FLFAMILY      -0.016         1.138
+ IMMI1GEN      -0.001         0.002         0.025
+ IMMI2GEN       0.002         0.000        -0.001         0.035
+ ESCS           0.024         0.042        -0.006        -0.001         0.530
+ MALE          -0.056        -0.023        -0.002        -0.002         0.007
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Covariances
+              MALE          STRATIO
+              ________      ________
+ MALE           0.250
+ STRATIO        0.000         0.000
+
+
+           Correlations
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000
+ FLIT           0.000         1.000
+ FCFMLRTY       0.000         0.227         1.000
+ FLCONFIN       0.000         0.164         0.264         1.000
+ FLSCHOOL       0.000         0.075         0.285         0.208         1.000
+ NOBULLY        0.000         0.040         0.063         0.044        -0.017
+ FLFAMILY       0.000         0.012         0.170         0.181         0.254
+ IMMI1GEN       0.000        -0.041        -0.020        -0.022        -0.002
+ IMMI2GEN       0.000         0.036        -0.003         0.015        -0.017
+ ESCS           0.000         0.205         0.195         0.147         0.067
+ MALE           0.000         0.035         0.020         0.105         0.034
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Correlations
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ NOBULLY        1.000
+ FLFAMILY      -0.014         1.000
+ IMMI1GEN      -0.004         0.009         1.000
+ IMMI2GEN       0.007         0.001        -0.032         1.000
+ ESCS           0.030         0.054        -0.050        -0.006         1.000
+ MALE          -0.103        -0.042        -0.019        -0.018         0.020
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           Correlations
+              MALE          STRATIO
+              ________      ________
+ MALE           1.000
+ STRATIO        0.000         0.000
+
+
+     ESTIMATED SAMPLE STATISTICS FOR BETWEEN
+
+
+           Means
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+                0.291       496.956         0.000         0.000         0.358
+
+
+           Means
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+               -0.272         0.108         0.000         0.000         0.000
+
+
+           Means
+              MALE          STRATIO
+              ________      ________
+                0.000        15.776
+
+
+           Covariances
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       1.392
+ FLIT         -12.176      1430.316
+ FCFMLRTY       0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000
+ FLSCHOOL       0.018        -2.062         0.000         0.000         0.031
+ NOBULLY        0.014         0.837         0.000         0.000         0.002
+ FLFAMILY      -0.016        -0.015         0.000         0.000         0.012
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ STRATIO       -0.303        -4.900         0.000         0.000        -0.065
+
+
+           Covariances
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ NOBULLY        0.007
+ FLFAMILY       0.002         0.015
+ IMMI1GEN       0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ STRATIO       -0.110        -0.048         0.000         0.000         0.000
+
+
+           Covariances
+              MALE          STRATIO
+              ________      ________
+ MALE           0.000
+ STRATIO        0.000        45.307
+
+
+           Correlations
+              EDUSHORT      FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL
+              ________      ________      ________      ________      ________
+ EDUSHORT       1.000
+ FLIT          -0.273         1.000
+ FCFMLRTY       0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000
+ FLSCHOOL       0.088        -0.312         0.000         0.000         1.000
+ NOBULLY        0.148         0.267         0.000         0.000         0.143
+ FLFAMILY      -0.109        -0.003         0.000         0.000         0.585
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ STRATIO       -0.038        -0.019         0.000         0.000        -0.055
+
+
+           Correlations
+              NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS
+              ________      ________      ________      ________      ________
+ NOBULLY        1.000
+ FLFAMILY       0.200         1.000
+ IMMI1GEN       0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+ STRATIO       -0.197        -0.059         0.000         0.000         0.000
+
+
+           Correlations
+              MALE          STRATIO
+              ________      ________
+ MALE           0.000
+ STRATIO        0.000         1.000
+
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       62
+
+Loglikelihood
+
+    H0 Value
+
+        Mean                           -137719.450
+        Std Dev                             90.459
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      -137929.884    -137878.569
+           0.980       1.000      -137905.225    -137878.569
+           0.950       0.857      -137868.245    -137878.569
+           0.900       0.857      -137835.382    -137878.569
+           0.800       0.714      -137795.580    -137878.569
+           0.700       0.714      -137766.886    -137834.146
+           0.500       0.714      -137719.450    -137700.148
+           0.300       0.429      -137672.013    -137691.664
+           0.200       0.143      -137643.319    -137658.819
+           0.100       0.000      -137603.517    -137646.158
+           0.050       0.000      -137570.654    -137646.158
+           0.020       0.000      -137533.674    -137646.158
+           0.010       0.000      -137509.015    -137646.158
+
+    H1 Value
+
+        Mean                           -137625.949
+        Std Dev                             85.808
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000      -137825.564    -137774.207
+           0.980       1.000      -137802.173    -137774.207
+           0.950       0.857      -137767.094    -137774.207
+           0.900       0.857      -137735.920    -137774.207
+           0.800       0.714      -137698.165    -137774.207
+           0.700       0.714      -137670.947    -137735.194
+           0.500       0.714      -137625.949    -137617.437
+           0.300       0.429      -137580.951    -137595.301
+           0.200       0.286      -137553.733    -137573.606
+           0.100       0.000      -137515.978    -137549.896
+           0.050       0.000      -137484.804    -137549.896
+           0.020       0.000      -137449.725    -137549.896
+           0.010       0.000      -137426.334    -137549.896
+
+Information Criteria
+
+    Akaike (AIC)
+
+        Mean                            275562.899
+        Std Dev                            180.918
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       275142.030     275377.285
+           0.980       1.000       275191.348     275377.285
+           0.950       1.000       275265.307     275377.285
+           0.900       1.000       275331.035     275377.285
+           0.800       0.857       275410.639     275377.285
+           0.700       0.571       275468.026     275416.315
+           0.500       0.286       275562.899     275441.639
+           0.300       0.286       275657.772     275507.328
+           0.200       0.286       275715.160     275524.296
+           0.100       0.143       275794.763     275792.292
+           0.050       0.143       275860.491     275792.292
+           0.020       0.000       275934.450     275792.292
+           0.010       0.000       275983.768     275792.292
+
+    Bayesian (BIC)
+
+        Mean                            276004.256
+        Std Dev                            180.918
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       275583.387     275818.643
+           0.980       1.000       275632.705     275818.643
+           0.950       1.000       275706.664     275818.643
+           0.900       1.000       275772.392     275818.643
+           0.800       0.857       275851.996     275818.643
+           0.700       0.571       275909.383     275857.672
+           0.500       0.286       276004.256     275882.996
+           0.300       0.286       276099.130     275948.685
+           0.200       0.286       276156.517     275965.653
+           0.100       0.143       276236.121     276233.649
+           0.050       0.143       276301.848     276233.649
+           0.020       0.000       276375.807     276233.649
+           0.010       0.000       276425.126     276233.649
+
+    Sample-Size Adjusted BIC (n* = (n + 2) / 24)
+
+        Mean                            275807.230
+        Std Dev                            180.918
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       275386.361     275621.617
+           0.980       1.000       275435.679     275621.617
+           0.950       1.000       275509.639     275621.617
+           0.900       1.000       275575.366     275621.617
+           0.800       0.857       275654.970     275621.617
+           0.700       0.571       275712.357     275660.647
+           0.500       0.286       275807.230     275685.970
+           0.300       0.286       275902.104     275751.659
+           0.200       0.286       275959.491     275768.627
+           0.100       0.143       276039.095     276036.623
+           0.050       0.143       276104.822     276036.623
+           0.020       0.000       276178.782     276036.623
+           0.010       0.000       276228.100     276036.623
+
+Chi-Square Test of Model Fit
+
+        Degrees of freedom                      22
+
+        Mean                               114.181
+        Std Dev                              9.426
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            9.542        100.233
+           0.980       1.000           10.600        100.233
+           0.950       1.000           12.338        100.233
+           0.900       1.000           14.041        100.233
+           0.800       1.000           16.314        100.233
+           0.700       1.000           18.101        103.318
+           0.500       1.000           21.337        110.211
+           0.300       1.000           24.939        114.492
+           0.200       1.000           27.301        119.849
+           0.100       1.000           30.813        124.715
+           0.050       1.000           33.924        124.715
+           0.020       1.000           37.659        124.715
+           0.010       1.000           40.289        124.715
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+        Mean                                 0.021
+        Std Dev                              0.001
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.019          0.020
+           0.980       1.000            0.019          0.020
+           0.950       1.000            0.020          0.020
+           0.900       0.857            0.020          0.020
+           0.800       0.714            0.020          0.020
+           0.700       0.714            0.021          0.020
+           0.500       0.571            0.021          0.021
+           0.300       0.429            0.022          0.021
+           0.200       0.286            0.022          0.022
+           0.100       0.000            0.023          0.023
+           0.050       0.000            0.023          0.023
+           0.020       0.000            0.024          0.023
+           0.010       0.000            0.024          0.023
+
+CFI/TLI
+
+    CFI
+
+        Mean                                 0.955
+        Std Dev                              0.004
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.945          0.949
+           0.980       1.000            0.946          0.949
+           0.950       1.000            0.948          0.949
+           0.900       0.857            0.949          0.949
+           0.800       0.714            0.951          0.949
+           0.700       0.571            0.953          0.951
+           0.500       0.429            0.955          0.952
+           0.300       0.429            0.957          0.954
+           0.200       0.286            0.959          0.957
+           0.100       0.143            0.961          0.960
+           0.050       0.000            0.962          0.960
+           0.020       0.000            0.964          0.960
+           0.010       0.000            0.965          0.960
+
+    TLI
+
+        Mean                                 0.877
+        Std Dev                              0.012
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.849          0.861
+           0.980       1.000            0.852          0.861
+           0.950       1.000            0.857          0.861
+           0.900       0.857            0.862          0.861
+           0.800       0.714            0.867          0.861
+           0.700       0.571            0.871          0.867
+           0.500       0.429            0.877          0.869
+           0.300       0.429            0.883          0.873
+           0.200       0.286            0.887          0.884
+           0.100       0.143            0.893          0.891
+           0.050       0.000            0.897          0.891
+           0.020       0.000            0.902          0.891
+           0.010       0.000            0.905          0.891
+
+SRMR (Standardized Root Mean Square Residual) for the WITHIN level
+
+        Mean                                 0.018
+        Std Dev                              0.001
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.016          0.017
+           0.980       1.000            0.017          0.017
+           0.950       1.000            0.017          0.017
+           0.900       0.714            0.017          0.017
+           0.800       0.714            0.018          0.017
+           0.700       0.714            0.018          0.017
+           0.500       0.571            0.018          0.018
+           0.300       0.429            0.019          0.018
+           0.200       0.143            0.019          0.019
+           0.100       0.143            0.019          0.019
+           0.050       0.000            0.019          0.019
+           0.020       0.000            0.020          0.019
+           0.010       0.000            0.020          0.019
+
+SRMR (Standardized Root Mean Square Residual) for the BETWEEN level
+
+        Mean                                 0.072
+        Std Dev                              0.013
+        Number of successful computations        7
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.041          0.051
+           0.980       1.000            0.045          0.051
+           0.950       1.000            0.050          0.051
+           0.900       0.857            0.055          0.051
+           0.800       0.857            0.061          0.051
+           0.700       0.714            0.065          0.063
+           0.500       0.429            0.072          0.068
+           0.300       0.286            0.079          0.069
+           0.200       0.143            0.083          0.079
+           0.100       0.143            0.089          0.079
+           0.050       0.143            0.094          0.079
+           0.020       0.000            0.099          0.079
+           0.010       0.000            0.103          0.079
+
+
+
+MODEL RESULTS
+
+                    Estimate
+
+Within Level
+
+ FCFMLRTY   ON
+    FLSCHOOL           1.445
+    NOBULLY            0.341
+    FLFAMILY           0.546
+    MALE               0.216
+    IMMI2GEN           0.047
+    ESCS               1.368
+
+ FLCONFIN   ON
+    FLSCHOOL           0.156
+    NOBULLY            0.051
+    FLFAMILY           0.125
+    MALE               0.211
+    IMMI2GEN           0.085
+    ESCS               0.168
+
+ FLIT       ON
+    FLSCHOOL           0.698
+    NOBULLY            1.305
+    FLFAMILY          -3.300
+    FCFMLRTY           2.222
+    FLCONFIN           7.794
+    IMMI1GEN         -12.613
+    ESCS              16.608
+
+ FLSCHOOL WITH
+    NOBULLY           -0.023
+    FLFAMILY           0.272
+    ESCS               0.049
+
+ NOBULLY  WITH
+    FLFAMILY          -0.018
+
+ FCFMLRTY WITH
+    FLCONFIN           0.943
+
+ ESCS     WITH
+    FLFAMILY           0.042
+    IMMI1GEN          -0.006
+    IMMI2GEN          -0.001
+
+ Means
+    IMMI1GEN           0.026
+    IMMI2GEN           0.036
+    ESCS               0.199
+
+ Intercepts
+    FCFMLRTY           8.265
+    FLCONFIN          -0.002
+
+ Variances
+    FLSCHOOL           1.016
+    NOBULLY            1.196
+    FLFAMILY           1.139
+    IMMI1GEN           0.025
+    IMMI2GEN           0.035
+    ESCS               0.530
+
+ Residual Variances
+    FLIT            5225.082
+    FCFMLRTY          30.032
+    FLCONFIN           0.867
+
+Between Level
+
+ FLIT       ON
+    FLSCHOOL         -97.343
+    NOBULLY          274.602
+    FLFAMILY          36.761
+    EDUSHORT          -8.702
+    STRATIO           -0.174
+
+ FLSCHOOL WITH
+    NOBULLY            0.002
+    FLFAMILY           0.013
+    EDUSHORT           0.019
+
+ NOBULLY  WITH
+    FLFAMILY           0.002
+    EDUSHORT           0.011
+
+ FLFAMILY WITH
+    EDUSHORT          -0.015
+
+ Means
+    EDUSHORT           0.288
+    FLSCHOOL           0.357
+    NOBULLY           -0.276
+    FLFAMILY           0.106
+
+ Intercepts
+    FLIT             585.635
+
+ Variances
+    EDUSHORT           1.388
+    FLSCHOOL           0.031
+    NOBULLY            0.007
+    FLFAMILY           0.015
+
+ Residual Variances
+    FLIT             729.575
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Within Level
+
+ FCFMLRTY   ON
+    FLSCHOOL           0.249      0.016     15.831      0.000      0.126
+    NOBULLY            0.064      0.015      4.306      0.000      0.084
+    FLFAMILY           0.099      0.016      6.165      0.000      0.061
+    MALE               0.018      0.014      1.310      0.190      0.073
+    IMMI2GEN           0.001      0.014      0.104      0.918      0.178
+    ESCS               0.170      0.016     10.591      0.000      0.063
+
+ FLCONFIN   ON
+    FLSCHOOL           0.161      0.017      9.530      0.000      0.042
+    NOBULLY            0.057      0.018      3.119      0.002      0.374
+    FLFAMILY           0.137      0.017      8.115      0.000      0.116
+    MALE               0.108      0.015      7.268      0.000      0.095
+    IMMI2GEN           0.016      0.014      1.132      0.257      0.235
+    ESCS               0.125      0.019      6.716      0.000      0.272
+
+ FLIT       ON
+    FLSCHOOL           0.009      0.017      0.556      0.578      0.102
+    NOBULLY            0.019      0.024      0.776      0.438      0.667
+    FLFAMILY          -0.047      0.017     -2.725      0.006      0.307
+    FCFMLRTY           0.172      0.020      8.661      0.000      0.407
+    FLCONFIN           0.100      0.018      5.440      0.000      0.354
+    IMMI1GEN          -0.027      0.016     -1.652      0.099      0.224
+    ESCS               0.160      0.016     10.089      0.000      0.109
+
+ FLSCHOOL WITH
+    NOBULLY           -0.020      0.016     -1.270      0.204      0.079
+    FLFAMILY           0.253      0.018     14.397      0.000      0.146
+    ESCS               0.066      0.020      3.288      0.001      0.227
+
+ NOBULLY  WITH
+    FLFAMILY          -0.015      0.018     -0.841      0.401      0.272
+
+ FCFMLRTY WITH
+    FLCONFIN           0.185      0.017     11.121      0.000      0.095
+
+ ESCS     WITH
+    FLFAMILY           0.054      0.016      3.302      0.001      0.218
+    IMMI1GEN          -0.051      0.019     -2.696      0.007      0.035
+    IMMI2GEN          -0.006      0.021     -0.284      0.777      0.120
+
+ Means
+    IMMI1GEN           0.164      0.008     19.544      0.000      0.012
+    IMMI2GEN           0.193      0.009     20.672      0.000      0.043
+    ESCS               0.273      0.033      8.244      0.000      0.007
+
+ Intercepts
+    FCFMLRTY           1.411      0.030     47.228      0.000      0.064
+    FLCONFIN          -0.002      0.023     -0.105      0.916      0.128
+
+ Variances
+    FLSCHOOL           1.000      0.000  *********      0.000      0.000
+    NOBULLY            1.000      0.000  *********      0.000      0.000
+    FLFAMILY           1.000      0.000  *********      0.000      0.000
+    IMMI1GEN           1.000      0.000  *********      0.000      0.000
+    IMMI2GEN           1.000      0.000  *********      0.000      0.000
+    ESCS               1.000      0.000  *********      0.000      0.000
+
+ Residual Variances
+    FLIT               0.910      0.010     87.445      0.000      0.276
+    FCFMLRTY           0.876      0.010     86.780      0.000      0.098
+    FLCONFIN           0.909      0.009     98.966      0.000      0.074
+
+Between Level
+
+ FLIT       ON
+    FLSCHOOL          -0.451      0.417     -1.080      0.280      0.139
+    NOBULLY            0.536      0.505      1.061      0.289      0.033
+    FLFAMILY           0.125      0.583      0.214      0.830      0.128
+    EDUSHORT          -0.272      0.193     -1.411      0.158      0.049
+    STRATIO           -0.031      0.069     -0.446      0.655      0.096
+
+ FLSCHOOL WITH
+    NOBULLY            0.129      0.367      0.352      0.725      0.097
+    FLFAMILY           0.589      0.196      3.012      0.003      0.178
+    EDUSHORT           0.094      0.096      0.974      0.330      0.116
+
+ NOBULLY  WITH
+    FLFAMILY           0.245      0.554      0.441      0.659      0.082
+    EDUSHORT           0.111      0.230      0.485      0.628      0.126
+
+ FLFAMILY WITH
+    EDUSHORT          -0.101      0.150     -0.670      0.503      0.103
+
+ Means
+    EDUSHORT           0.244      0.062      3.918      0.000      0.019
+    FLSCHOOL           2.046      0.293      6.989      0.000      0.034
+    NOBULLY           -3.676      3.118     -1.179      0.238      0.122
+    FLFAMILY           0.864      0.259      3.338      0.001      0.109
+
+ Intercepts
+    FLIT              15.533      4.531      3.428      0.001      0.074
+
+ Variances
+    EDUSHORT           1.000      0.000  *********      0.000      0.000
+    FLSCHOOL           1.000      0.000    999.000    999.000      0.000
+    NOBULLY            1.000      0.000    999.000    999.000      0.000
+    FLFAMILY           1.000      0.000  *********      0.000      0.000
+
+ Residual Variances
+    FLIT               0.511      0.529      0.966      0.334      0.064
+
+
+R-SQUARE
+
+Within Level
+
+    Observed                                        Two-Tailed   Rate of
+    Variable        Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+    FLIT               0.090      0.010      8.675      0.000      0.276
+    FCFMLRTY           0.124      0.010     12.314      0.000      0.098
+    FLCONFIN           0.091      0.009      9.880      0.000      0.074
+
+Between Level
+
+    Observed                                        Two-Tailed   Rate of
+    Variable        Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+    FLIT               0.489      0.529      0.924      0.356      0.064
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Average Condition Number for the Information Matrix      0.850E-17
+       (ratio of smallest to largest eigenvalue)
+
+
+TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+WITHIN
+
+Effects from FLSCHOOL to FLIT
+
+  Total                5.122      1.277      4.012      0.000      0.126
+  Total indirect       4.424      0.488      9.065      0.000      0.239
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLSCHOOL           3.211      0.423      7.596      0.000      0.311
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLSCHOOL           1.213      0.258      4.707      0.000      0.197
+
+  Direct
+    FLIT
+    FLSCHOOL           0.698      1.255      0.556      0.578      0.103
+
+
+Effects from NOBULLY to FLIT
+
+  Total                2.455      1.672      1.469      0.142      0.652
+  Total indirect       1.151      0.263      4.381      0.000      0.199
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    NOBULLY            0.758      0.200      3.800      0.000      0.166
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    NOBULLY            0.392      0.138      2.847      0.004      0.206
+
+  Direct
+    FLIT
+    NOBULLY            1.305      1.684      0.775      0.438      0.669
+
+
+Effects from FLFAMILY to FLIT
+
+  Total               -1.108      1.136     -0.975      0.329      0.211
+  Total indirect       2.192      0.341      6.422      0.000      0.215
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLFAMILY           1.212      0.239      5.072      0.000      0.150
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLFAMILY           0.979      0.221      4.438      0.000      0.323
+
+  Direct
+    FLIT
+    FLFAMILY          -3.300      1.205     -2.737      0.006      0.286
+
+
+BETWEEN
+
+Effects from FLSCHOOL to FLIT
+
+  Total              -97.343     92.517     -1.052      0.293      0.133
+  Total indirect       0.000      0.000      0.000      1.000      0.222
+
+  Direct
+    FLIT
+    FLSCHOOL         -97.343     92.517     -1.052      0.293      0.133
+
+
+Effects from NOBULLY to FLIT
+
+  Total              274.602    550.332      0.499      0.618      0.051
+  Total indirect       0.000      0.000     -0.194      0.846      0.222
+
+  Direct
+    FLIT
+    NOBULLY          274.602    550.332      0.499      0.618      0.051
+
+
+Effects from FLFAMILY to FLIT
+
+  Total               36.761    185.097      0.199      0.843      0.122
+  Total indirect       0.000      0.000     -0.509      0.610      0.222
+
+  Direct
+    FLIT
+    FLFAMILY          36.761    185.097      0.199      0.843      0.122
+
+
+
+STANDARDIZED TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+WITHIN
+
+Effects from FLSCHOOL to FLIT
+
+  Total                0.068      0.017      4.055      0.000      0.123
+  Total indirect       0.059      0.006      9.138      0.000      0.252
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLSCHOOL           0.043      0.006      7.662      0.000      0.313
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLSCHOOL           0.016      0.003      4.700      0.000      0.209
+
+  Direct
+    FLIT
+    FLSCHOOL           0.009      0.017      0.556      0.578      0.102
+
+
+Effects from NOBULLY to FLIT
+
+  Total                0.035      0.024      1.473      0.141      0.651
+  Total indirect       0.017      0.004      4.397      0.000      0.221
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    NOBULLY            0.011      0.003      3.821      0.000      0.173
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    NOBULLY            0.006      0.002      2.845      0.004      0.224
+
+  Direct
+    FLIT
+    NOBULLY            0.019      0.024      0.776      0.438      0.667
+
+
+Effects from FLFAMILY to FLIT
+
+  Total               -0.016      0.016     -0.976      0.329      0.217
+  Total indirect       0.031      0.005      6.326      0.000      0.261
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLFAMILY           0.017      0.003      5.029      0.000      0.175
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLFAMILY           0.014      0.003      4.408      0.000      0.345
+
+  Direct
+    FLIT
+    FLFAMILY          -0.047      0.017     -2.725      0.006      0.307
+
+
+BETWEEN
+
+Effects from FLSCHOOL to FLIT
+
+  Total               -0.451      0.417     -1.080      0.280      0.139
+  Total indirect       0.000      0.000      0.000      1.000      0.222
+
+  Direct
+    FLIT
+    FLSCHOOL          -0.451      0.417     -1.080      0.280      0.139
+
+
+Effects from NOBULLY to FLIT
+
+  Total                0.536      0.505      1.061      0.289      0.033
+  Total indirect       0.000      0.000      0.000      1.000      0.222
+
+  Direct
+    FLIT
+    NOBULLY            0.536      0.505      1.061      0.289      0.033
+
+
+Effects from FLFAMILY to FLIT
+
+  Total                0.125      0.583      0.214      0.830      0.128
+  Total indirect       0.000      0.000      0.000      1.000      0.222
+
+  Direct
+    FLIT
+    FLFAMILY           0.125      0.583      0.214      0.830      0.128
+
+
+
+
+MODEL COMMAND WITH FINAL ESTIMATES USED AS STARTING VALUES
+
+     %WITHIN%
+
+     fcfmlrty ON flschool*1.44485;
+     fcfmlrty ON nobully*0.34095;
+     fcfmlrty ON flfamily*0.54560;
+     fcfmlrty ON male*0.21639;
+     fcfmlrty ON immi2gen*0.04687;
+     fcfmlrty ON escs*1.36846;
+     flconfin ON flschool*0.15580;
+     flconfin ON nobully*0.05073;
+     flconfin ON flfamily*0.12549;
+     flconfin ON male*0.21072;
+     flconfin ON immi2gen*0.08502;
+     flconfin ON escs*0.16806;
+     flit ON flschool*0.69754;
+     flit ON nobully*1.30477;
+     flit ON flfamily*-3.29961;
+     flit ON fcfmlrty*2.22249;
+     flit ON flconfin*7.79387;
+     flit ON immi1gen*-12.61281;
+     flit ON escs*16.60765;
+
+     flschool WITH nobully*-0.02255;
+     flschool WITH flfamily*0.27235;
+     flschool WITH escs*0.04865;
+     nobully WITH flfamily*-0.01773;
+     fcfmlrty WITH flconfin*0.94304;
+     escs WITH flfamily*0.04157;
+     escs WITH immi1gen*-0.00591;
+     escs WITH immi2gen*-0.00082;
+
+     [ fcfmlrty*8.26519 ];
+     [ flconfin*-0.00238 ];
+     [ immi1gen*0.02610 ];
+     [ immi2gen*0.03579 ];
+     [ escs*0.19907 ];
+
+     flit*5225.08203;
+     fcfmlrty*30.03230;
+     flconfin*0.86691;
+     flschool*1.01646;
+     nobully*1.19606;
+     flfamily*1.13894;
+     immi1gen*0.02542;
+     immi2gen*0.03451;
+     escs*0.53008;
+
+     %BETWEEN%
+
+     flit ON flschool*-97.34303;
+     flit ON nobully*274.60165;
+     flit ON flfamily*36.76050;
+     flit ON edushort*-8.70246;
+     flit ON stratio*-0.17415;
+
+     flschool WITH nobully*0.00162;
+     flschool WITH flfamily*0.01266;
+     flschool WITH edushort*0.01932;
+     nobully WITH flfamily*0.00224;
+     nobully WITH edushort*0.01097;
+     flfamily WITH edushort*-0.01460;
+
+     [ edushort*0.28797 ];
+     [ flit*585.63477 ];
+     [ flschool*0.35722 ];
+     [ nobully*-0.27578 ];
+     [ flfamily*0.10584 ];
+
+     edushort*1.38766;
+     flit*729.57501;
+     flschool*0.03051;
+     nobully*0.00650;
+     flfamily*0.01528;
+
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION FOR WITHIN
+
+
+           NU
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           NU
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           LAMBDA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT               0             0             0             0             0
+ FCFMLRTY           0             0             0             0             0
+ FLCONFIN           0             0             0             0             0
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           LAMBDA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLIT               0             0             0             0             0
+ FCFMLRTY           0             0             0             0             0
+ FLCONFIN           0             0             0             0             0
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           THETA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT               0
+ FCFMLRTY           0             0
+ FLCONFIN           0             0             0
+ FLSCHOOL           0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           THETA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLFAMILY           0
+ IMMI1GEN           0             0
+ IMMI2GEN           0             0             0
+ ESCS               0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           ALPHA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+                    0             1             2             0             0
+
+
+           ALPHA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+                    0             3             4             5             0
+
+
+           BETA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT               0             6             7             8             9
+ FCFMLRTY           0             0             0            13            14
+ FLCONFIN           0             0             0            19            20
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           BETA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLIT              10            11             0            12             0
+ FCFMLRTY          15             0            16            17            18
+ FLCONFIN          21             0            22            23            24
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0             0             0
+ MALE               0             0             0             0             0
+
+
+           PSI
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT              25
+ FCFMLRTY           0            26
+ FLCONFIN           0            27            28
+ FLSCHOOL           0             0             0            29
+ NOBULLY            0             0             0            30            31
+ FLFAMILY           0             0             0            32            33
+ IMMI1GEN           0             0             0             0             0
+ IMMI2GEN           0             0             0             0             0
+ ESCS               0             0             0            37             0
+ MALE               0             0             0             0             0
+
+
+           PSI
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLFAMILY          34
+ IMMI1GEN           0            35
+ IMMI2GEN           0             0            36
+ ESCS              38            39            40            41
+ MALE               0             0             0             0             0
+
+
+     PARAMETER SPECIFICATION FOR BETWEEN
+
+
+           NU
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+                    0             0             0             0             0
+
+
+           NU
+              STRATIO
+              ________
+                    0
+
+
+           LAMBDA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT           0             0             0             0             0
+ FLIT               0             0             0             0             0
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ STRATIO            0             0             0             0             0
+
+
+           LAMBDA
+              STRATIO
+              ________
+ EDUSHORT           0
+ FLIT               0
+ FLSCHOOL           0
+ NOBULLY            0
+ FLFAMILY           0
+ STRATIO            0
+
+
+           THETA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT           0
+ FLIT               0             0
+ FLSCHOOL           0             0             0
+ NOBULLY            0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ STRATIO            0             0             0             0             0
+
+
+           THETA
+              STRATIO
+              ________
+ STRATIO            0
+
+
+           ALPHA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+                   42            43            44            45            46
+
+
+           ALPHA
+              STRATIO
+              ________
+                    0
+
+
+           BETA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT           0             0             0             0             0
+ FLIT              47             0            48            49            50
+ FLSCHOOL           0             0             0             0             0
+ NOBULLY            0             0             0             0             0
+ FLFAMILY           0             0             0             0             0
+ STRATIO            0             0             0             0             0
+
+
+           BETA
+              STRATIO
+              ________
+ EDUSHORT           0
+ FLIT              51
+ FLSCHOOL           0
+ NOBULLY            0
+ FLFAMILY           0
+ STRATIO            0
+
+
+           PSI
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT          52
+ FLIT               0            53
+ FLSCHOOL          54             0            55
+ NOBULLY           56             0            57            58
+ FLFAMILY          59             0            60            61            62
+ STRATIO            0             0             0             0             0
+
+
+           PSI
+              STRATIO
+              ________
+ STRATIO            0
+
+
+     STARTING VALUES FOR WITHIN
+
+
+           NU
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT           1.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         1.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         1.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         1.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         1.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       1.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         1.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         1.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         1.000         0.000
+ MALE           0.000         0.000         0.000         0.000         1.000
+
+
+           THETA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT           0.000
+ FCFMLRTY       0.000         0.000
+ FLCONFIN       0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLFAMILY       0.000
+ IMMI1GEN       0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+                0.000         8.185         0.121         0.000         0.000
+
+
+           ALPHA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+                0.000         0.026         0.031         0.178         0.000
+
+
+           BETA
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FCFMLRTY       0.000         0.000         0.000         0.000         0.000
+ FLCONFIN       0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              FLIT          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
+              ________      ________      ________      ________      ________
+ FLIT        3754.712
+ FCFMLRTY       0.000        17.660
+ FLCONFIN       0.000         0.000         0.486
+ FLSCHOOL       0.000         0.000         0.000         0.507
+ NOBULLY        0.000         0.000         0.000         0.000         0.600
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ IMMI1GEN       0.000         0.000         0.000         0.000         0.000
+ IMMI2GEN       0.000         0.000         0.000         0.000         0.000
+ ESCS           0.000         0.000         0.000         0.000         0.000
+ MALE           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              FLFAMILY      IMMI1GEN      IMMI2GEN      ESCS          MALE
+              ________      ________      ________      ________      ________
+ FLFAMILY       0.572
+ IMMI1GEN       0.000         0.012
+ IMMI2GEN       0.000         0.000         0.015
+ ESCS           0.000         0.000         0.000         0.266
+ MALE           0.000         0.000         0.000         0.000         0.125
+
+
+     STARTING VALUES FOR BETWEEN
+
+
+           NU
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              STRATIO
+              ________
+                0.000
+
+
+           LAMBDA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT       1.000         0.000         0.000         0.000         0.000
+ FLIT           0.000         1.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         1.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         1.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         1.000
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              STRATIO
+              ________
+ EDUSHORT       0.000
+ FLIT           0.000
+ FLSCHOOL       0.000
+ NOBULLY        0.000
+ FLFAMILY       0.000
+ STRATIO        1.000
+
+
+           THETA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000
+ FLIT           0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              STRATIO
+              ________
+ STRATIO        0.000
+
+
+           ALPHA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+                0.305       490.984         0.325        -0.308         0.071
+
+
+           ALPHA
+              STRATIO
+              ________
+                0.000
+
+
+           BETA
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.000         0.000         0.000         0.000         0.000
+ FLIT           0.000         0.000         0.000         0.000         0.000
+ FLSCHOOL       0.000         0.000         0.000         0.000         0.000
+ NOBULLY        0.000         0.000         0.000         0.000         0.000
+ FLFAMILY       0.000         0.000         0.000         0.000         0.000
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              STRATIO
+              ________
+ EDUSHORT       0.000
+ FLIT           0.000
+ FLSCHOOL       0.000
+ NOBULLY        0.000
+ FLFAMILY       0.000
+ STRATIO        0.000
+
+
+           PSI
+              EDUSHORT      FLIT          FLSCHOOL      NOBULLY       FLFAMILY
+              ________      ________      ________      ________      ________
+ EDUSHORT       0.653
+ FLIT           0.000      3754.712
+ FLSCHOOL       0.000         0.000         0.507
+ NOBULLY        0.000         0.000         0.000         0.600
+ FLFAMILY       0.000         0.000         0.000         0.000         0.572
+ STRATIO        0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              STRATIO
+              ________
+ STRATIO       33.463
+
+
+THE FOLLOWING DATA SET(S) DID NOT RESULT IN A COMPLETED REPLICATION:
+
+  C:\Users\tctan\finlit3.dat
+  C:\Users\tctan\finlit6.dat
+  C:\Users\tctan\finlit10.dat
+
+
+TECHNICAL 9 OUTPUT
+
+
+Errors for replication with data file C:\Users\tctan\finlit1.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324
+                  98300395 98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775
+                  98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557
+                  64300648 64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351
+                  64300806 98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566
+                  98300642 98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310
+                  64300341 64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598
+                  98300629 98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209
+                  64300696 98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764
+                  98300253 98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338
+                  64300661 98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364
+                  98200658 98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300226
+                  98300291 98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388
+                  64300560 64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308
+                  64300371 64300698 98300252 64300047 64300138 64300498 98300024 98300301 64300036
+                  64300239 64300366 98200766 98300383 98300432 98300501 64300327 64300650 64300686
+                  98300500 98300579 98300742 64300092 64300220 64300275 64300423 64300581 98300030
+                  98300478 98300597 98300675 64300017 64300144 64300162 64300232 64300426 64300559
+                  64300710 98200587 98200635 98200685 98300022 98300154 98300161 98300223 98300317
+                  98300344 98300382 98300396 98300462 98300515 98300570 98300656 98300740 98300744
+                  98300760 64300102 64300203 64300221 64300276 64300296 64300377 64300391 64300421
+                  64300424 64300448 64300549 64300728 64300789 98200264 98200358 98300157 98200267
+                  98200505 98300122 98300130 98300328 98300340 98300438 98300485 98300539 98300544
+                  98300564 98300606 98300611 98300616 98300622 98300667 98300733 98300763 64300050
+                  64300056 64300063 64300132 64300186 64300243 64300256 64300272 64300292 64300340
+                  64300372 64300386 64300407 64300413 64300446 64300453 64300479 64300490 64300633
+                  64300639 64300708 64300741 64300746 64300779 98300732 98300748 98300806 64300025
+                  64300053 64300060 64300062 64300089 64300103 64300111 64300133 64300159 64300188
+                  64300199 64300216 64300259 64300277 64300303 64300313 64300320 64300322 98200153
+                  64300358 98200250 64300376 64300402 64300416 64300431 64300432 64300434 64300458
+                  64300592 64300605 98300060 64300635 98300087 64300645 98300094 98300104 64300670
+                  64300683 98300139 64300693 98300185 64300725 98300190 98300204 98300219 98300235
+                  98300260 98300319 98300394 98300439 98300445 98300466 98300529 98300543 98300546
+                  98300563 98300619 98300625 98300627 98300633 98300640 98300643 64300439 64300482
+                  98300653 64300508 98300067 98300068 98300077 98300761 98300799 64300023 64300031
+                  64300046 98300192 98300209 64300706 64300073 64300074 64300077 64300088 64300105
+                  98300254 64300119 64300302 98200081 64300305 64300344 98200408 98300567 98300568
+                  98200506 64300395 98300581 98300144 98300166
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700
+                  64300052 64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244
+                  98300251 98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696
+                  98300736 98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265
+                  64300520 64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155
+                  64300215 64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237
+                  98300298 98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066
+                  64300094 64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498
+                  98200627 98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075
+                  64300113 64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764
+                  98300253 98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802
+                  64300338 64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519
+                  98300364 98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514
+                  64300631 64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222
+                  64300226 98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362
+                  98300052 64300083 64300295 64300308 64300698 98300252 98300271 64300498 98300301
+                  64300005 64300239 98200766 98300383 98300432 98300501 98300516 64300081 64300327
+                  64300686 98300500 98300579 98300742 64300092 64300220 64300275 64300423 98300478
+                  98300597 98300651 64300144 64300162 64300410 64300426 64300559 64300663 64300710
+                  98200209 98200587 98200635 98300022 98300154 98300161 98300313 98300317 98300344
+                  98300382 98300462 98300515 98300656 98300740 98300744 64300004 64300139 64300158
+                  64300203 64300221 64300276 64300296 64300391 64300424 64300448 64300509 64300728
+                  98200264 98200358 98200660 98200267 98200447 98200513 98200803 98300029 98300061
+                  98300130 98300310 98300328 98300438 98300449 98300472 98300485 98300539 98300544
+                  98300564 98300606 98300622 98300639 98300739 98300763 98300786 64300064 64300151
+                  64300243 64300272 64300330 64300340 64300363 64300386 64300407 64300413 64300479
+                  64300633 64300637 64300708 64300723 64300746 98300732 98300762 64300022 64300025
+                  64300053 64300060 64300062 64300111 64300133 64300159 64300168 64300188 64300199
+                  64300208 64300210 64300216 64300259 64300277 64300289 64300320 98200057 98200223
+                  64300376 64300402 64300416 64300432 64300434 64300592 98300060 64300635 98300087
+                  64300647 98300094 64300670 98300139 98300185 98300190 64300761 98300219 98300235
+                  98300249 98300260 98300295 98300394 98300529 98300543 98300563 98300575 98300627
+                  98300643 64300439 64300508 98300726 98300067 98300068 98300761 64300023 64300667
+                  64300031 64300046 98300192 98300209 64300706 64300073 64300769 64300095 64300105
+                  64300119 64300174 64300193 64300293 98300469 98200081 98300479 64300344 98300567
+                  98300568 64300395 98300581 98300729 98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.277D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit2.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324
+                  98300395 98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775
+                  98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557
+                  64300648 64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351
+                  64300806 98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566
+                  98300642 98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310
+                  64300341 64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598
+                  98300629 98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209
+                  64300696 98300297 64300359 64300393 64300491 98200225 98200538 64300684 98300253
+                  98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338 64300661
+                  98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364 98200658
+                  98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300226 98300291
+                  98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388 64300560
+                  64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308 64300371
+                  64300698 98300252 64300047 64300138 64300498 98300024 98300301 64300036 64300239
+                  64300366 98200766 98300383 98300432 64300327 64300650 64300686 98300500 98300579
+                  98300742 64300092 64300220 64300275 64300423 64300581 98300030 98300478 98300597
+                  64300017 64300144 64300162 64300232 64300426 64300559 64300663 64300710 98200587
+                  98200635 98200685 98300022 98300154 98300161 98300223 98300317 98300344 98300382
+                  98300396 98300462 98300515 98300570 98300656 98300740 98300744 98300760 64300102
+                  64300203 64300221 64300276 64300296 64300377 64300391 64300421 64300424 64300448
+                  64300549 64300789 98200264 98200358 98300157 98200267 98200505 98300122 98300130
+                  98300328 98300340 98300438 98300485 98300539 98300544 98300564 98300606 98300616
+                  98300622 98300667 98300733 98300763 64300050 64300056 64300063 64300132 64300186
+                  64300243 64300256 64300272 64300292 64300340 64300372 64300386 64300407 64300413
+                  64300446 64300453 64300479 64300490 64300633 64300639 64300708 64300741 64300746
+                  64300779 98300732 98300748 98300806 64300025 64300053 64300060 64300062 64300089
+                  64300103 64300111 64300133 64300159 64300188 64300199 64300216 64300259 64300277
+                  64300303 64300313 64300320 64300322 98200153 64300358 64300376 98200316 64300402
+                  64300416 64300431 64300432 64300434 64300458 64300592 64300605 98300060 64300635
+                  98300087 64300645 98300104 64300670 64300683 98300139 64300693 98300185 64300725
+                  98300190 98300204 98300219 98300235 98300260 98300319 98300394 98300439 98300445
+                  98300466 98300529 98300543 98300546 98300563 98300619 98300625 98300627 98300633
+                  98300640 98300643 64300439 64300482 98300653 64300508 98300067 98300068 98300077
+                  98300761 98300799 64300023 64300031 64300046 98300192 98300209 64300706 64300073
+                  64300074 64300077 64300088 64300105 98300254 64300119 64300302 98200081 64300305
+                  64300344 98200408 98300567 98300568 98200506 64300395 98300581 98300144 98300166
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700
+                  64300052 64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244
+                  98300251 98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696
+                  98300736 98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265
+                  64300520 64300557 64300648 64300666 98200647 98300048 98300064 98300083 64300215
+                  64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237 98300298
+                  98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066 64300094
+                  64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498 98200627
+                  98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075 64300113
+                  64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764 98300253
+                  98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802 64300338
+                  64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519 98300364
+                  98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514 64300631
+                  64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222 64300226
+                  98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362 98300052
+                  64300083 64300295 64300308 64300698 98300252 98300271 64300498 98300301 64300005
+                  64300239 98200766 98300383 98300432 98300501 98300516 64300081 64300327 64300686
+                  98300500 98300579 98300742 64300220 64300275 64300423 98300478 98300597 64300144
+                  64300162 64300410 64300426 64300559 64300663 64300710 98200209 98200587 98200635
+                  98300022 98300154 98300161 98300313 98300317 98300344 98300382 98300462 98300515
+                  98300656 98300740 98300744 64300004 64300139 64300158 64300203 64300221 64300276
+                  64300296 64300391 64300424 64300448 64300509 64300728 98200264 98200358 98200660
+                  98200267 98200447 98200513 98200803 98300029 98300061 98300130 98300310 98300328
+                  98300438 98300449 98300472 98300485 98300539 98300544 98300564 98300606 98300622
+                  98300739 98300763 98300786 64300064 64300151 64300243 64300272 64300330 64300340
+                  64300363 64300386 64300407 64300413 64300479 64300633 64300637 64300708 64300723
+                  64300746 98300732 98300762 64300022 64300025 64300053 64300060 64300062 64300111
+                  64300133 64300159 64300168 64300188 64300199 64300208 64300210 64300216 64300259
+                  64300277 64300289 64300320 98200057 98200223 64300376 64300402 64300416 64300432
+                  64300434 64300592 64300605 98300060 64300635 98300087 64300647 98300094 64300670
+                  98300139 98300185 98300190 64300761 98300219 98300235 98300249 98300260 98300295
+                  98300394 98300529 98300543 98300563 98300575 98300627 98300643 64300439 64300508
+                  98300726 98300067 98300068 98300761 64300023 64300667 64300031 64300046 98300192
+                  98300209 64300706 64300073 64300769 64300095 64300105 64300119 64300193 64300293
+                  98300469 98200081 98300479 64300344 98300567 98300568 64300395 98300581 98300729
+                  98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.235D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit3.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324
+                  98300395 98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775
+                  98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557
+                  64300648 64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351
+                  64300806 98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566
+                  98300642 98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310
+                  64300341 64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598
+                  98300629 98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209
+                  64300696 98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764
+                  98300253 98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338
+                  64300661 98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364
+                  98200658 98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300226
+                  98300291 98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388
+                  64300560 64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308
+                  64300371 64300698 98300252 64300047 64300138 64300498 98300024 98300301 64300036
+                  64300239 64300366 98200766 98300383 98300432 98300501 64300327 64300650 64300686
+                  98300500 98300579 98300742 64300092 64300220 64300275 64300423 64300581 98300030
+                  98300478 98300597 64300017 64300144 64300162 64300232 64300426 64300559 64300710
+                  98200587 98200635 98200685 98300022 98300154 98300161 98300223 98300317 98300344
+                  98300382 98300396 98300462 98300515 98300570 98300656 98300740 98300744 98300760
+                  64300102 64300203 64300221 64300296 64300377 64300391 64300421 64300424 64300448
+                  64300549 64300728 64300789 98200264 98300157 98200267 98200505 98300122 98300130
+                  98300328 98300340 98300438 98300485 98300539 98300544 98300564 98300606 98300611
+                  98300616 98300622 98300667 98300733 98300763 64300050 64300056 64300063 64300132
+                  64300186 64300243 64300256 64300272 64300292 64300340 64300372 64300407 64300413
+                  64300446 64300453 64300479 64300490 64300633 64300639 64300741 64300746 64300779
+                  98300732 98300748 98300806 64300025 64300053 64300060 64300062 64300089 64300103
+                  64300111 64300133 64300159 64300188 64300199 64300216 64300259 64300277 64300303
+                  64300313 64300320 64300322 98200153 64300358 98200250 64300376 98200316 64300402
+                  64300416 64300431 64300432 64300434 64300458 64300592 64300605 98300060 64300635
+                  98300087 64300645 98300094 98300104 64300670 64300683 98300139 64300693 98300185
+                  64300725 98300190 98300204 98300219 98300235 98300260 98300319 98300394 98300439
+                  98300445 98300466 98300529 98300543 98300546 98300563 98300619 98300625 98300627
+                  98300633 98300640 98300643 64300439 64300482 98300653 64300508 98300067 98300068
+                  98300077 98300761 98300799 64300023 64300031 64300046 98300192 98300209 64300706
+                  64300073 64300074 64300077 64300088 64300105 98300254 64300119 64300302 98200081
+                  64300305 64300344 98200408 98300567 98300568 98200506 64300395 98300581 98300166
+      IMMI2GEN    98200364 98300074 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539 64300540
+                  64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153 98300202
+                  98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700 64300052
+                  64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251
+                  98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696 98300736
+                  98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520
+                  64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155 64300215
+                  64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237 98300298
+                  98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066 64300094
+                  64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498 98200627
+                  98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075 64300113
+                  64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764 98300253
+                  98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802 64300338
+                  64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519 98300364
+                  98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514 64300631
+                  64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222 64300226
+                  98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362 98300052
+                  64300083 64300295 64300308 98300252 98300271 64300498 98300301 64300005 64300239
+                  98200766 98300383 98300432 98300501 64300081 64300327 64300686 98300500 98300579
+                  98300742 64300092 64300220 64300275 64300423 98300478 98300597 98300651 64300144
+                  64300162 64300410 64300426 64300559 64300663 64300710 98200209 98200587 98200635
+                  98300022 98300154 98300161 98300313 98300317 98300344 98300382 98300462 98300515
+                  98300656 98300740 98300744 64300004 64300139 64300158 64300203 64300221 64300276
+                  64300296 64300391 64300424 64300448 64300509 98200264 98200358 98200660 98200267
+                  98200447 98200513 98200803 98300029 98300061 98300130 98300310 98300328 98300438
+                  98300449 98300472 98300485 98300539 98300544 98300564 98300606 98300622 98300639
+                  98300739 98300763 98300786 64300064 64300151 64300243 64300272 64300330 64300340
+                  64300363 64300386 64300407 64300413 64300479 64300633 64300637 64300708 64300723
+                  64300746 98300732 98300762 64300022 64300025 64300053 64300060 64300062 64300111
+                  64300133 64300159 64300168 64300188 64300199 64300208 64300210 64300216 64300259
+                  64300277 64300320 98200057 64300376 64300402 64300416 64300432 64300434 64300592
+                  64300605 98300060 64300635 98300087 64300647 98300094 98300139 98300190 64300761
+                  98300219 98300235 98300249 98300260 98300295 98300394 98300529 98300543 98300563
+                  98300575 98300627 98300643 64300439 64300508 98300726 98300067 98300068 98300761
+                  64300023 64300667 64300031 64300046 98300192 98300209 64300706 64300073 64300769
+                  64300095 64300105 64300119 64300174 64300193 64300293 98300469 98300479 64300344
+                  98300567 98300568 64300395 98300581 98300729 98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE MODEL ESTIMATION DID NOT TERMINATE NORMALLY DUE TO AN ILL-CONDITIONED
+     FISHER INFORMATION MATRIX.  CHANGE YOUR MODEL AND/OR STARTING VALUES.
+
+     THE MODEL ESTIMATION DID NOT TERMINATE NORMALLY DUE TO A NON-POSITIVE
+     DEFINITE FISHER INFORMATION MATRIX.  THIS MAY BE DUE TO THE STARTING VALUES
+     BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE CONDITION
+     NUMBER IS       0.140D-10.
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES COULD NOT BE
+     COMPUTED.  THIS IS OFTEN DUE TO THE STARTING VALUES BUT MAY ALSO BE
+     AN INDICATION OF MODEL NONIDENTIFICATION.  CHANGE YOUR MODEL AND/OR
+     STARTING VALUES.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 48, %BETWEEN%: FLIT ON FLSCHOOL
+
+
+Errors for replication with data file C:\Users\tctan\finlit4.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324
+                  98300395 98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775
+                  98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557
+                  64300648 64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351
+                  64300806 98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566
+                  98300642 98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310
+                  64300341 64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598
+                  98300629 98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209
+                  64300696 98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764
+                  98300253 98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338
+                  64300661 98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364
+                  98200658 98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300226
+                  98300291 98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388
+                  64300560 64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308
+                  64300371 64300698 98300252 64300047 64300138 64300498 98300024 98300301 64300036
+                  64300239 64300366 98200766 98300383 98300432 98300501 64300327 64300650 64300686
+                  98300500 98300579 98300742 64300092 64300220 64300275 64300423 64300581 98300030
+                  98300478 98300597 98300675 64300017 64300144 64300162 64300232 64300426 64300559
+                  64300710 98200587 98200635 98200685 98300022 98300154 98300161 98300223 98300317
+                  98300344 98300382 98300396 98300462 98300515 98300570 98300656 98300740 98300760
+                  64300102 64300203 64300221 64300276 64300296 64300377 64300391 64300421 64300424
+                  64300448 64300549 64300728 64300789 98200264 98200358 98300157 98200267 98200505
+                  98300122 98300130 98300328 98300340 98300438 98300485 98300539 98300544 98300564
+                  98300606 98300611 98300616 98300622 98300667 98300733 98300763 64300050 64300056
+                  64300063 64300132 64300186 64300243 64300256 64300272 64300292 64300340 64300372
+                  64300386 64300407 64300413 64300446 64300453 64300479 64300490 64300633 64300639
+                  64300741 64300746 64300779 98300732 98300748 98300806 64300025 64300053 64300060
+                  64300062 64300089 64300103 64300111 64300133 64300159 64300188 64300199 64300216
+                  64300259 64300277 64300303 64300313 64300320 64300322 98200153 64300358 98200250
+                  64300376 64300402 64300416 64300431 64300432 64300434 64300458 64300592 64300605
+                  98300060 98300087 64300645 98300104 64300670 64300683 98300139 64300693 98300185
+                  64300725 98300190 98300204 98300219 98300235 98300260 98300319 98300394 98300439
+                  98300445 98300466 98300529 98300543 98300546 98300563 98300619 98300625 98300627
+                  98300633 98300640 98300643 64300439 64300482 98300653 64300508 98300068 98300077
+                  98300761 98300799 64300023 64300031 64300046 98300192 98300209 64300706 64300073
+                  64300074 64300088 64300105 98300254 64300119 64300302 98200081 64300305 64300344
+                  98200408 98300567 98300568 98200506 64300395 98300581 98300144 98300166
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300293 98300349 98300392 98300499 98300657 98300683 98300700 64300052
+                  64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251
+                  98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696 98300736
+                  98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520
+                  64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155 64300215
+                  64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237 98300298
+                  98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066 64300094
+                  64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498 98200627
+                  98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075 64300113
+                  64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764 98300253
+                  98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802 64300338
+                  64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519 98300364
+                  98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514 64300631
+                  64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222 64300226
+                  98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362 98300052
+                  64300083 64300295 64300308 64300698 98300252 98300271 64300498 64300005 64300239
+                  98200766 98300383 98300432 98300501 98300516 64300081 64300327 64300686 98300500
+                  98300579 98300742 64300092 64300220 64300275 64300423 98300478 98300597 98300651
+                  64300144 64300162 64300410 64300426 64300559 64300663 64300710 98200209 98200587
+                  98200635 98300022 98300154 98300161 98300313 98300317 98300344 98300382 98300462
+                  98300515 98300656 98300740 98300744 64300004 64300158 64300203 64300221 64300276
+                  64300296 64300391 64300424 64300448 64300509 98200264 98200358 98200660 98200267
+                  98200447 98200513 98200803 98300029 98300061 98300130 98300310 98300328 98300438
+                  98300449 98300472 98300485 98300544 98300606 98300622 98300639 98300739 98300763
+                  98300786 64300064 64300151 64300243 64300272 64300330 64300340 64300363 64300386
+                  64300407 64300413 64300479 64300633 64300637 64300708 64300723 64300746 98300732
+                  98300762 64300022 64300025 64300053 64300060 64300062 64300111 64300133 64300159
+                  64300168 64300188 64300199 64300208 64300210 64300216 64300259 64300277 64300289
+                  64300320 98200057 98200223 64300376 64300402 64300416 64300432 64300434 64300592
+                  64300605 98300060 64300635 98300087 64300647 98300094 64300670 98300139 98300190
+                  64300761 98300219 98300235 98300249 98300260 98300295 98300394 98300529 98300543
+                  98300563 98300575 98300627 98300643 64300439 64300508 98300726 98300067 98300068
+                  98300761 64300023 64300667 64300031 64300046 98300192 98300209 64300706 64300073
+                  64300769 64300095 64300105 64300119 64300174 64300193 64300293 98300469 98200081
+                  98300479 64300344 98300567 98300568 64300395 98300581 98300729 98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.207D-18.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit5.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324
+                  98300395 98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775
+                  98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557
+                  64300648 64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351
+                  64300806 98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566
+                  98300642 98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310
+                  64300341 64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598
+                  98300629 98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209
+                  64300696 98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764
+                  98300253 98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338
+                  64300661 98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364
+                  98200658 98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300226
+                  98300291 98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388
+                  64300560 64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308
+                  64300371 64300698 98300252 64300047 64300138 64300498 98300024 98300301 64300036
+                  64300239 64300366 98200766 98300383 98300432 98300501 64300327 64300650 64300686
+                  98300500 98300579 98300742 64300092 64300220 64300275 64300423 64300581 98300030
+                  98300478 98300597 98300675 64300017 64300144 64300162 64300232 64300426 64300559
+                  64300663 64300710 98200587 98200635 98200685 98300022 98300154 98300161 98300223
+                  98300317 98300344 98300382 98300396 98300462 98300515 98300656 98300740 98300744
+                  98300760 64300102 64300203 64300221 64300276 64300296 64300377 64300391 64300421
+                  64300424 64300448 64300549 64300728 64300789 98200264 98200358 98300157 98200267
+                  98200505 98300122 98300130 98300328 98300340 98300438 98300485 98300539 98300544
+                  98300564 98300606 98300611 98300616 98300622 98300667 98300733 98300763 64300050
+                  64300056 64300063 64300132 64300186 64300243 64300272 64300292 64300340 64300372
+                  64300386 64300407 64300413 64300446 64300453 64300479 64300490 64300633 64300639
+                  64300708 64300741 64300746 64300779 98300732 98300748 98300806 64300025 64300053
+                  64300060 64300062 64300089 64300103 64300111 64300133 64300159 64300188 64300199
+                  64300216 64300259 64300277 64300303 64300313 64300320 64300322 98200153 64300358
+                  98200250 64300376 98200316 64300402 64300416 64300431 64300432 64300434 64300458
+                  64300592 64300605 98300060 64300635 98300087 64300645 98300104 64300670 64300683
+                  98300139 64300693 98300185 64300725 98300190 98300204 98300219 98300235 98300260
+                  98300319 98300394 98300439 98300445 98300466 98300529 98300543 98300546 98300563
+                  98300619 98300625 98300627 98300633 98300640 98300643 64300439 64300482 98300653
+                  64300508 98300067 98300068 98300077 98300761 98300799 64300023 64300031 64300046
+                  98300192 98300209 64300706 64300073 64300074 64300077 64300088 64300105 98300254
+                  64300119 98200081 64300305 64300344 98200408 98300567 98300568 98200506 64300395
+                  98300581 98300166
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700
+                  64300052 64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244
+                  98300251 98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696
+                  98300736 98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265
+                  64300520 64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155
+                  64300215 64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237
+                  98300298 98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066
+                  64300094 64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498
+                  98200627 98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075
+                  64300113 64300696 98300297 98300541 64300167 64300393 64300491 64300684 98300253
+                  98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802 64300338
+                  64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519 98300364
+                  98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514 64300631
+                  64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222 64300226
+                  98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362 98300052
+                  64300083 64300295 64300308 64300698 98300252 98300271 64300498 98300301 64300005
+                  64300239 98200766 98300383 98300432 98300501 98300516 64300081 64300327 64300686
+                  98300500 98300579 98300742 64300092 64300220 64300275 64300423 98300478 98300597
+                  98300651 64300144 64300162 64300410 64300426 64300559 64300710 98200209 98200587
+                  98200635 98300022 98300154 98300161 98300313 98300317 98300344 98300382 98300462
+                  98300515 98300656 98300740 98300744 64300004 64300139 64300158 64300203 64300221
+                  64300276 64300296 64300391 64300424 64300448 64300509 64300728 98200264 98200358
+                  98200660 98200267 98200447 98200513 98200803 98300029 98300061 98300130 98300310
+                  98300328 98300438 98300449 98300472 98300485 98300539 98300544 98300564 98300606
+                  98300622 98300639 98300739 98300763 98300786 64300064 64300151 64300243 64300272
+                  64300330 64300340 64300363 64300386 64300407 64300413 64300479 64300633 64300637
+                  64300723 64300746 98300732 98300762 64300022 64300025 64300053 64300060 64300062
+                  64300111 64300133 64300159 64300168 64300188 64300199 64300208 64300210 64300216
+                  64300259 64300277 64300289 64300320 98200057 98200223 64300376 64300402 64300416
+                  64300432 64300434 64300592 64300605 98300060 64300635 98300087 64300647 64300670
+                  98300139 98300185 98300190 64300761 98300219 98300235 98300249 98300260 98300295
+                  98300394 98300529 98300543 98300563 98300575 98300627 98300643 64300439 64300508
+                  98300726 98300067 98300068 98300761 64300023 64300667 64300031 64300046 98300192
+                  98300209 64300706 64300073 64300769 64300095 64300105 64300119 64300174 64300193
+                  64300293 98300469 98200081 98300479 64300344 98300567 98300568 64300395 98300581
+                  98300729 98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.121D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit6.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300744 64300754 64300773 98300243 98300244 98300251 98300324 98300395
+                  98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775 98300804
+                  64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557 64300648
+                  64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351 64300806
+                  98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566 98300642
+                  98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310 64300341
+                  64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598 98300629
+                  98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209 64300696
+                  98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764 98300253
+                  98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338 64300661
+                  98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364 98200658
+                  98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300226 98300291
+                  98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388 64300560
+                  64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308 64300371
+                  64300698 98300252 64300047 64300138 64300498 98300024 98300301 64300036 64300239
+                  64300366 98200766 98300383 98300432 98300501 64300327 64300650 64300686 98300500
+                  98300579 98300742 64300092 64300220 64300275 64300423 64300581 98300030 98300478
+                  98300597 98300675 64300017 64300144 64300162 64300232 64300426 64300559 64300710
+                  98200587 98200635 98200685 98300022 98300154 98300161 98300223 98300317 98300344
+                  98300382 98300396 98300462 98300515 98300570 98300656 98300740 98300744 98300760
+                  64300102 64300203 64300221 64300276 64300296 64300377 64300391 64300421 64300424
+                  64300448 64300549 64300728 64300789 98200264 98200358 98300157 98200267 98200505
+                  98300122 98300130 98300328 98300340 98300438 98300485 98300539 98300544 98300606
+                  98300611 98300616 98300622 98300667 98300733 98300763 64300050 64300056 64300063
+                  64300132 64300186 64300243 64300256 64300272 64300292 64300340 64300372 64300386
+                  64300407 64300413 64300446 64300453 64300479 64300633 64300639 64300708 64300741
+                  64300746 64300779 98300732 98300748 98300806 64300025 64300053 64300060 64300062
+                  64300089 64300103 64300111 64300133 64300159 64300188 64300199 64300216 64300259
+                  64300277 64300303 64300313 64300320 64300322 98200153 64300358 98200250 64300376
+                  98200316 64300402 64300416 64300431 64300432 64300434 64300458 64300592 64300605
+                  98300060 64300635 98300087 64300645 98300094 98300104 64300670 64300683 98300139
+                  64300693 98300185 64300725 98300190 98300204 98300219 98300235 98300260 98300319
+                  98300394 98300439 98300466 98300529 98300543 98300546 98300563 98300619 98300625
+                  98300627 98300633 98300640 98300643 64300439 64300482 98300653 64300508 98300067
+                  98300068 98300077 98300761 98300799 64300023 64300031 64300046 98300192 98300209
+                  64300706 64300073 64300074 64300077 64300088 64300105 98300254 64300119 64300302
+                  64300305 64300344 98200408 98300567 98300568 98200506 64300395 98300581 98300144
+                  98300166
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700
+                  64300052 64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244
+                  98300251 98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696
+                  98300736 98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265
+                  64300520 64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155
+                  64300215 64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237
+                  98300298 98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066
+                  64300094 64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498
+                  98200627 98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075
+                  64300113 64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764
+                  98300253 98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802
+                  64300338 64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519
+                  98300364 98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514
+                  64300631 64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222
+                  64300226 98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362
+                  98300052 64300083 64300295 64300308 64300698 98300252 98300271 64300498 98300301
+                  64300005 64300239 98200766 98300383 98300432 98300516 64300081 64300327 64300686
+                  98300500 98300579 98300742 64300092 64300220 64300275 64300423 98300478 98300597
+                  98300651 64300144 64300162 64300410 64300426 64300559 64300663 64300710 98200209
+                  98200587 98200635 98300022 98300154 98300161 98300313 98300317 98300344 98300382
+                  98300515 98300656 98300740 98300744 64300004 64300139 64300158 64300203 64300221
+                  64300276 64300296 64300391 64300424 64300448 64300509 64300728 98200264 98200358
+                  98200660 98200267 98200447 98200513 98200803 98300029 98300061 98300130 98300310
+                  98300328 98300438 98300449 98300472 98300485 98300539 98300544 98300564 98300606
+                  98300622 98300639 98300739 98300763 98300786 64300064 64300151 64300243 64300272
+                  64300330 64300340 64300363 64300386 64300407 64300413 64300479 64300633 64300637
+                  64300708 64300723 64300746 98300732 98300762 64300022 64300025 64300053 64300060
+                  64300062 64300111 64300133 64300159 64300168 64300188 64300199 64300208 64300210
+                  64300216 64300259 64300277 64300289 64300320 98200057 98200223 64300376 64300402
+                  64300416 64300432 64300434 64300592 64300605 98300060 64300635 98300087 64300647
+                  98300094 64300670 98300139 98300185 98300190 64300761 98300219 98300235 98300249
+                  98300260 98300295 98300394 98300529 98300543 98300563 98300627 98300643 64300439
+                  64300508 98300726 98300067 98300068 98300761 64300023 64300667 64300031 64300046
+                  98300192 98300209 64300706 64300073 64300769 64300095 64300105 64300119 64300193
+                  64300293 98300469 98200081 98300479 64300344 98300567 98300568 64300395 98300581
+                  98300729 98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE MODEL ESTIMATION DID NOT TERMINATE NORMALLY DUE TO AN ILL-CONDITIONED
+     FISHER INFORMATION MATRIX.  CHANGE YOUR MODEL AND/OR STARTING VALUES.
+
+     THE MODEL ESTIMATION DID NOT TERMINATE NORMALLY DUE TO A NON-POSITIVE
+     DEFINITE FISHER INFORMATION MATRIX.  THIS MAY BE DUE TO THE STARTING VALUES
+     BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE CONDITION
+     NUMBER IS       0.730D-11.
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES COULD NOT BE
+     COMPUTED.  THIS IS OFTEN DUE TO THE STARTING VALUES BUT MAY ALSO BE
+     AN INDICATION OF MODEL NONIDENTIFICATION.  CHANGE YOUR MODEL AND/OR
+     STARTING VALUES.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 50, %BETWEEN%: FLIT ON FLFAMILY
+
+
+Errors for replication with data file C:\Users\tctan\finlit7.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324
+                  98300395 98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775
+                  98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557
+                  64300648 64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351
+                  64300806 98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566
+                  98300642 98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310
+                  64300341 64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598
+                  98300629 98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209
+                  64300696 98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764
+                  98300253 98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338
+                  64300661 98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364
+                  98200658 98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300291
+                  98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388 64300560
+                  64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308 64300371
+                  64300698 98300252 64300047 64300138 64300498 98300024 64300036 64300239 64300366
+                  98200766 98300383 98300432 64300327 64300650 64300686 98300500 98300579 98300742
+                  64300092 64300220 64300275 64300423 64300581 98300030 98300478 98300597 98300675
+                  64300017 64300144 64300232 64300426 64300559 64300663 64300710 98200587 98200635
+                  98200685 98300022 98300154 98300161 98300317 98300344 98300382 98300396 98300462
+                  98300515 98300570 98300656 98300740 98300744 98300760 64300203 64300221 64300276
+                  64300296 64300377 64300391 64300421 64300424 64300448 64300549 64300728 64300789
+                  98200264 98200358 98300157 98200267 98200505 98300122 98300130 98300328 98300340
+                  98300438 98300485 98300539 98300544 98300564 98300606 98300611 98300616 98300622
+                  98300667 98300733 98300763 64300050 64300056 64300132 64300186 64300243 64300256
+                  64300272 64300292 64300340 64300372 64300386 64300407 64300413 64300446 64300453
+                  64300479 64300490 64300633 64300639 64300708 64300741 64300746 64300779 98300732
+                  98300748 98300806 64300025 64300053 64300060 64300062 64300089 64300103 64300111
+                  64300133 64300159 64300188 64300199 64300216 64300259 64300277 64300303 64300313
+                  64300320 64300322 98200153 64300358 98200250 64300376 98200316 64300402 64300416
+                  64300431 64300432 64300434 64300458 64300592 64300605 98300060 64300635 98300087
+                  64300645 98300094 98300104 64300670 64300683 98300139 64300693 98300185 64300725
+                  98300190 98300204 98300219 98300235 98300260 98300319 98300394 98300439 98300445
+                  98300466 98300529 98300543 98300546 98300563 98300619 98300625 98300627 98300633
+                  98300640 98300643 64300439 64300482 98300653 64300508 98300067 98300068 98300077
+                  98300761 98300799 64300023 64300031 64300046 98300192 98300209 64300706 64300073
+                  64300074 64300077 64300088 64300105 98300254 64300119 64300302 98200081 64300305
+                  64300344 98200408 98300567 98300568 98200506 64300395 98300581 98300144 98300166
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700
+                  64300052 64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244
+                  98300251 98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696
+                  98300736 98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265
+                  64300520 64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155
+                  64300215 64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237
+                  98300298 98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066
+                  64300094 64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498
+                  98200627 98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075
+                  64300113 64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764
+                  98300253 98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802
+                  64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519 98300364
+                  98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514 64300631
+                  64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222 64300226
+                  98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362 98300052
+                  64300083 64300295 64300308 64300698 98300252 98300271 64300498 98300301 64300239
+                  98200766 98300383 98300432 98300501 98300516 64300081 64300327 64300686 98300500
+                  98300579 98300742 64300092 64300220 64300275 64300423 98300478 98300597 98300651
+                  64300144 64300162 64300410 64300426 64300559 64300663 64300710 98200209 98200587
+                  98200635 98300022 98300154 98300161 98300313 98300317 98300344 98300382 98300462
+                  98300515 98300656 98300740 98300744 64300004 64300139 64300158 64300203 64300221
+                  64300276 64300296 64300391 64300424 64300448 64300509 64300728 98200264 98200358
+                  98200660 98200267 98200447 98200513 98200803 98300029 98300061 98300130 98300310
+                  98300438 98300449 98300472 98300485 98300539 98300544 98300564 98300606 98300622
+                  98300639 98300739 98300763 98300786 64300064 64300151 64300243 64300272 64300330
+                  64300340 64300363 64300386 64300407 64300413 64300479 64300633 64300637 64300708
+                  64300723 64300746 98300732 98300762 64300022 64300025 64300053 64300060 64300062
+                  64300111 64300133 64300159 64300168 64300188 64300199 64300208 64300210 64300259
+                  64300277 64300289 64300320 98200057 64300376 64300402 64300416 64300432 64300434
+                  64300592 64300605 98300060 64300635 98300087 64300647 98300094 64300670 98300139
+                  98300185 98300190 64300761 98300219 98300235 98300249 98300260 98300295 98300394
+                  98300529 98300543 98300563 98300575 98300627 98300643 64300439 64300508 98300726
+                  98300067 98300068 98300761 64300023 64300667 64300031 64300046 98300192 98300209
+                  64300706 64300073 64300769 64300095 64300105 64300119 64300174 64300193 64300293
+                  98300469 98200081 98300479 64300344 98300567 98300568 64300395 98300581 98300729
+                  98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.697D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 41, %WITHIN%: ESCS
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit8.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324
+                  98300395 98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775
+                  98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557
+                  64300648 64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351
+                  64300806 98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566
+                  98300642 98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310
+                  64300341 64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598
+                  98300629 98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209
+                  64300696 98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764
+                  98300253 98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338
+                  64300661 98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364
+                  98200658 98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300226
+                  98300291 98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388
+                  64300560 64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308
+                  64300371 64300698 98300252 64300047 64300138 64300498 98300024 98300301 64300036
+                  64300239 64300366 98200766 98300383 98300432 98300501 64300327 64300650 64300686
+                  98300500 98300579 98300742 64300092 64300220 64300275 64300423 64300581 98300030
+                  98300478 98300597 98300675 64300017 64300144 64300162 64300232 64300426 64300559
+                  64300663 64300710 98200587 98200635 98200685 98300022 98300154 98300161 98300223
+                  98300317 98300344 98300382 98300396 98300462 98300515 98300570 98300656 98300740
+                  98300744 98300760 64300102 64300203 64300221 64300276 64300296 64300377 64300391
+                  64300421 64300424 64300448 64300549 64300728 64300789 98200264 98200358 98300157
+                  98200267 98200505 98300122 98300130 98300328 98300340 98300438 98300485 98300539
+                  98300544 98300564 98300606 98300611 98300616 98300622 98300667 98300733 98300763
+                  64300050 64300056 64300063 64300132 64300186 64300243 64300256 64300272 64300292
+                  64300340 64300372 64300386 64300407 64300413 64300446 64300453 64300479 64300490
+                  64300633 64300639 64300708 64300741 64300746 64300779 98300732 98300748 98300806
+                  64300025 64300053 64300060 64300062 64300103 64300111 64300133 64300159 64300188
+                  64300199 64300216 64300259 64300277 64300303 64300313 64300320 64300322 98200153
+                  64300358 98200250 64300376 98200316 64300402 64300416 64300431 64300432 64300434
+                  64300458 64300592 64300605 98300060 64300635 98300087 64300645 98300094 98300104
+                  64300670 64300683 98300139 64300693 98300185 64300725 98300190 98300204 98300219
+                  98300235 98300260 98300319 98300394 98300439 98300445 98300466 98300529 98300543
+                  98300546 98300563 98300619 98300625 98300627 98300633 98300640 98300643 64300439
+                  64300482 98300653 64300508 98300067 98300068 98300761 98300799 64300023 64300031
+                  64300046 98300192 98300209 64300706 64300073 64300074 64300077 64300088 64300105
+                  98300254 64300119 64300302 98200081 64300305 64300344 98200408 98300567 98300568
+                  98200506 64300395 98300581 98300144 98300166
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700
+                  64300052 64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244
+                  98300251 98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696
+                  98300736 98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265
+                  64300520 64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155
+                  64300215 64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237
+                  98300298 98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066
+                  64300094 64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498
+                  98200627 98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075
+                  64300113 64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764
+                  98300253 98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802
+                  64300338 64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519
+                  98300364 98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514
+                  64300631 64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222
+                  64300226 98300384 64300169 64300560 64300687 64300749 98300070 98200362 98300052
+                  64300083 64300295 64300308 64300698 98300252 98300271 64300498 98300301 64300005
+                  64300239 98200766 98300383 98300432 98300501 64300081 64300327 64300686 98300500
+                  98300579 98300742 64300092 64300220 64300275 64300423 98300478 98300597 98300651
+                  64300144 64300162 64300410 64300426 64300559 64300663 64300710 98200209 98200587
+                  98200635 98300022 98300154 98300161 98300313 98300317 98300344 98300382 98300462
+                  98300515 98300656 98300740 98300744 64300004 64300158 64300203 64300221 64300276
+                  64300296 64300391 64300424 64300448 64300509 64300728 98200264 98200358 98200660
+                  98200267 98200447 98200513 98200803 98300029 98300061 98300130 98300310 98300328
+                  98300438 98300449 98300472 98300485 98300539 98300544 98300564 98300606 98300622
+                  98300639 98300739 98300763 98300786 64300064 64300151 64300243 64300272 64300330
+                  64300340 64300363 64300386 64300407 64300413 64300479 64300633 64300637 64300708
+                  64300723 64300746 98300732 98300762 64300022 64300025 64300053 64300060 64300062
+                  64300111 64300133 64300159 64300188 64300199 64300208 64300210 64300216 64300259
+                  64300277 64300289 64300320 98200057 98200223 64300376 64300402 64300416 64300432
+                  64300434 64300592 64300605 98300060 64300635 98300087 64300647 98300094 64300670
+                  98300139 98300185 98300190 64300761 98300219 98300235 98300249 98300260 98300295
+                  98300394 98300529 98300543 98300563 98300575 98300627 98300643 64300439 64300508
+                  98300726 98300067 98300068 98300761 64300023 64300667 64300031 64300046 98300192
+                  98300209 64300706 64300073 64300769 64300095 64300105 64300119 64300174 64300193
+                  64300293 98300469 98200081 98300479 64300344 98300567 98300568 64300395 98300581
+                  98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.223D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 41, %WITHIN%: ESCS
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit9.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300293 98300349
+                  98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300 64300354
+                  64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324 98300395
+                  98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775 98300804
+                  64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557 64300648
+                  64300666 98200647 98300048 98300064 98300155 64300215 64300257 64300351 64300806
+                  98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566 98300642
+                  98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310 64300341
+                  64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598 98300629
+                  98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209 64300696
+                  98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764 98300253
+                  98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338 98300517
+                  98300518 98300553 98300709 64300343 98300100 64300519 98300364 98200658 98300015
+                  64300355 98300132 64300478 64300523 64300632 64300660 98300226 98300291 98300464
+                  98300719 64300222 64300662 98300384 98300443 98300614 64300388 64300560 64300749
+                  98200462 98200637 98300070 98300052 98300758 64300083 64300308 64300371 64300698
+                  98300252 64300047 64300138 64300498 98300024 98300301 64300036 64300239 64300366
+                  98200766 98300383 98300432 98300501 64300327 64300650 64300686 98300500 98300579
+                  98300742 64300092 64300220 64300275 64300423 64300581 98300030 98300478 98300597
+                  98300675 64300017 64300144 64300162 64300232 64300426 64300559 64300663 64300710
+                  98200587 98200635 98200685 98300022 98300154 98300161 98300223 98300317 98300344
+                  98300382 98300396 98300462 98300515 98300570 98300656 98300740 98300744 98300760
+                  64300102 64300203 64300221 64300296 64300377 64300391 64300421 64300424 64300448
+                  64300549 64300728 64300789 98200264 98200358 98300157 98200267 98200505 98300122
+                  98300130 98300328 98300340 98300438 98300485 98300544 98300564 98300606 98300611
+                  98300616 98300622 98300667 98300733 98300763 64300050 64300056 64300063 64300132
+                  64300186 64300243 64300256 64300272 64300292 64300340 64300372 64300386 64300407
+                  64300413 64300446 64300479 64300490 64300633 64300639 64300708 64300741 64300746
+                  64300779 98300732 98300748 98300806 64300025 64300053 64300060 64300062 64300089
+                  64300103 64300111 64300133 64300159 64300188 64300199 64300216 64300259 64300277
+                  64300303 64300313 64300320 64300322 98200153 64300358 98200250 64300376 98200316
+                  64300402 64300416 64300431 64300432 64300434 64300458 64300592 64300605 98300060
+                  64300635 98300087 64300645 98300094 98300104 64300670 64300683 98300139 64300693
+                  98300185 64300725 98300190 98300204 98300219 98300235 98300260 98300319 98300394
+                  98300439 98300445 98300466 98300529 98300543 98300546 98300563 98300619 98300625
+                  98300627 98300633 98300640 98300643 64300439 64300482 98300653 64300508 98300067
+                  98300068 98300077 98300761 98300799 64300023 64300031 64300046 98300192 98300209
+                  64300706 64300073 64300074 64300077 64300088 64300105 98300254 64300119 64300302
+                  98200081 64300305 64300344 98200408 98300567 98300568 98200506 64300395 98300581
+                  98300144 98300166
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700
+                  64300052 64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244
+                  98300251 98300324 98300395 98300433 98300458 98300506 98300594 98300609 98300696
+                  98300736 98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265
+                  64300520 64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155
+                  64300215 64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237
+                  98300298 98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066
+                  64300094 64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498
+                  98200627 98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075
+                  64300113 64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764
+                  98300253 98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802
+                  64300338 64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519
+                  98300364 98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514
+                  64300631 64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222
+                  64300226 98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362
+                  98300052 64300083 64300295 64300308 64300698 98300252 98300271 64300498 98300301
+                  64300005 64300239 98200766 98300383 98300432 98300501 98300516 64300081 64300327
+                  64300686 98300500 98300579 98300742 64300092 64300220 64300275 64300423 98300478
+                  98300597 64300144 64300162 64300410 64300426 64300559 64300710 98200209 98200587
+                  98200635 98300022 98300154 98300161 98300313 98300317 98300344 98300382 98300462
+                  98300515 98300656 98300740 64300004 64300158 64300203 64300276 64300296 64300391
+                  64300424 64300448 64300509 64300728 98200264 98200358 98200267 98200447 98200513
+                  98200803 98300061 98300130 98300310 98300328 98300438 98300449 98300472 98300485
+                  98300539 98300544 98300564 98300606 98300622 98300739 98300763 98300786 64300064
+                  64300151 64300243 64300272 64300330 64300340 64300363 64300386 64300407 64300413
+                  64300479 64300633 64300637 64300723 64300746 98300732 98300762 64300022 64300025
+                  64300053 64300060 64300062 64300111 64300133 64300159 64300188 64300199 64300208
+                  64300210 64300216 64300259 64300277 64300289 64300320 98200057 98200223 64300376
+                  64300402 64300416 64300432 64300434 64300592 98300060 64300635 98300087 64300647
+                  98300094 64300670 98300139 98300185 98300190 64300761 98300219 98300235 98300249
+                  98300260 98300295 98300394 98300529 98300543 98300563 98300575 98300627 98300643
+                  64300439 64300508 98300726 98300067 98300068 98300761 64300023 64300667 64300031
+                  64300046 98300192 98300209 64300706 64300073 64300769 64300095 64300105 64300193
+                  64300293 98300469 98200081 98300479 64300344 98300567 98300568 64300395 98300581
+                  98300729 98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS       0.438D-16.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 40, %WITHIN%: ESCS WITH IMMI2GEN
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+Errors for replication with data file C:\Users\tctan\finlit10.dat:
+
+*** WARNING
+  One or more individual-level variables have no variation within a
+  cluster for the following clusters.
+
+     Variable   Cluster IDs with no within-cluster variation
+
+      FCFMLRTY    64300493 64300585 98300736
+      FLCONFIN    98300137 98300162 98300386 64300763
+      FLSCHOOL    98300162 98300426 98300779 64300306 64300540 64300763
+      NOBULLY     98200364 98300074 98300137 98300162 98300171 98300285 98300365 98300413 64300480
+                  64300540 64300585 64300674 64300744 98300251 98300696 64300520 64300648 64300351
+      FLFAMILY    98300211 98300803
+      IMMI1GEN    98200364 98300031 98300137 98300162 98300171 98300211 98300218 98300236 98300285
+                  98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621 98300779
+                  98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300540 64300585
+                  64300623 64300674 64300763 98200612 98300028 98300049 98300202 98300257 98300293
+                  98300349 98300392 98300499 98300657 98300683 98300700 98300717 64300052 64300300
+                  64300354 64300521 64300744 64300754 64300773 98300243 98300244 98300251 98300324
+                  98300395 98300433 98300458 98300594 98300609 98300696 98300706 98300736 98300775
+                  98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520 64300557
+                  64300648 64300666 98200647 98300048 98300064 64300215 64300257 64300351 64300806
+                  98300158 98300178 98300215 98300237 98300298 98300332 98300347 98300566 98300642
+                  98300681 98300352 98300677 98300697 64300066 64300094 64300291 64300310 64300341
+                  64300486 64300630 64300713 98200163 98200498 98200627 98300118 98300598 98300629
+                  98300669 98300705 64300394 64300501 98300045 98300117 64300075 64300209 64300696
+                  98300297 64300359 64300393 64300491 98200225 98200538 64300684 98200764 98300253
+                  98300353 98300496 64300677 98300323 98300514 98300802 64300130 64300338 64300661
+                  98300517 98300518 98300553 98300709 64300343 98300100 64300519 98300364 98200658
+                  98300015 64300355 98300132 64300478 64300523 64300632 64300660 98300226 98300291
+                  98300464 98300719 64300222 64300662 98300384 98300443 98300614 64300388 64300560
+                  64300749 98200462 98200637 98300070 98300052 98300758 64300083 64300308 64300371
+                  64300698 98300252 64300047 64300138 64300498 98300024 98300301 64300036 64300239
+                  64300366 98200766 98300383 98300432 98300501 64300327 64300650 64300686 98300500
+                  98300579 98300742 64300092 64300220 64300275 64300423 64300581 98300030 98300478
+                  98300597 64300144 64300162 64300232 64300426 64300559 64300663 64300710 98200587
+                  98200635 98200685 98300022 98300154 98300161 98300223 98300317 98300344 98300382
+                  98300396 98300462 98300515 98300570 98300656 98300740 98300744 98300760 64300102
+                  64300203 64300221 64300276 64300296 64300377 64300391 64300421 64300424 64300448
+                  64300549 64300728 64300789 98200264 98200358 98300157 98200267 98200505 98300122
+                  98300130 98300328 98300340 98300438 98300485 98300539 98300544 98300564 98300606
+                  98300611 98300616 98300622 98300667 98300733 98300763 64300050 64300056 64300063
+                  64300132 64300186 64300243 64300256 64300272 64300292 64300340 64300372 64300386
+                  64300407 64300413 64300446 64300453 64300479 64300490 64300633 64300639 64300708
+                  64300741 64300746 64300779 98300732 98300748 98300806 64300025 64300053 64300060
+                  64300062 64300089 64300103 64300111 64300133 64300159 64300188 64300199 64300216
+                  64300259 64300277 64300303 64300313 64300320 64300322 98200153 64300358 98200250
+                  64300376 98200316 64300402 64300416 64300431 64300432 64300434 64300458 64300592
+                  64300605 98300060 64300635 98300087 64300645 98300094 98300104 64300670 64300683
+                  98300139 64300693 98300185 64300725 98300190 98300204 98300219 98300235 98300260
+                  98300319 98300394 98300439 98300445 98300466 98300529 98300543 98300546 98300563
+                  98300619 98300625 98300627 98300633 98300640 64300439 64300482 98300653 64300508
+                  98300067 98300068 98300077 98300761 98300799 64300023 64300031 64300046 98300192
+                  98300209 64300706 64300073 64300074 64300077 64300088 64300105 98300254 64300119
+                  64300302 98200081 64300305 64300344 98200408 98300567 98300568 98200506 64300395
+                  98300581 98300144
+      IMMI2GEN    98200364 98300031 98300074 98300137 98300162 98300171 98300211 98300218 98300236
+                  98300285 98300365 98300386 98300413 98300426 98300489 98300523 98300549 98300621
+                  98300779 98300803 98300805 64300136 64300148 64300306 64300480 64300493 64300539
+                  64300540 64300585 64300623 64300674 64300763 98200612 98300028 98300049 98300153
+                  98300202 98300257 98300293 98300349 98300392 98300499 98300657 98300683 98300700
+                  64300052 64300300 64300354 64300521 64300744 64300754 64300773 98300243 98300244
+                  98300251 98300324 98300395 98300458 98300506 98300594 98300609 98300696 98300736
+                  98300775 98300804 64300123 64300129 64300145 64300146 64300254 64300265 64300520
+                  64300557 64300648 64300666 98200647 98300048 98300064 98300083 98300155 64300215
+                  64300257 64300351 64300806 98300093 98300158 98300178 98300215 98300237 98300298
+                  98300332 98300347 98300566 98300642 98300681 98300352 98300677 64300066 64300094
+                  64300291 64300310 64300341 64300486 64300507 64300630 64300713 98200498 98200627
+                  98300598 98300629 98300669 64300394 64300501 98300045 98300117 64300075 64300113
+                  64300696 98300297 98300541 64300167 64300393 64300491 64300684 98200764 98300253
+                  98300353 98300429 98300496 98200717 98300017 98300323 98300514 98300802 64300338
+                  64300595 64300661 98300517 98300553 98300709 64300278 64300343 64300519 98300364
+                  98300759 98200658 98300015 64300355 64300362 98300132 64300478 98200514 64300631
+                  64300632 64300660 98300226 98300291 98300464 64300042 98300719 64300222 64300226
+                  98300384 64300169 64300388 64300560 64300687 64300749 98300070 98200362 98300052
+                  64300083 64300295 64300308 64300698 98300252 98300271 64300498 98300301 64300005
+                  64300239 98200766 98300383 98300432 98300501 98300516 64300081 64300327 64300686
+                  98300500 98300579 98300742 64300092 64300220 64300275 64300423 98300478 98300597
+                  98300651 64300144 64300162 64300410 64300426 64300559 64300710 98200209 98200587
+                  98200635 98300022 98300154 98300161 98300313 98300317 98300344 98300382 98300462
+                  98300515 98300656 98300740 98300744 64300004 64300139 64300158 64300203 64300221
+                  64300276 64300296 64300391 64300424 64300448 64300509 64300728 98200264 98200358
+                  98200660 98200267 98200447 98200513 98200803 98300029 98300061 98300130 98300310
+                  98300328 98300438 98300449 98300472 98300485 98300539 98300544 98300564 98300606
+                  98300622 98300639 98300739 98300763 98300786 64300064 64300151 64300243 64300272
+                  64300330 64300340 64300363 64300386 64300407 64300413 64300479 64300633 64300637
+                  64300708 64300723 64300746 98300732 98300762 64300022 64300053 64300060 64300062
+                  64300111 64300133 64300159 64300168 64300188 64300199 64300208 64300210 64300259
+                  64300277 64300289 64300320 98200057 98200223 64300376 64300402 64300416 64300432
+                  64300434 64300592 64300605 98300060 64300635 98300087 64300647 98300094 64300670
+                  98300139 98300185 98300190 64300761 98300219 98300235 98300249 98300260 98300295
+                  98300394 98300529 98300543 98300563 98300575 98300627 98300643 64300439 64300508
+                  98300726 98300067 98300068 98300761 64300023 64300667 64300031 64300046 98300192
+                  98300209 64300706 64300073 64300769 64300095 64300105 64300119 64300193 64300293
+                  98300469 98200081 98300479 64300344 98300567 98300568 64300395 98300581 98300729
+                  98300166
+      MALE        98300162 98300211 98300236 98300285 98300365 98300426 98300523 98300621 98300779
+                  98300805 64300136 64300480 64300539 64300540 64300674 98300028 98300392 98300499
+                  98300244 98300696 64300129 64300094 98200163 98300118 98300045 98300154
+
+     THE MODEL ESTIMATION DID NOT TERMINATE NORMALLY DUE TO AN ILL-CONDITIONED
+     FISHER INFORMATION MATRIX.  CHANGE YOUR MODEL AND/OR STARTING VALUES.
+
+     THE MODEL ESTIMATION DID NOT TERMINATE NORMALLY DUE TO A NON-POSITIVE
+     DEFINITE FISHER INFORMATION MATRIX.  THIS MAY BE DUE TO THE STARTING VALUES
+     BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE CONDITION
+     NUMBER IS       0.133D-10.
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES COULD NOT BE
+     COMPUTED.  THIS IS OFTEN DUE TO THE STARTING VALUES BUT MAY ALSO BE
+     AN INDICATION OF MODEL NONIDENTIFICATION.  CHANGE YOUR MODEL AND/OR
+     STARTING VALUES.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 48, %BETWEEN%: FLIT ON FLSCHOOL
+
+
+
+     Beginning Time:  21:52:29
+        Ending Time:  21:58:43
+       Elapsed Time:  00:06:14
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2019 Muthen & Muthen

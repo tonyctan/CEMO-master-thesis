@@ -6,6 +6,7 @@ start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M2" mplus Two-saturated_233.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M2" mplus Two-saturated_246.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M2" mplus Two-saturated_268.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M2" mplus Two-saturated_360.inp
+start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M2" mplus Two-saturated_380.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M2" mplus Two-saturated_428.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M2" mplus Two-saturated_440.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M2" mplus Two-saturated_528.inp

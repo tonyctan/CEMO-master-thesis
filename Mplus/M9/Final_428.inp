@@ -1,0 +1,130 @@
+
+TITLE:
+    Two-level structured model 428
+
+DATA:
+    file = "C:\Users\tctan\implist.dat";
+
+    type = imputation;
+
+
+VARIABLE:
+    names =
+        FKI CNTRYID CNTSCHID W_STU
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
+        ;
+
+    useobs = CNTRYID eq 428;          ! Pull out one country at a time
+
+    usevar =
+        FLIT                                ! PISA achievement variables
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        EDUSHORT STRATIO                    !   Lat var "Inst env"
+        FCFMLRTY FLCONFIN                   ! Affect
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        ;
+
+    ! Vars that ONLY appear in L1
+    within =
+        FCFMLRTY FLCONFIN                   ! Affective vars
+        MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
+        ;
+
+    ! Vars that ONLY appear in L2
+    between =
+        EDUSHORT STRATIO                    ! L2: school
+        ;
+
+    weight = W_STU;                         ! Student weight
+    wtscale = cluster;                      ! Scale L1 weight to cluster size
+    bweight = W_SCH;                        ! School weight
+    bwtscale = sample;                      ! Scale L2 weight to sample
+
+    cluster = CNTSCHID;                     ! Cluster by school ID
+
+
+ANALYSIS:
+    processors = 4;
+
+    type = twolevel;
+
+
+MODEL:
+
+%Within%                                    ! === L1: Student-level ===
+
+    ! Indirect pathways (1st half): school climate vars onto mediators
+        ! Onto mediator FAMILIARITY
+    FCFMLRTY on
+        FLSCHOOL NOBULLY FLFAMILY
+        MALE IMMI2GEN ESCS
+        ;
+        ! Onto mediator CONFIDENCE
+    FLCONFIN on
+        FLSCHOOL NOBULLY FLFAMILY
+        MALE IMMI2GEN ESCS
+        ;
+
+    ! Total effect
+    FLIT on
+        ! Direct pathways: school climate vars onto financial literacy
+        FLSCHOOL NOBULLY FLFAMILY
+        ! Indirect pathways (2nd half): affective vars onto financial literacy
+        FCFMLRTY FLCONFIN
+        ! Control vars (demographic info)
+        IMMI1GEN ESCS
+        ;
+
+    ! Covariances
+        ! Between school climate vars
+    FLSCHOOL with NOBULLY;
+    FLSCHOOL with FLFAMILY;
+    NOBULLY with FLFAMILY;
+        ! Between mediators
+    FCFMLRTY with FLCONFIN;
+
+    ! Covariances suggested by modification indices
+        ! ESCS with FLSCHOOL
+    ESCS with FLSCHOOL;
+        ! ESCS with FLFAMILY
+    ESCS with FLFAMILY;
+        ! ESCS with IMMI1GEN and IMMI2GEN
+    ESCS with IMMI1GEN IMMI2GEN;
+
+%Between%                                   ! === L2: School-level ===
+
+    FLIT on
+        FLSCHOOL NOBULLY FLFAMILY EDUSHORT  ! School climate variables
+        STRATIO                             ! Control: Student-teacher ratio
+        ;
+
+    FLSCHOOL with NOBULLY;
+    NOBULLY with FLFAMILY;
+    FLFAMILY with EDUSHORT;
+
+    FLSCHOOL with FLFAMILY;
+    NOBULLY with EDUSHORT;
+
+    FLSCHOOL with EDUSHORT;
+
+
+MODEL INDIRECT:
+
+    ! Indirect effects
+    FLIT ind FLSCHOOL;
+    FLIT ind NOBULLY;
+    FLIT ind FLFAMILY;
+
+
+OUTPUT:
+    stdyx                                   ! Fully standardised solution
+    ;

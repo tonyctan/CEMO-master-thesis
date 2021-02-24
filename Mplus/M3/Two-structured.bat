@@ -6,6 +6,7 @@ start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M3" mplus Two-structured_233.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M3" mplus Two-structured_246.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M3" mplus Two-structured_268.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M3" mplus Two-structured_360.inp
+start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M3" mplus Two-structured_380.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M3" mplus Two-structured_428.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M3" mplus Two-structured_440.inp
 start "" /d "M:\pc\Dokumenter\MSc\Thesis\Mplus\M3" mplus Two-structured_528.inp
