@@ -1,6 +1,6 @@
 Mplus VERSION 8.3
 MUTHEN & MUTHEN
-02/23/2021  11:05 PM
+02/26/2021  12:23 PM
 
 INPUT INSTRUCTIONS
 
@@ -8,10 +8,12 @@ INPUT INSTRUCTIONS
   TITLE:
       One-level for all countries
 
+
   DATA:
       file = "C:\Users\tctan\implist.dat";
 
       type = imputation;
+
 
   VARIABLE:
       names =
@@ -35,9 +37,7 @@ INPUT INSTRUCTIONS
           MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
           ;
 
-
       weight = W_STU;                         ! Student weight
-
 
   ANALYSIS:
       processors = 4;
@@ -49,46 +49,43 @@ INPUT INSTRUCTIONS
 
       ! Indirect pathways (1st half): school climate vars onto mediators
           ! Onto mediator FAMILIARITY
-      FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY
-          MALE IMMI2GEN ESCS
-          ;
+      FCFMLRTY on FLSCHOOL FLFAMILY NOBULLY ESCS IMMI2GEN MALE;
           ! Onto mediator CONFIDENCE
-      FLCONFIN on FLSCHOOL NOBULLY FLFAMILY
-          MALE IMMI2GEN ESCS
-          ;
+      FLCONFIN on FLSCHOOL FLFAMILY NOBULLY ESCS IMMI2GEN MALE;
 
       ! Total effect
       FLIT on
-          ! Direct pathways: school climate vars onto financial literacy
-          FLSCHOOL NOBULLY FLFAMILY
           ! Indirect pathways (2nd half): affective vars onto financial literacy
           FCFMLRTY FLCONFIN
-          ! Control vars (demographic info)
-          IMMI1GEN ESCS
+          ! Direct pathways: school climate vars onto financial literacy
+          FLSCHOOL FLFAMILY NOBULLY
+          ! Dmographic vars
+          ESCS IMMI1GEN
           ;
 
       ! Covariances
           ! Between school climate vars
-      FLSCHOOL with NOBULLY;
       FLSCHOOL with FLFAMILY;
-      NOBULLY with FLFAMILY;
+      FLFAMILY with NOBULLY;
+      FLSCHOOL with NOBULLY;
+
           ! Between mediators
       FCFMLRTY with FLCONFIN;
 
-      ! Covariances suggested by modification indices
-          ! ESCS with FLSCHOOL
-      ESCS with FLSCHOOL;
-          ! ESCS with FLFAMILY
-      ESCS with FLFAMILY;
-          ! ESCS with IMMI1GEN and IMMI2GEN
+          ! SES with school climate vars
+      ESCS with FLSCHOOL FLFAMILY;
+          ! SES with demographic vars
       ESCS with IMMI1GEN IMMI2GEN;
 
   MODEL INDIRECT:
-
   ! Indirect effects
       FLIT ind FLSCHOOL;
-      FLIT ind NOBULLY;
       FLIT ind FLFAMILY;
+      FLIT ind NOBULLY;
+
+      FLIT ind ESCS;
+      FLIT ind IMMI2GEN;
+      FLIT ind MALE;
 
 
   OUTPUT:
@@ -453,42 +450,42 @@ MODEL RESULTS
 
  FCFMLRTY ON
     FLSCHOOL           1.318      0.040     32.982      0.000      0.077
-    NOBULLY            0.317      0.038      8.303      0.000      0.103
     FLFAMILY           0.538      0.039     13.766      0.000      0.084
-    MALE               0.185      0.077      2.412      0.016      0.066
-    IMMI2GEN          -0.281      0.165     -1.706      0.088      0.139
+    NOBULLY            0.317      0.038      8.303      0.000      0.103
     ESCS               1.077      0.032     33.934      0.000      0.084
+    IMMI2GEN          -0.281      0.165     -1.706      0.088      0.139
+    MALE               0.185      0.077      2.412      0.016      0.066
 
  FLCONFIN ON
     FLSCHOOL           0.180      0.008     21.739      0.000      0.143
-    NOBULLY            0.000      0.008      0.043      0.966      0.161
     FLFAMILY           0.155      0.008     19.928      0.000      0.104
-    MALE               0.246      0.016     15.524      0.000      0.151
-    IMMI2GEN          -0.072      0.037     -1.963      0.050      0.156
+    NOBULLY            0.000      0.008      0.043      0.966      0.161
     ESCS               0.073      0.007     11.131      0.000      0.168
+    IMMI2GEN          -0.072      0.037     -1.963      0.050      0.156
+    MALE               0.246      0.016     15.524      0.000      0.151
 
  FLIT     ON
-    FLSCHOOL         -12.697      0.825    -15.392      0.000      0.285
-    NOBULLY            6.442      0.697      9.243      0.000      0.171
-    FLFAMILY          -1.176      0.737     -1.595      0.111      0.190
     FCFMLRTY           4.279      0.151     28.389      0.000      0.116
     FLCONFIN           1.190      0.847      1.406      0.160      0.258
-    IMMI1GEN           2.034      5.151      0.395      0.693      0.227
+    FLSCHOOL         -12.697      0.825    -15.392      0.000      0.285
+    FLFAMILY          -1.176      0.737     -1.595      0.111      0.190
+    NOBULLY            6.442      0.697      9.243      0.000      0.171
     ESCS              36.522      0.649     56.291      0.000      0.246
+    IMMI1GEN           2.034      5.151      0.395      0.693      0.227
 
  FLSCHOOL WITH
-    NOBULLY           -0.085      0.009     -9.021      0.000      0.083
     FLFAMILY           0.265      0.010     27.247      0.000      0.061
+    NOBULLY           -0.085      0.009     -9.021      0.000      0.083
     ESCS              -0.060      0.011     -5.269      0.000      0.075
 
- NOBULLY  WITH
-    FLFAMILY          -0.056      0.010     -5.722      0.000      0.102
+ FLFAMILY WITH
+    NOBULLY           -0.056      0.010     -5.722      0.000      0.102
+    ESCS               0.081      0.011      7.325      0.000      0.057
 
  FCFMLRTY WITH
     FLCONFIN           0.836      0.039     21.338      0.000      0.117
 
  ESCS     WITH
-    FLFAMILY           0.081      0.011      7.325      0.000      0.057
     IMMI1GEN           0.009      0.002      5.456      0.000      0.058
     IMMI2GEN           0.017      0.003      6.766      0.000      0.044
     NOBULLY            0.072      0.012      5.895      0.000      0.090
@@ -541,42 +538,42 @@ STDYX Standardization
 
  FCFMLRTY ON
     FLSCHOOL           0.257      0.008     33.428      0.000      0.075
-    NOBULLY            0.064      0.008      8.274      0.000      0.098
     FLFAMILY           0.106      0.008     13.831      0.000      0.081
-    MALE               0.017      0.007      2.413      0.016      0.065
-    IMMI2GEN          -0.013      0.007     -1.703      0.089      0.138
+    NOBULLY            0.064      0.008      8.274      0.000      0.098
     ESCS               0.256      0.008     33.524      0.000      0.097
+    IMMI2GEN          -0.013      0.007     -1.703      0.089      0.138
+    MALE               0.017      0.007      2.413      0.016      0.065
 
  FLCONFIN ON
     FLSCHOOL           0.188      0.009     21.983      0.000      0.136
-    NOBULLY            0.000      0.008      0.043      0.966      0.161
     FLFAMILY           0.164      0.008     20.209      0.000      0.106
-    MALE               0.122      0.008     15.786      0.000      0.143
-    IMMI2GEN          -0.017      0.009     -1.959      0.050      0.156
+    NOBULLY            0.000      0.008      0.043      0.966      0.161
     ESCS               0.093      0.008     11.199      0.000      0.168
+    IMMI2GEN          -0.017      0.009     -1.959      0.050      0.156
+    MALE               0.122      0.008     15.786      0.000      0.143
 
  FLIT     ON
-    FLSCHOOL          -0.126      0.008    -15.298      0.000      0.299
-    NOBULLY            0.066      0.007      9.295      0.000      0.162
-    FLFAMILY          -0.012      0.007     -1.595      0.111      0.191
     FCFMLRTY           0.217      0.007     30.092      0.000      0.085
     FLCONFIN           0.011      0.008      1.405      0.160      0.260
-    IMMI1GEN           0.003      0.008      0.394      0.693      0.228
+    FLSCHOOL          -0.126      0.008    -15.298      0.000      0.299
+    FLFAMILY          -0.012      0.007     -1.595      0.111      0.191
+    NOBULLY            0.066      0.007      9.295      0.000      0.162
     ESCS               0.441      0.007     63.155      0.000      0.206
+    IMMI1GEN           0.003      0.008      0.394      0.693      0.228
 
  FLSCHOOL WITH
-    NOBULLY           -0.075      0.008     -9.116      0.000      0.088
     FLFAMILY           0.236      0.008     29.086      0.000      0.073
+    NOBULLY           -0.075      0.008     -9.116      0.000      0.088
     ESCS              -0.044      0.008     -5.284      0.000      0.075
 
- NOBULLY  WITH
-    FLFAMILY          -0.048      0.008     -5.755      0.000      0.103
+ FLFAMILY WITH
+    NOBULLY           -0.048      0.008     -5.755      0.000      0.103
+    ESCS               0.059      0.008      7.368      0.000      0.055
 
  FCFMLRTY WITH
     FLCONFIN           0.176      0.008     21.925      0.000      0.135
 
  ESCS     WITH
-    FLFAMILY           0.059      0.008      7.368      0.000      0.055
     IMMI1GEN           0.045      0.008      5.633      0.000      0.059
     IMMI2GEN           0.056      0.008      6.874      0.000      0.048
     NOBULLY            0.052      0.009      5.946      0.000      0.090
@@ -661,6 +658,26 @@ Effects from FLSCHOOL to FLIT
     FLSCHOOL         -12.697      0.825    -15.392      0.000      0.285
 
 
+Effects from FLFAMILY to FLIT
+
+  Total                1.312      0.734      1.788      0.074      0.168
+  Total indirect       2.488      0.210     11.859      0.000      0.098
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLFAMILY           2.303      0.182     12.619      0.000      0.061
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLFAMILY           0.185      0.133      1.393      0.164      0.266
+
+  Direct
+    FLIT
+    FLFAMILY          -1.176      0.737     -1.595      0.111      0.190
+
+
 Effects from NOBULLY to FLIT
 
   Total                7.800      0.712     10.953      0.000      0.155
@@ -681,24 +698,56 @@ Effects from NOBULLY to FLIT
     NOBULLY            6.442      0.697      9.243      0.000      0.171
 
 
-Effects from FLFAMILY to FLIT
+Effects from ESCS to FLIT
 
-  Total                1.312      0.734      1.788      0.074      0.168
-  Total indirect       2.488      0.210     11.859      0.000      0.098
+  Total               41.219      0.652     63.176      0.000      0.290
+  Total indirect       4.697      0.215     21.801      0.000      0.160
 
   Specific indirect 1
     FLIT
     FCFMLRTY
-    FLFAMILY           2.303      0.182     12.619      0.000      0.061
+    ESCS               4.610      0.215     21.411      0.000      0.148
 
   Specific indirect 2
     FLIT
     FLCONFIN
-    FLFAMILY           0.185      0.133      1.393      0.164      0.266
+    ESCS               0.087      0.062      1.401      0.161      0.252
 
   Direct
     FLIT
-    FLFAMILY          -1.176      0.737     -1.595      0.111      0.190
+    ESCS              36.522      0.649     56.291      0.000      0.246
+
+
+Effects from IMMI2GEN to FLIT
+
+  Total               -1.288      0.712     -1.809      0.070      0.138
+  Total indirect      -1.288      0.712     -1.809      0.070      0.138
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    IMMI2GEN          -1.203      0.700     -1.718      0.086      0.136
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    IMMI2GEN          -0.085      0.073     -1.171      0.242      0.261
+
+
+Effects from MALE to FLIT
+
+  Total                1.086      0.377      2.877      0.004      0.068
+  Total indirect       1.086      0.377      2.877      0.004      0.068
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    MALE               0.793      0.330      2.403      0.016      0.067
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    MALE               0.293      0.208      1.407      0.159      0.259
 
 
 
@@ -730,6 +779,26 @@ Effects from FLSCHOOL to FLIT
     FLSCHOOL          -0.126      0.008    -15.298      0.000      0.299
 
 
+Effects from FLFAMILY to FLIT
+
+  Total                0.013      0.007      1.791      0.073      0.166
+  Total indirect       0.025      0.002     11.849      0.000      0.104
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    FLFAMILY           0.023      0.002     12.753      0.000      0.050
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    FLFAMILY           0.002      0.001      1.392      0.164      0.267
+
+  Direct
+    FLIT
+    FLFAMILY          -0.012      0.007     -1.595      0.111      0.191
+
+
 Effects from NOBULLY to FLIT
 
   Total                0.079      0.007     11.003      0.000      0.145
@@ -750,24 +819,56 @@ Effects from NOBULLY to FLIT
     NOBULLY            0.066      0.007      9.295      0.000      0.162
 
 
-Effects from FLFAMILY to FLIT
+Effects from ESCS to FLIT
 
-  Total                0.013      0.007      1.791      0.073      0.166
-  Total indirect       0.025      0.002     11.849      0.000      0.104
+  Total                0.497      0.007     73.951      0.000      0.261
+  Total indirect       0.057      0.003     22.281      0.000      0.158
 
   Specific indirect 1
     FLIT
     FCFMLRTY
-    FLFAMILY           0.023      0.002     12.753      0.000      0.050
+    ESCS               0.056      0.003     22.030      0.000      0.137
 
   Specific indirect 2
     FLIT
     FLCONFIN
-    FLFAMILY           0.002      0.001      1.392      0.164      0.267
+    ESCS               0.001      0.001      1.400      0.162      0.253
 
   Direct
     FLIT
-    FLFAMILY          -0.012      0.007     -1.595      0.111      0.191
+    ESCS               0.441      0.007     63.154      0.000      0.206
+
+
+Effects from IMMI2GEN to FLIT
+
+  Total               -0.003      0.002     -1.801      0.072      0.142
+  Total indirect      -0.003      0.002     -1.801      0.072      0.142
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    IMMI2GEN          -0.003      0.002     -1.710      0.087      0.139
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    IMMI2GEN           0.000      0.000     -1.168      0.243      0.264
+
+
+Effects from MALE to FLIT
+
+  Total                0.005      0.002      2.878      0.004      0.067
+  Total indirect       0.005      0.002      2.878      0.004      0.067
+
+  Specific indirect 1
+    FLIT
+    FCFMLRTY
+    MALE               0.004      0.002      2.407      0.016      0.065
+
+  Specific indirect 2
+    FLIT
+    FLCONFIN
+    MALE               0.001      0.001      1.407      0.160      0.259
 
 
 
@@ -1049,9 +1150,9 @@ TECHNICAL 1 OUTPUT
  MALE           0.000         0.000         0.000         0.000         0.250
 
 
-     Beginning Time:  23:05:35
-        Ending Time:  23:07:35
-       Elapsed Time:  00:02:00
+     Beginning Time:  12:23:56
+        Ending Time:  12:24:57
+       Elapsed Time:  00:01:01
 
 
 

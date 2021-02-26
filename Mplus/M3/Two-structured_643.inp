@@ -64,32 +64,37 @@ MODEL:
 
     ! Indirect pathways (1st half): school climate vars onto mediators
         ! Onto mediator FAMILIARITY
-    FCFMLRTY on FLSCHOOL NOBULLY FLFAMILY;
+    FCFMLRTY on FLSCHOOL FLFAMILY NOBULLY ESCS IMMI2GEN MALE;
         ! Onto mediator CONFIDENCE
-    FLCONFIN on FLSCHOOL NOBULLY FLFAMILY;
+    FLCONFIN on FLSCHOOL FLFAMILY NOBULLY ESCS IMMI2GEN MALE;
 
     ! Total effect
     FLIT on
-        ! Direct pathways: school climate vars onto financial literacy
-        FLSCHOOL NOBULLY FLFAMILY
         ! Indirect pathways (2nd half): affective vars onto financial literacy
         FCFMLRTY FLCONFIN
-        ! Control vars (demographic info)
-        MALE IMMI1GEN IMMI2GEN ESCS
+        ! Direct pathways: school climate vars onto financial literacy
+        FLSCHOOL FLFAMILY NOBULLY
+        ! Dmographic vars
+        ESCS IMMI1GEN
         ;
 
     ! Covariances
         ! Between school climate vars
-    FLSCHOOL with NOBULLY;
     FLSCHOOL with FLFAMILY;
-    NOBULLY with FLFAMILY;
+    FLFAMILY with NOBULLY;
+    FLSCHOOL with NOBULLY;
         ! Between mediators
     FCFMLRTY with FLCONFIN;
+
+        ! SES with school climate vars
+    ESCS with FLSCHOOL FLFAMILY;
+        ! SES with demographic vars
+    ESCS with IMMI1GEN IMMI2GEN;
 
 %Between%                                   ! === L2: School-level ===
 
     FLIT on
-        FLSCHOOL NOBULLY FLFAMILY EDUSHORT  ! School climate variables
+        FLSCHOOL FLFAMILY NOBULLY EDUSHORT  ! School climate variables
         STRATIO                             ! Control: Student-teacher ratio
         ;
 
@@ -107,8 +112,12 @@ MODEL INDIRECT:
 
     ! Indirect effects
     FLIT ind FLSCHOOL;
-    FLIT ind NOBULLY;
     FLIT ind FLFAMILY;
+    FLIT ind NOBULLY;
+
+    FLIT ind ESCS;
+    FLIT ind IMMI2GEN;
+    FLIT ind MALE;
 
 
 OUTPUT:

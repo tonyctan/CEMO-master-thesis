@@ -243,11 +243,13 @@ The proposed model therefore is:
 Student-level ($L_1$):
 \begin{equation}
     \begin{aligned}
-        \texttt{FCFMLRTY}_{ij} &= \gamma_{11}\texttt{FLSCHOOL}_{ij} + \gamma_{21}\texttt{NOBULLY}_{ij} + \gamma_{31}\texttt{FLFAMILY}_{ij} + r^{M_1}_{ij}\\
-        \texttt{FLCONFIN}_{ij} &= \gamma_{12}\texttt{FLSCHOOL}_{ij} + \gamma_{22}\texttt{NOBULLY}_{ij} + \gamma_{32}\texttt{FLFAMILY}_{ij} + r^{M_2}_{ij}\\
+        \texttt{FCFMLRTY}_{ij} &= \gamma_{11}\texttt{FLSCHOOL}_{ij} + \gamma_{21}\texttt{FLFAMILY}_{ij} + \gamma_{31}\texttt{NOBULLY}_{ij}\\
+        &+ \gamma_{41}\texttt{ESCS}_{ij} + \gamma_{61}\texttt{IMMI2GEN}_{ij} + \gamma_{71}\texttt{MALE}_{ij} + r^{M_1}_{ij}\\
+        \texttt{FLCONFIN}_{ij} &= \gamma_{12}\texttt{FLSCHOOL}_{ij} + \gamma_{22}\texttt{FLFAMILY}_{ij} + \gamma_{32}\texttt{NOBULLY}_{ij}\\
+        &+ \gamma_{42}\texttt{ESCS}_{ij} + \gamma_{62}\texttt{IMMI2GEN}_{ij} + \gamma_{72}\texttt{MALE}_{ij} + r^{M_1}_{ij}\\
         \texttt{FLIT}_{ij} &= \alpha_{0j} + \beta_1\texttt{FCFMLRTY}_{ij} + \beta_2\texttt{FLCONFIN}_{ij}\\
         &+ \gamma_1\texttt{FLSCHOOL}_{ij} + \gamma_2\texttt{NOBULLY}_{ij} + \gamma_3\texttt{FLFAMILY}_{ij}\\
-        &+ k_1\texttt{IMMI1GEN}_{ij} + k_2\texttt{IMMI2GEN}_{ij} + k_3\texttt{MALE}_{ij} + k_4\texttt{ESCS}_{ij} + r^{Y_W}_{ij}
+        &+ \gamma_4\texttt{ESCS}_{ij} + \gamma_5\texttt{IMMI1GEN}_{ij} + r^{Y_W}_{ij}
     \end{aligned}
 \end{equation}
 
@@ -255,11 +257,13 @@ School-level ($L_2$):
 \begin{equation}
     \begin{aligned}
         \alpha_{0j} &= \alpha_{00} + a_1\texttt{FLSCHOOL}_j + a_2\texttt{NOBULLY}_j + a_3\texttt{FLFAMILY}_j + a_4\texttt{EDUSHTG}_j\\
-        &+ k_0\texttt{STRATIO}_j + \epsilon^{Y_B}_j
+        &+ a_5\texttt{STRATIO}_j + \epsilon^{Y_B}_j
     \end{aligned}
 \end{equation}
 
-Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{y}_{ij} + \m{\Gamma}_j\m{x}_{ij} + \text{controls}^W + \m{r}_{ij}$ for student-level ($L_1$) and random intercept $\alpha_{0j} = \alpha_{00} + \m{a}\m{w}_j + \text{control}^B + \epsilon_j$ for school-level ($L_2$):
+\newpage
+
+Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{y}_{ij} + \m{\Gamma}_j\m{x}_{ij} + \m{r}_{ij}$ for student-level ($L_1$) and random intercept $\alpha_{0j} = \alpha_{00} + \m{a}\m{w}_j + \epsilon_j$ for school-level ($L_2$):
 \begin{equation}
     \begin{aligned}
         \begin{bmatrix}
@@ -281,52 +285,48 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
             \texttt{FCFMLRTY}_{ij}\\
             \texttt{FLCONFIN}_{ij}\\
             \texttt{FLIT}_{ij}
-        \end{bmatrix}\\
-        &+
+        \end{bmatrix}
+        +
         \begin{pmatrix}
             \gamma_{11}  &\gamma_{12}   &\gamma_1\\
             \gamma_{21}  &\gamma_{22}   &\gamma_2\\
             \gamma_{31}  &\gamma_{32}   &\gamma_3\\
+            \gamma_{41}  &\gamma_{42}   &\gamma_4\\
+            0  &0   &\gamma_5\\
+            \gamma_{61}  &\gamma_{62}   &0\\
+            \gamma_{71}  &\gamma_{72}   &0
         \end{pmatrix}\Ts
         \begin{bmatrix}
             \texttt{FLSCHOOL}_{ij}\\
+            \texttt{FLFAMILY}_{ij}\\
             \texttt{NOBULLY}_{ij}\\
-            \texttt{FLFAMILY}_{ij}
-        \end{bmatrix} +
-        \begin{pmatrix}
-            k_1\\
-            k_2\\
-            k_3\\
-            k_4
-        \end{pmatrix}\Ts
-        \begin{bmatrix}
+            \texttt{ESCS}_{ij}\\
             \texttt{IMMI1GEN}_{ij}\\
             \texttt{IMMI2GEN}_{ij}\\
-            \texttt{MALE}_{ij}\\
-            \texttt{ESCS}_{ij}
+            \texttt{MALE}_{ij}
         \end{bmatrix} +
         \begin{pmatrix}
             r^{M_1}_{ij}\\
             r^{M_2}_{ij}\\
             r^{Y_W}_{ij}
-        \end{pmatrix}
+        \end{pmatrix}\\
+        \alpha_{0j} &= \alpha_{00} +
+        \begin{pmatrix}
+            a_1\\
+            a_2\\
+            a_3\\
+            a_4\\
+            a_5
+        \end{pmatrix}\Ts
+        \begin{bmatrix}
+            \texttt{FLSCHOOL}_j\\
+            \texttt{NOBULLY}_j\\
+            \texttt{FLFAMILY}_j\\
+            \texttt{EDUSHTG}_j\\
+            \texttt{STRATIO}_j
+        \end{bmatrix}
+        + \epsilon^{Y_B}_j
     \end{aligned}
-\end{equation}
-\begin{equation}
-    \alpha_{0j} = \alpha_{00} +
-    \begin{pmatrix}
-        a_1\\
-        a_2\\
-        a_3\\
-        a_4
-    \end{pmatrix}\Ts
-    \begin{bmatrix}
-        \texttt{FLSCHOOL}_j\\
-        \texttt{NOBULLY}_j\\
-        \texttt{FLFAMILY}_j\\
-        \texttt{EDUSHTG}_j
-    \end{bmatrix}
-    + k_0\texttt{STRATIO}_j + \epsilon^{Y_B}_j
 \end{equation}
 
 
