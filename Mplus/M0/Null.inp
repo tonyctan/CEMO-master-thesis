@@ -26,18 +26,16 @@ VARIABLE:
 
     weight = W_STU;                         ! Student weight
     wtscale = cluster;                      ! Scale L1 weight to cluster size
-    b2weight = W_SCH;                        ! School weight
+    bweight = W_SCH;                       ! School weight
     bwtscale = sample;                      ! Scale L2 weight to sample
 
-    cluster =
-        CNTRYID                             ! L3 label: country ID
-        CNTSCHID;                           ! L2 label: school ID
+    cluster = CNTSCHID;                     ! Cluster label: school ID
 
 
 ANALYSIS:
     processors = 4;
 
-    type = threelevel;
+    type = twolevel;
 
 
 MODEL:
@@ -45,10 +43,7 @@ MODEL:
 %Within%                                    ! === L1: Student-level ===
     FLIT;
 
-%Between CNTSCHID%                          ! === L2: School-level ===
-    FLIT;
-
-%Between CNTRYID%                           ! === L3: Country-level ===
+%Between%                          ! === L2: School-level ===
     FLIT;
 
 

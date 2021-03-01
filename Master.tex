@@ -195,7 +195,7 @@ Combining individual and institutional data cources can be a productive approach
 
 \newpage
 
-\input{./Figures/tikz/model_par}
+\input{./Figures/tikz/model}
 
 \newpage
 
@@ -240,15 +240,17 @@ A three-level multigroup structural equation model was employed to account for t
 
 The proposed model therefore is:
 
+\newpage
+
 Student-level ($L_1$):
 \begin{equation}
     \begin{aligned}
-        \texttt{FCFMLRTY}_{ij} &= \gamma_{11}\texttt{FLSCHOOL}_{ij} + \gamma_{21}\texttt{FLFAMILY}_{ij} + \gamma_{31}\texttt{NOBULLY}_{ij}\\
+        \texttt{FCFMLRTY}_{ij} = \alpha^{M_1}_{j} &+ \gamma_{11}\texttt{FLSCHOOL}_{ij} + \gamma_{21}\texttt{FLFAMILY}_{ij} + \gamma_{31}\texttt{NOBULLY}_{ij}\\
         &+ \gamma_{41}\texttt{ESCS}_{ij} + \gamma_{61}\texttt{IMMI2GEN}_{ij} + \gamma_{71}\texttt{MALE}_{ij} + r^{M_1}_{ij}\\
-        \texttt{FLCONFIN}_{ij} &= \gamma_{12}\texttt{FLSCHOOL}_{ij} + \gamma_{22}\texttt{FLFAMILY}_{ij} + \gamma_{32}\texttt{NOBULLY}_{ij}\\
-        &+ \gamma_{42}\texttt{ESCS}_{ij} + \gamma_{62}\texttt{IMMI2GEN}_{ij} + \gamma_{72}\texttt{MALE}_{ij} + r^{M_1}_{ij}\\
-        \texttt{FLIT}_{ij} &= \alpha_{0j} + \beta_1\texttt{FCFMLRTY}_{ij} + \beta_2\texttt{FLCONFIN}_{ij}\\
-        &+ \gamma_1\texttt{FLSCHOOL}_{ij} + \gamma_2\texttt{NOBULLY}_{ij} + \gamma_3\texttt{FLFAMILY}_{ij}\\
+        \texttt{FLCONFIN}_{ij} = \alpha^{M_2}_{j} &+ \gamma_{12}\texttt{FLSCHOOL}_{ij} + \gamma_{22}\texttt{FLFAMILY}_{ij} + \gamma_{32}\texttt{NOBULLY}_{ij}\\
+        &+ \gamma_{42}\texttt{ESCS}_{ij} + \gamma_{62}\texttt{IMMI2GEN}_{ij} + \gamma_{72}\texttt{MALE}_{ij} + r^{M_2}_{ij}\\
+        \texttt{FLIT}_{ij} = \alpha^{Y_W}_{j} &+ \beta_1\texttt{FCFMLRTY}_{ij} + \beta_2\texttt{FLCONFIN}_{ij}\\
+        &+ \gamma_1\texttt{FLSCHOOL}_{ij} + \gamma_2\texttt{FLFAMILY}_{ij}+ \gamma_3\texttt{NOBULLY}_{ij} \\
         &+ \gamma_4\texttt{ESCS}_{ij} + \gamma_5\texttt{IMMI1GEN}_{ij} + r^{Y_W}_{ij}
     \end{aligned}
 \end{equation}
@@ -256,26 +258,26 @@ Student-level ($L_1$):
 School-level ($L_2$):
 \begin{equation}
     \begin{aligned}
-        \alpha_{0j} &= \alpha_{00} + a_1\texttt{FLSCHOOL}_j + a_2\texttt{NOBULLY}_j + a_3\texttt{FLFAMILY}_j + a_4\texttt{EDUSHTG}_j\\
+        \alpha^{Y_W}_{j} = \alpha^Y_{00} &+ a_1\texttt{FLSCHOOL}_j + a_2\texttt{NOBULLY}_j + a_3\texttt{FLFAMILY}_j + a_4\texttt{EDUSHTG}_j\\
         &+ a_5\texttt{STRATIO}_j + \epsilon^{Y_B}_j
     \end{aligned}
 \end{equation}
 
 \newpage
 
-Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{y}_{ij} + \m{\Gamma}_j\m{x}_{ij} + \m{r}_{ij}$ for student-level ($L_1$) and random intercept $\alpha_{0j} = \alpha_{00} + \m{a}\m{w}_j + \epsilon_j$ for school-level ($L_2$):
+Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{y}_{ij} + \m{\Gamma}_j\m{x}_{ij} + \m{r}_{ij}$ for student-level ($L_1$) and random intercept $\m{\alpha}_{j} = \m{\alpha}_{00} + \m{A}\m{w}_j + \m{\epsilon}_j$ for school-level ($L_2$):
 \begin{equation}
     \begin{aligned}
         \begin{bmatrix}
             \texttt{FCFMLRTY}_{ij}\\
             \texttt{FLCONFIN}_{ij}\\
             \texttt{FLIT}_{ij}
-        \end{bmatrix} &=
+        \end{bmatrix} =
         \begin{pmatrix}
-            0\\
-            0\\
-            \alpha_{0j}
-        \end{pmatrix} +
+            \alpha^{M_1}_{j}\\
+            \alpha^{M_2}_{j}\\
+            \alpha^{Y_W}_{j}\\
+        \end{pmatrix} &+
         \begin{pmatrix}
             0   &0  &\beta_1\\
             0   &0  &\beta_2\\
@@ -285,8 +287,8 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
             \texttt{FCFMLRTY}_{ij}\\
             \texttt{FLCONFIN}_{ij}\\
             \texttt{FLIT}_{ij}
-        \end{bmatrix}
-        +
+        \end{bmatrix}\\
+        &+
         \begin{pmatrix}
             \gamma_{11}  &\gamma_{12}   &\gamma_1\\
             \gamma_{21}  &\gamma_{22}   &\gamma_2\\
@@ -310,13 +312,22 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
             r^{M_2}_{ij}\\
             r^{Y_W}_{ij}
         \end{pmatrix}\\
-        \alpha_{0j} &= \alpha_{00} +
         \begin{pmatrix}
-            a_1\\
-            a_2\\
-            a_3\\
-            a_4\\
-            a_5
+            \alpha^{M_1}_{j}\\
+            \alpha^{M_2}_{j}\\
+            \alpha^{Y_W}_{j}\\
+        \end{pmatrix} =
+        \begin{pmatrix}
+            \alpha^{M_1}_{00}\\
+            \alpha^{M_2}_{00}\\
+            \alpha^Y_{00}
+        \end{pmatrix} &+
+        \begin{pmatrix}
+            0   &0  &a_1\\
+            0   &0  &a_2\\
+            0   &0  &a_3\\
+            0   &0  &a_4\\
+            0   &0  &a_5
         \end{pmatrix}\Ts
         \begin{bmatrix}
             \texttt{FLSCHOOL}_j\\
@@ -324,8 +335,12 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
             \texttt{FLFAMILY}_j\\
             \texttt{EDUSHTG}_j\\
             \texttt{STRATIO}_j
-        \end{bmatrix}
-        + \epsilon^{Y_B}_j
+        \end{bmatrix} +
+        \begin{pmatrix}
+            0\\
+            0\\
+            \epsilon^{Y_B}_j
+        \end{pmatrix}
     \end{aligned}
 \end{equation}
 

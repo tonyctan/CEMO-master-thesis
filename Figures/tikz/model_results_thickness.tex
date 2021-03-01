@@ -1,7 +1,12 @@
-\ptikz{fig:mod}{Three-level Structural Equation Model Predicting Youth's Financial Literacy Outcomes}{
+\ptikz{fig:mod}{Path Diagram}{
 \begin{tikzpicture}[
     latvar/.style={ellipse,draw=black,minimum width=3.5cm,minimum height=1cm},
+    exolat/.style={ellipse,draw=red,minimum width=3.5cm,minimum height=1cm},
+    endlat/.style={ellipse,draw=blue,minimum width=3.5cm,minimum height=1cm},
     manvar/.style={rectangle,draw=black,minimum width=2.5cm},
+    exovar/.style={rectangle,draw=red,minimum width=2.5cm},
+    endvar/.style={rectangle,draw=blue,minimum width=2.5cm},
+    demo/.style={rectangle,fill=black!10!white,minimum width=2.5cm},
     mean/.style={fill=black!10!white,regular polygon,regular polygon sides=3},
     ->,>=stealth',semithick,
     bend angle=-45,
@@ -19,141 +24,125 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Draw a dashed line to mark Level 1
-    \draw[black,dashed,-,line width=2pt] (1.5,5)--(14.85,5);
+%\draw[black,dashed,-,line width=2pt] (1.5,5)--(14.85,5);
 % Insert level labels
-    \node at (0,5) {\textbf{$\m{L1}$: Student}};
+\node at (0,4) {\textbf{$\m{L1}$: Student}};
 
-% Set input vars (school climate)
-    \node[manvar] (A1) at (0,4) {$\texttt{FLSCHOOL}_W$};
-    \node[manvar] (S1) at (0,2) {$\texttt{NOBULLY}_W$};
-    \node[manvar] (C1) at (0,0) {$\texttt{FLFAMILY}_W$};
+% Set school climate vars (X)
+    \node[manvar] (A1) at (2,3) {$\texttt{FLSCHOOL}_W$};
+    \node[manvar] (C1) at (2,2) {$\texttt{FLFAMILY}_W$};
+    \node[manvar] (S1) at (2,1) {$\texttt{NOBULLY}_W$};
 
-% Set mediators (affective vars)
-    \node[manvar] (fami1) at (5,4) {$\texttt{FCFMLRTY}$};
-    \node[manvar] (conf1) at (5,0) {$\texttt{FLCONFIN}$};
+% Set demographic vars
+    \node[demo] (escs) at (2,0) {$\texttt{ESCS}$};
+    \node[demo] (immi1) at (2,-1) {$\texttt{IMMI1GEN}$};
+    \node[demo] (immi2) at (2,-2) {$\texttt{IMMI2GEN}$};
+    \node[demo] (male) at (2,-3) {$\texttt{MALE}$};
 
-% Set outcome var (financial literacy)
-    \node[manvar] (flit1) at (9.5,2) {$\texttt{FLIT}_W$};
+% Set affective vars (M)
+    \node[manvar] (fami1) at (7.5,3) {$\texttt{FCFMLRTY}$};
+    \node[manvar] (conf1) at (7.5,-3) {$\texttt{FLCONFIN}$};
 
-% Link input vars with mediators
-    \draw[blue,->,line width=2*0.280mm] (A1.east) to node[above,sloped,pos=0.57] {\press{0.280}{***}{0.017}} (fami1.west);
-    \draw[blue,->,line width=2*0.160mm] (A1.east) to node[above,sloped,pos=0.72] {\press{0.160}{***}{0.008}} (conf1.west);
+% Set outcome var (Y)
+    \node[manvar] (flit1) at (13,0) {$\texttt{FLIT}_W$};
 
-    \draw[blue,->,line width=2*0.056mm] (S1.east) to node[above,sloped,pos=0.33] {\press{0.056}{***}{0.005}} (fami1.west);
-    \draw[blue,->,dashed] (S1.east) to node[below,sloped,pos=0.25] {\press{0.009}{}{0.010}} (conf1.west);
+% Link X to M
+    \draw[blue,->,line width=2*0.271mm] (A1.east) to node[above,sloped] {\press{0.271}{***}{0.008}} (fami1.west);
+    \draw[blue,->,line width=2*0.177mm] (A1.east) to node[above,sloped,pos=0.75] {\press{0.177}{***}{0.009}} (conf1.west);
 
-    \draw[blue,->,line width=2*0.127mm] (C1.east) to node[below,sloped,pos=0.72] {\press{0.127}{***}{0.012}} (fami1.west);
-    \draw[blue,->,line width=2*0.159mm] (C1.east) to node[below,sloped,pos=0.57] {\press{0.159}{***}{0.008}} (conf1.west);
+    \draw[blue,->,line width=2*0.104mm] (C1.east) to node[above,sloped] {\press{0.104}{***}{0.009}} (fami1.west);
+    \draw[blue,->,line width=2*0.173mm] (C1.east) to node[sloped] {\press{0.173}{***}{0.009}} (conf1.west);
 
-% Link mediators with outcome var
-    \draw[blue,->,line width=2*0.195mm] (fami1.east) to node[above,sloped,pos=0.55] {\press{0.195}{***}{0.013}} (flit1.west);
-    \draw[blue,->,line width=2*0.082mm] (conf1.east) to node[below,sloped,pos=0.55] {\press{0.082}{***}{0.010}} (flit1.west);
+    \draw[blue,->,line width=2*0.048mm] (S1.east) to node[above,sloped] {\press{0.048}{***}{0.009}} (fami1.west);
+    \draw[dashed,blue,->,line width=2*0.006mm] (S1.east) to node[below,sloped,pos=0.6] {\press{0.006}{}{0.009}} (conf1.west);
 
-% Link input vars with outcome var
-    \draw[red,->,line width=2*0.074mm] (A1.east) to node[above,sloped,pos=0.45] {\press{-0.074}{***}{0.015}} (flit1.west);
-    \draw[red,->,line width=2*0.068mm] (S1.east) to node[above,sloped,pos=0.45] {\press{0.068}{***}{0.009}} (flit1.west);
-    \draw[red,->,dashed] (C1.east) to node[above,sloped,pos=0.45] {\press{-0.003}{}{0.013}} (flit1.west);
+% Link demo to M
+    \draw[black!25!white,->,line width=2*0.222mm] (escs.east) to node[above,sloped] {\press{0.222}{***}{0.010}} (fami1.west);
+    \draw[black!25!white,->,line width=2*0.063mm] (escs.east) to node[below,sloped,pos=0.25] {\press{0.063}{***}{0.009}} (conf1.west);
 
-% Set control vars
-    \node[manvar] (immi1) at (13.5,4) {$\texttt{IMMI1GEN}$};
-    \node[manvar] (immi2) at (13.5,3) {$\texttt{IMMI2GEN}$};
-    \node[manvar] (male) at (13.5,1) {$\texttt{MALE}$};
-    \node[manvar] (escs) at (13.5,0) {$\texttt{ESCS}$};
+    \draw[black!25!white,->,line width=2*0.024mm] (immi2.east) to node[above,sloped,pos=0.6] {\press{-0.024}{*}{0.010}} (fami1.west);
+    \draw[black!25!white,->,line width=2*0.030mm] (immi2.east) to node[below,sloped,pos=0.4] {\press{-0.030}{**}{0.010}} (conf1.west);
 
-% Link control vars with outcome var
-    \draw[->,line width=2*0.039mm] (immi1.west) to node[above,sloped,pos=0.45] {\press{-0.039}{**}{0.014}} (flit1.north east);
-    \draw[->,line width=2*0.021mm] (immi2.west) to node[below,sloped,pos=0.4] {\press{-0.021}{*}{0.011}} (flit1.north east);
-    \draw[->,line width=2*0.023mm] (male.west) to node[above,sloped,pos=0.45] {\press{0.023}{*}{0.012}} (flit1.south east);
-    \draw[->,line width=2*0.208mm] (escs.west) to node[below,sloped,pos=0.44] {\press{0.208}{***}{0.019}} (flit1.south east);
+    \draw[black!25!white,->,line width=2*0.021mm] (male.east) to node[below,sloped,pos=0.7] {\press{0.021}{**}{0.008}} (fami1.west);
+    \draw[black!25!white,->,line width=2*0.129mm] (male.east) to node[below,sloped] {\press{0.129}{***}{0.008}} (conf1.west);
+
+% Link M to Y
+    \draw[blue,->,line width=2*0.194mm] (fami1.east) to node[above,sloped] {\press{0.194}{***}{0.009}} (flit1.west);
+    \draw[blue,->,line width=2*0.028mm] (conf1.east) to node[below,sloped] {\press{0.028}{**}{0.010}} (flit1.west);
+
+% Link X to Y
+    \draw[red,->,line width=2*0.089mm] (A1.east) to node[above,sloped,pos=0.42] {\press{-0.089}{***}{0.011}} (flit1.west);
+    \draw[dashed,red,->,line width=2*0.016mm] (C1.east) to node[above,sloped,pos=0.38] {\press{-0.016}{\dagger}{0.010}} (flit1.west);
+    \draw[red,->,line width=2*0.046mm] (S1.east) to node[above,sloped,pos=0.4] {\press{0.046}{***}{0.009}} (flit1.west);
+
+% Link demo to Y
+    \draw[black!25!white,->,line width=2*0.245mm] (escs.east) to node[above,sloped,pos=0.4] {\press{0.245}{***}{0.015}} (flit1.west);
+
+    \draw[black!25!white,->,line width=2*0.041mm] (immi1.east) to node[above,sloped,pos=0.39] {\press{-0.041}{***}{0.012}} (flit1.west);
+
+% Draw residual arrows for M
+    \draw[blue,<-] (8.75,3)--(9.25,3);
+    \draw[blue,<-] (8.75,-3)--(9.25,-3);
+
+% Draw residual arrow for Y
+    \draw[<-] (14.25,0)--(14.75,0);
 
 % Draw a black dot on output var
-    \filldraw[black] (8.25,2) circle (2.5pt);
-
-% Draw residual arrow on output var
-    \draw[blue,<-] (6.25,4)--(6.75,4);
-    \draw[blue,<-] (6.25,0)--(6.75,0);
-
-    \draw[<-] (10.75,2)--(11.25,2);
+\filldraw[black] (11.75,0) circle (3pt);
 
 % Arc covariances
-    \draw[<->,line width=2*0.047mm] (A1.south) to [bend right] node[above,sloped] {\press{-0.047}{***}{0.010}} (S1.north);
-    \draw[<->,line width=2*0.228mm] (A1.south) to [bend left] node[below,sloped,pos=0.25,rotate=180] {\press{0.228}{***}{0.012}} (C1.north);
+    \draw[<->] (A1.south) to [bend right] (C1.north);
+    \draw[<->] (C1.south) to [bend right] (S1.north);
+    \draw[<->] (A1.south) to [bend left] (S1.north);
 
-    \draw[<->,line width=2*0.032mm] (S1.south) to [bend right] node[above,sloped] {\press{-0.032}{***}{0.007}} (C1.north);
+    \draw[<->] (fami1.south) to [bend right] (conf1.north);
 
-    \draw[<->,line width=2*0.205mm] (fami1.south) to [bend right] node[above,sloped] {\press{0.205}{***}{0.013}} (conf1.north);
+    \draw[black!25!white,<->] (escs.west) to [bend right] (A1.west);
+    \draw[black!25!white,<->] (escs.west) to [bend right] (C1.west);
+    \draw[black!25!white,<->] (escs.west) to [bend left] (immi1.west);
+    \draw[black!25!white,<->] (escs.west) to [bend left] (immi2.west);
 
-    \draw[<->,line width=2*0.098mm] (C1.south) to [bend right=15] node[above] {\press{0.098}{***}{0.017}} (escs.south);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Level 2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Draw a dashed line to mark Level 2
-    \draw[black,dashed,-,line width=2pt] (1.5,13)--(14.85,13);
+%\draw[black,dashed,-,line width=2pt] (1.5,13)--(14.85,13);
 % Insert level labels
-    \node at (0,13) {\textbf{$\m{L2}$: School}};
+\node at (0,12) {\textbf{$\m{L2}$: School}};
 
 % Input vars (school climate)
-    \node[latvar] (A2) at (3,12) {$\texttt{FLSCHOOL}_B$};
-    \node[latvar] (S2) at (3,10) {$\texttt{NOBULLY}_B$};
-    \node[latvar] (C2) at (3,8) {$\texttt{FLFAMILY}_B$};
-    \node[manvar] (R2) at (3,6) {$\texttt{EDUSHORT}$};
+    \node[latvar] (A2) at (3,11) {$\texttt{FLSCHOOL}_B$};
+    \node[latvar] (C2) at (3,9) {$\texttt{FLFAMILY}_B$};
+    \node[latvar] (S2) at (3,7) {$\texttt{NOBULLY}_B$};
+    \node[manvar] (R2) at (3,5) {$\texttt{EDUSHORT}$};
 
 % Control var
-    \node[manvar] (st2) at (13.5,6) {$\texttt{STRATIO}$};
+    \node[manvar] (st2) at (13.5,5) {$\texttt{STRATIO}$};
 
 % Outcome var (financial literacy)
-    \node[latvar] (flit2) at (9.5,9) {$\texttt{FLIT}_{B2}$};
+    \node[latvar] (flit2) at (9.5,8) {$\texttt{FLIT}_{B}$};
 
 % Link input vars with output var
-    \draw[->,line width=2*0.259mm] (A2.east) to node[above,sloped] {\press{-0.259}{***}{0.071}} (flit2.west);
-    \draw[->,line width=2*0.441mm] (S2.east) to node[above,sloped,pos=0.4] {\press{0.441}{***}{0.065}} (flit2.west);
-    \draw[->,line width=2*0.164mm] (C2.east) to node[below,sloped,pos=0.4] {\press{-0.164}{**}{0.053}} (flit2.west);
-    \draw[->,line width=2*0.184mm] (R2.east) to node[below,sloped] {\press{-0.184}{***}{0.041}} (flit2.west);
+    \draw[->,line width=2*0.283mm] (A2.east) to node[above,sloped] {\press{-0.283}{***}{0.065}} (flit2.west);
+    \draw[->,line width=2*0.214mm] (C2.east) to node[above,sloped,pos=0.4] {\press{-0.214}{***}{0.054}} (flit2.west);
+    \draw[->,line width=2*0.266mm] (S2.east) to node[above,sloped,pos=0.4] {\press{0.266}{***}{0.071}} (flit2.west);
+    \draw[->,line width=2*0.287mm] (R2.east) to node[below,sloped] {\press{-0.287}{***}{0.039}} (flit2.west);
 
 % Link control vars with output var
-    \draw[->,dashed] (st2.west) to node[above,sloped] {\press{0.007}{}{0.077}} (flit2.south east);
-
-% Draw a black dot on output var
-    \filldraw[black] (7.75,9) circle (2.5pt);
+    \draw[->,line width=2*0.130mm] (st2.west) to node[below,sloped] {\press{-0.130}{***}{0.026}} (flit2.south east);
 
 % Draw residual arrow on output var
-    \draw[<-] (11.25,9)--(11.75,9);
+    \draw[<-] (11.25,8)--(11.75,8);
 
 % Arc covariances
-    \draw[<->,line width=2*0.368] (A2.south) to [bend right] node[above,sloped] {\press{-0.368}{***}{0.064}} (S2.north);
-    \draw[<->,line width=2*0.267] (A2.south) to [bend left] node[below,sloped,pos=0.22,rotate=180] {\press{0.267}{**}{0.084}} (C2.north);
-    \draw[<->,line width=2*0.058] (A2.south west) to [bend left] node[above,sloped,rotate=180] {\press{0.058}{*}{0.028}} (R2.north west);
-
-    \draw[<->,line width=2*0.156] (S2.south) to [bend right] node[above,sloped] {\press{0.156}{*}{0.076}} (C2.north);
-    \draw[<->,dashed] (S2.south) to [bend left] node[below,sloped,pos=0.75] {\press{-0.049}{}{0.042}} (R2.north);
-
-    \draw[<->,dashed] (C2.south) to [bend right] node[above,sloped] {\press{0.037}{}{0.055}} (R2.north);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% Level 3
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Draw a dashed line to mark Level 3
-    \draw[black,dashed,-,line width=2pt] (1.5,17)--(14.85,17);
-% Insert level labels
-    \node at (0,17) {\textbf{$\m{L3}$: Country}};
-
-% Set input vars
-    \node[mean] (mean3) at (5,16) {$1$};
-    \node[manvar] (fki3) at (5,14) {\texttt{FKI}};
-
-% Set output var
-    \node[latvar] (flit3) at (9.5,15) {$\texttt{FLIT}_{B3}$};
-
-% Link input vars with output var
-    \draw[->] (mean3.east) to node[above,sloped] {\press{10.691}{***}{1.774}} (flit3.west);
-    \draw[->,line width=2*0.699mm] (fki3.east) to node[below,sloped] {\press{0.699}{***}{0.090}} (flit3.west);
-
-% Draw residual arrow on output var
-    \draw[<-] (11.25,15)--(11.75,15);
+    \draw[<->] (A2.south) to [bend right] (C2.north);
+    \draw[dashed,<->] (C2.south) to [bend right] (S2.north);
+    \draw[<->] (S2.south) to [bend right] (R2.north);
+    \draw[<->] (A2.south) to [bend left] (S2.north);
+    \draw[dashed,<->] (C2.south) to [bend left] (R2.north);
+    \draw[<->] (A2.south west) to [bend left] (R2.north west);
 
 \end{tikzpicture}
-}{This multilevel structural equation model predicts youth's financial literacy outcomes using PISA 2018 data, with mediating effects of familiarity with, and confidence in, financial matters at student-level (\textcolor{red}{direct} and \textcolor{blue}{indirect} pathways). Statistics are standardised regression coefficients. Dashed lines represent nonsignificant relations at $\alpha=0.05$ level. FKI = financial knowledge indices, FLIT = financial literacy. Subscript $_W$ = within, $_B$ = between.\\$^{*}p<0.05$, $^{**}p<0.01$, $^{***}p<0.001$}
-%//ref APA7 Manual Figure 7.7 (p. 239)
+}{[Insert notes here.]}
