@@ -16,19 +16,6 @@ finlit_mmi_1 <- fread("FLIT_MMI_1.dat")
 names(finlit_mmi_1) <- c(
     "STRATIO",
     "EDUSHORT",
-    "MALE",
-    "IMMI1GEN",
-    "IMMI2GEN",
-    "ESCS",
-    "FCFMLRTY",
-    "FLCONFIN",
-    "FLSCHOOL",
-    "NOBULLY",
-    "FLFAMILY",
-    "FKI",
-    "CNTRYID",
-    "CNTSTUID",
-    "W_STU",
     "PV1MATH",
     "PV2MATH",
     "PV3MATH",
@@ -59,15 +46,37 @@ names(finlit_mmi_1) <- c(
     "PV8FLIT",
     "PV9FLIT",
     "PV10FLIT",
+    "MALE",
+    "IMMI1GEN",
+    "IMMI2GEN",
+    "ESCS",
+    "FCFMLRTY",
+    "FLCONFIN",
+    "FLSCHOOL",
+    "NOBULLY",
+    "FLFAMILY",
+    "FKI",
+    "CNTRYID",
+    "CNTSTUID",
+    "W_STU",
     "W_SCH",
     "CNTSCHID"
 )
 # Inspect data
 head(finlit_mmi_1); dim(finlit_mmi_1)
 
-# Rearrange data
+# Rearrange data to this order
+#    FKI CNTRYID CNTSCHID W_STU          ! Admin variables
+#    MATH READ FLIT                      ! PISA achievement variables
+#    MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+#    FCFMLRTY FLCONFIN                   ! Affect
+#    FLSCHOOL                            !   Lat var "Academic"
+#    NOBULLY                             !   Lat var "Safety"
+#    FLFAMILY                            !   Lat var "Community"
+#    W_SCH STRATIO                       ! School character
+#    EDUSHORT                            !   Lat var "inst. env."
 names(finlit_mmi_1)
-fl1 <- finlit_mmi_1[, c(12:13, 47, 15, 16, 26, 36, 3:11, 46, 1:2)]
+fl1 <- finlit_mmi_1[, c(42:43, 47, 45, 3, 13, 23, 33:41, 46, 1:2)]
 head(fl1); dim(fl1)
 
 # Now I am happy. I can apply the same procedure to all 10 versions
@@ -84,15 +93,15 @@ finlit_mmi_9 <- fread("FLIT_MMI_9.dat")
 finlit_mmi_10 <- fread("FLIT_MMI_10.dat")
 names(finlit_mmi_10) <- names(finlit_mmi_1) # Give version 10 a heading
 
-fl2 <- finlit_mmi_2[, c(12:13, 47, 15, 17, 27, 37, 3:11, 46, 1:2)]
-fl3 <- finlit_mmi_3[, c(12:13, 47, 15, 18, 28, 38, 3:11, 46, 1:2)]
-fl4 <- finlit_mmi_4[, c(12:13, 47, 15, 19, 29, 39, 3:11, 46, 1:2)]
-fl5 <- finlit_mmi_5[, c(12:13, 47, 15, 20, 30, 40, 3:11, 46, 1:2)]
-fl6 <- finlit_mmi_6[, c(12:13, 47, 15, 21, 31, 41, 3:11, 46, 1:2)]
-fl7 <- finlit_mmi_7[, c(12:13, 47, 15, 22, 32, 42, 3:11, 46, 1:2)]
-fl8 <- finlit_mmi_8[, c(12:13, 47, 15, 23, 33, 43, 3:11, 46, 1:2)]
-fl9 <- finlit_mmi_9[, c(12:13, 47, 15, 24, 34, 44, 3:11, 46, 1:2)]
-fl10 <- finlit_mmi_10[, c(12:13, 47, 15, 25, 35, 45, 3:11, 46, 1:2)]
+fl2 <- finlit_mmi_2[, c(42:43, 47, 45, 4, 14, 24, 33:41, 46, 1:2)]
+fl3 <- finlit_mmi_3[, c(42:43, 47, 45, 5, 15, 25, 33:41, 46, 1:2)]
+fl4 <- finlit_mmi_4[, c(42:43, 47, 45, 6, 16, 26, 33:41, 46, 1:2)]
+fl5 <- finlit_mmi_5[, c(42:43, 47, 45, 7, 17, 27, 33:41, 46, 1:2)]
+fl6 <- finlit_mmi_6[, c(42:43, 47, 45, 8, 18, 28, 33:41, 46, 1:2)]
+fl7 <- finlit_mmi_7[, c(42:43, 47, 45, 9, 19, 29, 33:41, 46, 1:2)]
+fl8 <- finlit_mmi_8[, c(42:43, 47, 45, 10, 20, 30, 33:41, 46, 1:2)]
+fl9 <- finlit_mmi_9[, c(42:43, 47, 45, 11, 21, 31, 33:41, 46, 1:2)]
+fl10 <- finlit_mmi_10[, c(42:43, 47, 45, 12, 22, 32, 33:41, 46, 1:2)]
 
 head(fl2); head(fl10) # Inspect version 2 and 10 to make sure they make sense
 

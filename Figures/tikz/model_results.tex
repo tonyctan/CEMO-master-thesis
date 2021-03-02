@@ -110,16 +110,15 @@
 % Draw a dashed line to mark Level 2
 %\draw[black,dashed,-,line width=2pt] (1.5,13)--(14.85,13);
 % Insert level labels
-\node at (0,12) {\textbf{$\m{L2}$: School}};
+\node at (0,13) {\textbf{$\m{L2}$: School}};
 
 % Input vars (school climate)
-    \node[latvar] (A2) at (3,11) {$\texttt{FLSCHOOL}_B$};
-    \node[latvar] (C2) at (3,9) {$\texttt{FLFAMILY}_B$};
-    \node[latvar] (S2) at (3,7) {$\texttt{NOBULLY}_B$};
-    \node[manvar] (R2) at (3,5) {$\texttt{EDUSHORT}$};
+    \node[latvar] (A2) at (3,12) {$\texttt{FLSCHOOL}_B$};
+    \node[latvar] (C2) at (3,10) {$\texttt{FLFAMILY}_B$};
+    \node[latvar] (S2) at (3,8) {$\texttt{NOBULLY}_B$};
+    \node[manvar] (R2) at (3,6) {$\texttt{EDUSHORT}$};
 
-% Control var
-    \node[manvar] (st2) at (13.5,5) {$\texttt{STRATIO}$};
+    \node[demo] (st2) at (3,5) {$\texttt{STRATIO}$};
 
 % Outcome var (financial literacy)
     \node[latvar] (flit2) at (9.5,8) {$\texttt{FLIT}_{B}$};
@@ -128,10 +127,9 @@
     \draw[->] (A2.east) to node[above,sloped] {\press{-0.283}{***}{0.065}} (flit2.west);
     \draw[->] (C2.east) to node[above,sloped,pos=0.4] {\press{-0.214}{***}{0.054}} (flit2.west);
     \draw[->] (S2.east) to node[above,sloped,pos=0.4] {\press{0.266}{***}{0.071}} (flit2.west);
-    \draw[->] (R2.east) to node[below,sloped] {\press{-0.287}{***}{0.039}} (flit2.west);
+    \draw[->] (R2.east) to node[above,sloped] {\press{-0.287}{***}{0.039}} (flit2.west);
 
-% Link control vars with output var
-    \draw[->] (st2.west) to node[below,sloped] {\press{-0.130}{***}{0.026}} (flit2.south east);
+    \draw[black!25!white,->] (st2.east) to node[below,sloped] {\press{-0.130}{***}{0.026}} (flit2.west);
 
 % Draw residual arrow on output var
     \draw[<-] (11.25,8)--(11.75,8);
@@ -142,7 +140,10 @@
     \draw[<->] (S2.south) to [bend right] (R2.north);
     \draw[<->] (A2.south) to [bend left] (S2.north);
     \draw[dashed,<->] (C2.south) to [bend left] (R2.north);
-    \draw[<->] (A2.south west) to [bend left] (R2.north west);
+    \draw[<->] (A2.south west) to [bend left] (R2.west);
+
+    \draw[black!25!white,<->] (st2.west) to [bend right] (A2.west);
+    \draw[black!25!white,<->] (st2.west) to [bend right] (R2.west);
 
 \end{tikzpicture}
 }{[Insert notes here.]}

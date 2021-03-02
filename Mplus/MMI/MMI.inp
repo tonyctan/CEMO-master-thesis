@@ -8,20 +8,20 @@ DATA:
 
 VARIABLE:
     names =
-        FKI CNTRYID CNTSCHID CNTSTUID W_STU
-        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
+        FKI CNTRYID CNTSCHID CNTSTUID W_STU         ! Administrative vars
+        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH     ! Plausible values for MATH
         PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
-        PV1READ PV2READ PV3READ PV4READ PV5READ
+        PV1READ PV2READ PV3READ PV4READ PV5READ     ! Plausible values for READ
         PV6READ PV7READ PV8READ PV9READ PV10READ
-        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
+        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT     ! Plausible values for FLIT (Y)
         PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
-        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
-        FCFMLRTY FLCONFIN                   ! Affect
-        FLSCHOOL                            !   Lat var "Academic"
-        NOBULLY                             !   Lat var "Safety"
-        FLFAMILY                            !   Lat var "Community"
-        W_SCH STRATIO                       ! School character
-        EDUSHORT                            !   Lat var "inst. env."
+        MALE IMMI1GEN IMMI2GEN ESCS                 ! Demographic info
+        FCFMLRTY FLCONFIN                           ! Affects (M)
+        FLSCHOOL                                    !   Lat var "Academic"
+        NOBULLY                                     !   Lat var "Safety"
+        FLFAMILY                                    !   Lat var "Community"
+        W_SCH STRATIO                               ! School characteristics
+        EDUSHORT                                    !   Lat var "inst. env."
         ;
 
     usevar =
@@ -49,12 +49,6 @@ VARIABLE:
 
     auxiliary =
         FKI CNTRYID CNTSTUID W_STU
-        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
-        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
-        PV1READ PV2READ PV3READ PV4READ PV5READ
-        PV6READ PV7READ PV8READ PV9READ PV10READ
-        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
-        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
         W_SCH
         ;
 
@@ -80,6 +74,7 @@ DATA IMPUTATION:
         FLSCHOOL NOBULLY FLFAMILY
         STRATIO EDUSHORT
         ;
+
     ndatasets = 10;
     save = FLIT_MMI_*.dat;
     thin = 5000;                         ! Separations to avoid autocorrelation

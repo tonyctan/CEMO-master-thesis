@@ -1,6 +1,6 @@
 Mplus VERSION 8.3
 MUTHEN & MUTHEN
-02/21/2021   9:51 PM
+03/01/2021  12:39 PM
 
 INPUT INSTRUCTIONS
 
@@ -14,20 +14,20 @@ INPUT INSTRUCTIONS
 
   VARIABLE:
       names =
-          FKI CNTRYID CNTSCHID CNTSTUID W_STU
-          PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
+          FKI CNTRYID CNTSCHID CNTSTUID W_STU         ! Administrative vars
+          PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH     ! Plausible values for MATH
           PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
-          PV1READ PV2READ PV3READ PV4READ PV5READ
+          PV1READ PV2READ PV3READ PV4READ PV5READ     ! Plausible values for READ
           PV6READ PV7READ PV8READ PV9READ PV10READ
-          PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
+          PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT     ! Plausible values for FLIT (Y)
           PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
-          MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
-          FCFMLRTY FLCONFIN                   ! Affect
-          FLSCHOOL                            !   Lat var "Academic"
-          NOBULLY                             !   Lat var "Safety"
-          FLFAMILY                            !   Lat var "Community"
-          W_SCH STRATIO                       ! School character
-          EDUSHORT                            !   Lat var "inst. env."
+          MALE IMMI1GEN IMMI2GEN ESCS                 ! Demographic info
+          FCFMLRTY FLCONFIN                           ! Affects (M)
+          FLSCHOOL                                    !   Lat var "Academic"
+          NOBULLY                                     !   Lat var "Safety"
+          FLFAMILY                                    !   Lat var "Community"
+          W_SCH STRATIO                               ! School characteristics
+          EDUSHORT                                    !   Lat var "inst. env."
           ;
 
       usevar =
@@ -55,12 +55,6 @@ INPUT INSTRUCTIONS
 
       auxiliary =
           FKI CNTRYID CNTSTUID W_STU
-          PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
-          PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
-          PV1READ PV2READ PV3READ PV4READ PV5READ
-          PV6READ PV7READ PV8READ PV9READ PV10READ
-          PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
-          PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
           W_SCH
           ;
 
@@ -86,6 +80,7 @@ INPUT INSTRUCTIONS
           FLSCHOOL NOBULLY FLFAMILY
           STRATIO EDUSHORT
           ;
+
       ndatasets = 10;
       save = FLIT_MMI_*.dat;
       thin = 5000;                         ! Separations to avoid autocorrelation
@@ -1313,25 +1308,25 @@ Average number of observations                              107162
 
 Number of replications
     Requested                                                   10
-    Completed                                                   10
+    Completed                                                    0
 
-Number of dependent variables                                   11
+Number of dependent variables                                   41
 Number of independent variables                                  0
 Number of continuous latent variables                            0
 
 Observed dependent variables
 
   Continuous
-   STRATIO     EDUSHORT    MALE        IMMI1GEN    IMMI2GEN    ESCS
+   STRATIO     EDUSHORT    PV1MATH     PV2MATH     PV3MATH     PV4MATH
+   PV5MATH     PV6MATH     PV7MATH     PV8MATH     PV9MATH     PV10MATH
+   PV1READ     PV2READ     PV3READ     PV4READ     PV5READ     PV6READ
+   PV7READ     PV8READ     PV9READ     PV10READ    PV1FLIT     PV2FLIT
+   PV3FLIT     PV4FLIT     PV5FLIT     PV6FLIT     PV7FLIT     PV8FLIT
+   PV9FLIT     PV10FLIT    MALE        IMMI1GEN    IMMI2GEN    ESCS
    FCFMLRTY    FLCONFIN    FLSCHOOL    NOBULLY     FLFAMILY
 
 Observed auxiliary variables
-   FKI         CNTRYID     CNTSTUID    W_STU       PV1MATH     PV2MATH
-   PV3MATH     PV4MATH     PV5MATH     PV6MATH     PV7MATH     PV8MATH
-   PV9MATH     PV10MATH    PV1READ     PV2READ     PV3READ     PV4READ
-   PV5READ     PV6READ     PV7READ     PV8READ     PV9READ     PV10READ
-   PV1FLIT     PV2FLIT     PV3FLIT     PV4FLIT     PV5FLIT     PV6FLIT
-   PV7FLIT     PV8FLIT     PV9FLIT     PV10FLIT    W_SCH
+   FKI         CNTRYID     CNTSTUID    W_STU       W_SCH
 
 Variables with special functions
 
@@ -2508,17 +2503,6 @@ SUMMARY OF DATA FOR THE FIRST DATA SET
          32        12400350
          35        12400651
 
-     Average cluster size       16.161
-
-     Estimated Intraclass Correlations for the Y Variables
-
-                Intraclass              Intraclass              Intraclass
-     Variable  Correlation   Variable  Correlation   Variable  Correlation
-
-     MALE         0.000      IMMI1GEN     0.000      IMMI2GEN     0.000
-     ESCS         0.000      FCFMLRTY     0.000      FLCONFIN     0.000
-     FLSCHOOL     0.000      NOBULLY      0.000      FLFAMILY     0.000
-
 
 
 SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
@@ -2529,6 +2513,36 @@ SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
            1
  STRATIO   x
  EDUSHORT  x
+ PV1MATH   x
+ PV2MATH   x
+ PV3MATH   x
+ PV4MATH   x
+ PV5MATH   x
+ PV6MATH   x
+ PV7MATH   x
+ PV8MATH   x
+ PV9MATH   x
+ PV10MATH  x
+ PV1READ   x
+ PV2READ   x
+ PV3READ   x
+ PV4READ   x
+ PV5READ   x
+ PV6READ   x
+ PV7READ   x
+ PV8READ   x
+ PV9READ   x
+ PV10READ  x
+ PV1FLIT   x
+ PV2FLIT   x
+ PV3FLIT   x
+ PV4FLIT   x
+ PV5FLIT   x
+ PV6FLIT   x
+ PV7FLIT   x
+ PV8FLIT   x
+ PV9FLIT   x
+ PV10FLIT  x
  MALE      x
  IMMI1GEN  x
  IMMI2GEN  x
@@ -2555,10 +2569,211 @@ Minimum covariance coverage value   0.100
 
 
            Covariance Coverage
-              STRATIO       EDUSHORT      MALE          IMMI1GEN      IMMI2GEN
+              STRATIO       EDUSHORT      PV1MATH       PV2MATH       PV3MATH
               ________      ________      ________      ________      ________
  STRATIO        1.000
  EDUSHORT       1.000         1.000
+ PV1MATH        1.000         1.000         1.000
+ PV2MATH        1.000         1.000         1.000         1.000
+ PV3MATH        1.000         1.000         1.000         1.000         1.000
+ PV4MATH        1.000         1.000         1.000         1.000         1.000
+ PV5MATH        1.000         1.000         1.000         1.000         1.000
+ PV6MATH        1.000         1.000         1.000         1.000         1.000
+ PV7MATH        1.000         1.000         1.000         1.000         1.000
+ PV8MATH        1.000         1.000         1.000         1.000         1.000
+ PV9MATH        1.000         1.000         1.000         1.000         1.000
+ PV10MATH       1.000         1.000         1.000         1.000         1.000
+ PV1READ        1.000         1.000         1.000         1.000         1.000
+ PV2READ        1.000         1.000         1.000         1.000         1.000
+ PV3READ        1.000         1.000         1.000         1.000         1.000
+ PV4READ        1.000         1.000         1.000         1.000         1.000
+ PV5READ        1.000         1.000         1.000         1.000         1.000
+ PV6READ        1.000         1.000         1.000         1.000         1.000
+ PV7READ        1.000         1.000         1.000         1.000         1.000
+ PV8READ        1.000         1.000         1.000         1.000         1.000
+ PV9READ        1.000         1.000         1.000         1.000         1.000
+ PV10READ       1.000         1.000         1.000         1.000         1.000
+ PV1FLIT        1.000         1.000         1.000         1.000         1.000
+ PV2FLIT        1.000         1.000         1.000         1.000         1.000
+ PV3FLIT        1.000         1.000         1.000         1.000         1.000
+ PV4FLIT        1.000         1.000         1.000         1.000         1.000
+ PV5FLIT        1.000         1.000         1.000         1.000         1.000
+ PV6FLIT        1.000         1.000         1.000         1.000         1.000
+ PV7FLIT        1.000         1.000         1.000         1.000         1.000
+ PV8FLIT        1.000         1.000         1.000         1.000         1.000
+ PV9FLIT        1.000         1.000         1.000         1.000         1.000
+ PV10FLIT       1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ IMMI1GEN       1.000         1.000         1.000         1.000         1.000
+ IMMI2GEN       1.000         1.000         1.000         1.000         1.000
+ ESCS           1.000         1.000         1.000         1.000         1.000
+ FCFMLRTY       1.000         1.000         1.000         1.000         1.000
+ FLCONFIN       1.000         1.000         1.000         1.000         1.000
+ FLSCHOOL       1.000         1.000         1.000         1.000         1.000
+ NOBULLY        1.000         1.000         1.000         1.000         1.000
+ FLFAMILY       1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              PV4MATH       PV5MATH       PV6MATH       PV7MATH       PV8MATH
+              ________      ________      ________      ________      ________
+ PV4MATH        1.000
+ PV5MATH        1.000         1.000
+ PV6MATH        1.000         1.000         1.000
+ PV7MATH        1.000         1.000         1.000         1.000
+ PV8MATH        1.000         1.000         1.000         1.000         1.000
+ PV9MATH        1.000         1.000         1.000         1.000         1.000
+ PV10MATH       1.000         1.000         1.000         1.000         1.000
+ PV1READ        1.000         1.000         1.000         1.000         1.000
+ PV2READ        1.000         1.000         1.000         1.000         1.000
+ PV3READ        1.000         1.000         1.000         1.000         1.000
+ PV4READ        1.000         1.000         1.000         1.000         1.000
+ PV5READ        1.000         1.000         1.000         1.000         1.000
+ PV6READ        1.000         1.000         1.000         1.000         1.000
+ PV7READ        1.000         1.000         1.000         1.000         1.000
+ PV8READ        1.000         1.000         1.000         1.000         1.000
+ PV9READ        1.000         1.000         1.000         1.000         1.000
+ PV10READ       1.000         1.000         1.000         1.000         1.000
+ PV1FLIT        1.000         1.000         1.000         1.000         1.000
+ PV2FLIT        1.000         1.000         1.000         1.000         1.000
+ PV3FLIT        1.000         1.000         1.000         1.000         1.000
+ PV4FLIT        1.000         1.000         1.000         1.000         1.000
+ PV5FLIT        1.000         1.000         1.000         1.000         1.000
+ PV6FLIT        1.000         1.000         1.000         1.000         1.000
+ PV7FLIT        1.000         1.000         1.000         1.000         1.000
+ PV8FLIT        1.000         1.000         1.000         1.000         1.000
+ PV9FLIT        1.000         1.000         1.000         1.000         1.000
+ PV10FLIT       1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ IMMI1GEN       1.000         1.000         1.000         1.000         1.000
+ IMMI2GEN       1.000         1.000         1.000         1.000         1.000
+ ESCS           1.000         1.000         1.000         1.000         1.000
+ FCFMLRTY       1.000         1.000         1.000         1.000         1.000
+ FLCONFIN       1.000         1.000         1.000         1.000         1.000
+ FLSCHOOL       1.000         1.000         1.000         1.000         1.000
+ NOBULLY        1.000         1.000         1.000         1.000         1.000
+ FLFAMILY       1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              PV9MATH       PV10MATH      PV1READ       PV2READ       PV3READ
+              ________      ________      ________      ________      ________
+ PV9MATH        1.000
+ PV10MATH       1.000         1.000
+ PV1READ        1.000         1.000         1.000
+ PV2READ        1.000         1.000         1.000         1.000
+ PV3READ        1.000         1.000         1.000         1.000         1.000
+ PV4READ        1.000         1.000         1.000         1.000         1.000
+ PV5READ        1.000         1.000         1.000         1.000         1.000
+ PV6READ        1.000         1.000         1.000         1.000         1.000
+ PV7READ        1.000         1.000         1.000         1.000         1.000
+ PV8READ        1.000         1.000         1.000         1.000         1.000
+ PV9READ        1.000         1.000         1.000         1.000         1.000
+ PV10READ       1.000         1.000         1.000         1.000         1.000
+ PV1FLIT        1.000         1.000         1.000         1.000         1.000
+ PV2FLIT        1.000         1.000         1.000         1.000         1.000
+ PV3FLIT        1.000         1.000         1.000         1.000         1.000
+ PV4FLIT        1.000         1.000         1.000         1.000         1.000
+ PV5FLIT        1.000         1.000         1.000         1.000         1.000
+ PV6FLIT        1.000         1.000         1.000         1.000         1.000
+ PV7FLIT        1.000         1.000         1.000         1.000         1.000
+ PV8FLIT        1.000         1.000         1.000         1.000         1.000
+ PV9FLIT        1.000         1.000         1.000         1.000         1.000
+ PV10FLIT       1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ IMMI1GEN       1.000         1.000         1.000         1.000         1.000
+ IMMI2GEN       1.000         1.000         1.000         1.000         1.000
+ ESCS           1.000         1.000         1.000         1.000         1.000
+ FCFMLRTY       1.000         1.000         1.000         1.000         1.000
+ FLCONFIN       1.000         1.000         1.000         1.000         1.000
+ FLSCHOOL       1.000         1.000         1.000         1.000         1.000
+ NOBULLY        1.000         1.000         1.000         1.000         1.000
+ FLFAMILY       1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              PV4READ       PV5READ       PV6READ       PV7READ       PV8READ
+              ________      ________      ________      ________      ________
+ PV4READ        1.000
+ PV5READ        1.000         1.000
+ PV6READ        1.000         1.000         1.000
+ PV7READ        1.000         1.000         1.000         1.000
+ PV8READ        1.000         1.000         1.000         1.000         1.000
+ PV9READ        1.000         1.000         1.000         1.000         1.000
+ PV10READ       1.000         1.000         1.000         1.000         1.000
+ PV1FLIT        1.000         1.000         1.000         1.000         1.000
+ PV2FLIT        1.000         1.000         1.000         1.000         1.000
+ PV3FLIT        1.000         1.000         1.000         1.000         1.000
+ PV4FLIT        1.000         1.000         1.000         1.000         1.000
+ PV5FLIT        1.000         1.000         1.000         1.000         1.000
+ PV6FLIT        1.000         1.000         1.000         1.000         1.000
+ PV7FLIT        1.000         1.000         1.000         1.000         1.000
+ PV8FLIT        1.000         1.000         1.000         1.000         1.000
+ PV9FLIT        1.000         1.000         1.000         1.000         1.000
+ PV10FLIT       1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ IMMI1GEN       1.000         1.000         1.000         1.000         1.000
+ IMMI2GEN       1.000         1.000         1.000         1.000         1.000
+ ESCS           1.000         1.000         1.000         1.000         1.000
+ FCFMLRTY       1.000         1.000         1.000         1.000         1.000
+ FLCONFIN       1.000         1.000         1.000         1.000         1.000
+ FLSCHOOL       1.000         1.000         1.000         1.000         1.000
+ NOBULLY        1.000         1.000         1.000         1.000         1.000
+ FLFAMILY       1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              PV9READ       PV10READ      PV1FLIT       PV2FLIT       PV3FLIT
+              ________      ________      ________      ________      ________
+ PV9READ        1.000
+ PV10READ       1.000         1.000
+ PV1FLIT        1.000         1.000         1.000
+ PV2FLIT        1.000         1.000         1.000         1.000
+ PV3FLIT        1.000         1.000         1.000         1.000         1.000
+ PV4FLIT        1.000         1.000         1.000         1.000         1.000
+ PV5FLIT        1.000         1.000         1.000         1.000         1.000
+ PV6FLIT        1.000         1.000         1.000         1.000         1.000
+ PV7FLIT        1.000         1.000         1.000         1.000         1.000
+ PV8FLIT        1.000         1.000         1.000         1.000         1.000
+ PV9FLIT        1.000         1.000         1.000         1.000         1.000
+ PV10FLIT       1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ IMMI1GEN       1.000         1.000         1.000         1.000         1.000
+ IMMI2GEN       1.000         1.000         1.000         1.000         1.000
+ ESCS           1.000         1.000         1.000         1.000         1.000
+ FCFMLRTY       1.000         1.000         1.000         1.000         1.000
+ FLCONFIN       1.000         1.000         1.000         1.000         1.000
+ FLSCHOOL       1.000         1.000         1.000         1.000         1.000
+ NOBULLY        1.000         1.000         1.000         1.000         1.000
+ FLFAMILY       1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              PV4FLIT       PV5FLIT       PV6FLIT       PV7FLIT       PV8FLIT
+              ________      ________      ________      ________      ________
+ PV4FLIT        1.000
+ PV5FLIT        1.000         1.000
+ PV6FLIT        1.000         1.000         1.000
+ PV7FLIT        1.000         1.000         1.000         1.000
+ PV8FLIT        1.000         1.000         1.000         1.000         1.000
+ PV9FLIT        1.000         1.000         1.000         1.000         1.000
+ PV10FLIT       1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ IMMI1GEN       1.000         1.000         1.000         1.000         1.000
+ IMMI2GEN       1.000         1.000         1.000         1.000         1.000
+ ESCS           1.000         1.000         1.000         1.000         1.000
+ FCFMLRTY       1.000         1.000         1.000         1.000         1.000
+ FLCONFIN       1.000         1.000         1.000         1.000         1.000
+ FLSCHOOL       1.000         1.000         1.000         1.000         1.000
+ NOBULLY        1.000         1.000         1.000         1.000         1.000
+ FLFAMILY       1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              PV9FLIT       PV10FLIT      MALE          IMMI1GEN      IMMI2GEN
+              ________      ________      ________      ________      ________
+ PV9FLIT        1.000
+ PV10FLIT       1.000         1.000
  MALE           1.000         1.000         1.000
  IMMI1GEN       1.000         1.000         1.000         1.000
  IMMI2GEN       1.000         1.000         1.000         1.000         1.000
@@ -2595,181 +2810,9 @@ NOTE:  The sample statistics for within and between refer to the
        maximum-likelihood estimated within and between covariance
        matrices, respectively.
 
-NOTE:  These are average results over 10 data sets.
 
-
-     ESTIMATED SAMPLE STATISTICS FOR WITHIN
-
-
-           Means
-              STRATIO       EDUSHORT      MALE          IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
-                0.000         0.000         0.502         0.029         0.042
-
-
-           Means
-              ESCS          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
-              ________      ________      ________      ________      ________
-               -0.241         7.033        -0.084         0.011        -0.064
-
-
-           Means
-              FLFAMILY
-              ________
-                0.058
-
-
-           Covariances
-              STRATIO       EDUSHORT      MALE          IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
- STRATIO        0.000
- EDUSHORT       0.000         0.000
- MALE           0.000         0.000         0.250
- IMMI1GEN       0.000         0.000         0.001         0.028
- IMMI2GEN       0.000         0.000         0.001        -0.001         0.041
- ESCS           0.000         0.000         0.009         0.001         0.003
- FCFMLRTY       0.000         0.000         0.066        -0.001         0.004
- FLCONFIN       0.000         0.000         0.067         0.000         0.000
- FLSCHOOL       0.000         0.000         0.028         0.002         0.000
- NOBULLY        0.000         0.000        -0.051        -0.003         0.001
- FLFAMILY       0.000         0.000        -0.025        -0.001        -0.001
-
-
-           Covariances
-              ESCS          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
-              ________      ________      ________      ________      ________
- ESCS           1.183
- FCFMLRTY       1.203        29.792
- FLCONFIN       0.131         1.468         1.035
- FLSCHOOL       0.009         1.664         0.218         1.040
- NOBULLY        0.055         0.272        -0.014        -0.086         1.111
- FLFAMILY       0.037         0.885         0.196         0.223        -0.037
-
-
-           Covariances
-              FLFAMILY
-              ________
- FLFAMILY       1.090
-
-
-           Correlations
-              STRATIO       EDUSHORT      MALE          IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
- STRATIO        0.000
- EDUSHORT       0.000         0.000
- MALE           0.000         0.000         1.000
- IMMI1GEN       0.000         0.000         0.007         1.000
- IMMI2GEN       0.000         0.000         0.005        -0.036         1.000
- ESCS           0.000         0.000         0.017         0.004         0.014
- FCFMLRTY       0.000         0.000         0.024        -0.001         0.003
- FLCONFIN       0.000         0.000         0.132         0.000        -0.001
- FLSCHOOL       0.000         0.000         0.055         0.011        -0.001
- NOBULLY        0.000         0.000        -0.097        -0.016         0.002
- FLFAMILY       0.000         0.000        -0.047        -0.006        -0.006
-
-
-           Correlations
-              ESCS          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
-              ________      ________      ________      ________      ________
- ESCS           1.000
- FCFMLRTY       0.203         1.000
- FLCONFIN       0.119         0.264         1.000
- FLSCHOOL       0.008         0.299         0.210         1.000
- NOBULLY        0.048         0.047        -0.013        -0.080         1.000
- FLFAMILY       0.033         0.155         0.185         0.209        -0.034
-
-
-           Correlations
-              FLFAMILY
-              ________
- FLFAMILY       1.000
-
-
-     ESTIMATED SAMPLE STATISTICS FOR BETWEEN
-
-
-           Means
-              STRATIO       EDUSHORT      MALE          IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
-               13.868         0.130         0.000         0.000         0.000
-
-
-           Means
-              ESCS          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
-              ________      ________      ________      ________      ________
-                0.000         0.000         0.000         0.000         0.000
-
-
-           Means
-              FLFAMILY
-              ________
-                0.000
-
-
-           Covariances
-              STRATIO       EDUSHORT      MALE          IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
- STRATIO      103.594
- EDUSHORT      -0.125         1.073
- MALE           0.000         0.000         0.000
- IMMI1GEN       0.000         0.000         0.000         0.000
- IMMI2GEN       0.000         0.000         0.000         0.000         0.000
- ESCS           0.000         0.000         0.000         0.000         0.000
- FCFMLRTY       0.000         0.000         0.000         0.000         0.000
- FLCONFIN       0.000         0.000         0.000         0.000         0.000
- FLSCHOOL       0.000         0.000         0.000         0.000         0.000
- NOBULLY        0.000         0.000         0.000         0.000         0.000
- FLFAMILY       0.000         0.000         0.000         0.000         0.000
-
-
-           Covariances
-              ESCS          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
-              ________      ________      ________      ________      ________
- ESCS           0.000
- FCFMLRTY       0.000         0.000
- FLCONFIN       0.000         0.000         0.000
- FLSCHOOL       0.000         0.000         0.000         0.000
- NOBULLY        0.000         0.000         0.000         0.000         0.000
- FLFAMILY       0.000         0.000         0.000         0.000         0.000
-
-
-           Covariances
-              FLFAMILY
-              ________
- FLFAMILY       0.000
-
-
-           Correlations
-              STRATIO       EDUSHORT      MALE          IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
- STRATIO        1.000
- EDUSHORT      -0.012         1.000
- MALE           0.000         0.000         0.000
- IMMI1GEN       0.000         0.000         0.000         0.000
- IMMI2GEN       0.000         0.000         0.000         0.000         0.000
- ESCS           0.000         0.000         0.000         0.000         0.000
- FCFMLRTY       0.000         0.000         0.000         0.000         0.000
- FLCONFIN       0.000         0.000         0.000         0.000         0.000
- FLSCHOOL       0.000         0.000         0.000         0.000         0.000
- NOBULLY        0.000         0.000         0.000         0.000         0.000
- FLFAMILY       0.000         0.000         0.000         0.000         0.000
-
-
-           Correlations
-              ESCS          FCFMLRTY      FLCONFIN      FLSCHOOL      NOBULLY
-              ________      ________      ________      ________      ________
- ESCS           0.000
- FCFMLRTY       0.000         0.000
- FLCONFIN       0.000         0.000         0.000
- FLSCHOOL       0.000         0.000         0.000         0.000
- NOBULLY        0.000         0.000         0.000         0.000         0.000
- FLFAMILY       0.000         0.000         0.000         0.000         0.000
-
-
-           Correlations
-              FLFAMILY
-              ________
- FLFAMILY       0.000
+     THE SAMPLE STATISTICS COULD NOT BE COMPUTED FOR THE IMPUTED DATA SETS.
+     SEE TECHNICAL 9 OUTPUT FOR MORE DETAILS.
 
 
 UNIVARIATE SAMPLE STATISTICS
@@ -2784,6 +2827,66 @@ UNIVARIATE SAMPLE STATISTICS
             5626.000     103.449      25.425     100.000    0.37%      13.231     17.516
      EDUSHORT              0.131       0.341      -1.421   15.79%      -0.688     -0.208      0.100
             6346.000       1.073      -0.188       2.959    1.92%       0.399      1.024
+     PV1MATH             468.915      -0.091     105.829    0.00%     383.641    445.069    471.510
+          107162.000    9348.307      -0.327     825.714    0.00%     497.161    554.059
+     PV2MATH             468.863      -0.094      70.541    0.00%     382.957    444.974    471.463
+          107162.000    9405.538      -0.329     829.814    0.00%     497.425    553.950
+     PV3MATH             469.054      -0.101     107.868    0.00%     383.614    445.629    472.113
+          107162.000    9349.609      -0.332     823.950    0.00%     497.831    553.551
+     PV4MATH             468.786      -0.098      90.719    0.00%     383.194    445.090    471.727
+          107162.000    9400.133      -0.328     839.184    0.00%     497.657    553.786
+     PV5MATH             469.103      -0.093      88.125    0.00%     383.984    445.483    471.707
+          107162.000    9377.082      -0.332     816.214    0.00%     497.434    553.969
+     PV6MATH             468.799      -0.095     103.775    0.00%     383.699    445.120    471.517
+          107162.000    9366.183      -0.319     905.420    0.00%     497.300    553.721
+     PV7MATH             468.966      -0.098      93.345    0.00%     383.588    445.386    471.837
+          107162.000    9390.254      -0.346     838.228    0.00%     497.643    554.211
+     PV8MATH             468.767      -0.101      59.877    0.00%     383.332    445.172    471.730
+          107162.000    9436.656      -0.317     811.201    0.00%     497.374    553.906
+     PV9MATH             468.839      -0.091     122.944    0.00%     383.482    445.282    471.432
+          107162.000    9378.703      -0.326     848.574    0.00%     497.372    553.813
+     PV10MATH            468.824      -0.087     111.050    0.00%     383.407    444.659    471.405
+          107162.000    9395.563      -0.332     841.484    0.00%     497.603    553.657
+     PV1READ             465.877      -0.028      76.744    0.00%     373.702    439.409    467.800
+          107162.000   10708.390      -0.387     868.940    0.00%     495.256    557.084
+     PV2READ             465.854      -0.035     102.699    0.00%     373.915    439.463    467.366
+          107162.000   10677.745      -0.384     841.718    0.00%     495.402    556.835
+     PV3READ             465.845      -0.030     104.078    0.00%     373.835    439.524    467.636
+          107162.000   10693.627      -0.384     862.513    0.00%     495.287    556.670
+     PV4READ             466.035      -0.031      79.873    0.00%     374.238    439.320    467.489
+          107162.000   10754.327      -0.391     838.288    0.00%     495.141    557.533
+     PV5READ             465.971      -0.038     111.668    0.00%     374.035    439.567    467.805
+          107162.000   10717.077      -0.390     865.005    0.00%     495.571    557.222
+     PV6READ             465.833      -0.037      77.282    0.00%     374.171    439.366    467.424
+          107162.000   10718.729      -0.390     857.434    0.00%     495.312    557.186
+     PV7READ             465.609      -0.024      96.744    0.00%     373.849    439.108    467.005
+          107162.000   10716.982      -0.385     861.031    0.00%     494.889    556.563
+     PV8READ             465.808      -0.035      42.566    0.00%     373.995    439.345    467.670
+          107162.000   10739.928      -0.371     837.846    0.00%     495.143    557.037
+     PV9READ             466.097      -0.030     111.151    0.00%     374.178    439.756    467.818
+          107162.000   10687.386      -0.380     836.707    0.00%     495.617    556.970
+     PV10READ            465.827      -0.024      85.796    0.00%     373.508    440.053    467.651
+          107162.000   10689.555      -0.368     927.839    0.00%     495.387    556.454
+     PV1FLIT             478.377      -0.082      45.664    0.00%     389.796    454.347    481.596
+          107162.000   10321.125      -0.231     897.101    0.00%     507.828    566.230
+     PV2FLIT             478.442      -0.084      29.841    0.00%     389.458    454.529    481.651
+          107162.000   10336.324      -0.233     877.955    0.00%     508.026    566.020
+     PV3FLIT             478.564      -0.088      88.005    0.00%     390.160    454.668    481.587
+          107162.000   10250.203      -0.242     868.796    0.00%     507.933    565.979
+     PV4FLIT             478.120      -0.083      86.810    0.00%     389.902    453.920    481.031
+          107162.000   10251.609      -0.236     865.043    0.00%     507.278    565.469
+     PV5FLIT             478.005      -0.073      89.618    0.00%     389.624    453.822    480.835
+          107162.000   10291.522      -0.240     877.357    0.00%     507.354    565.455
+     PV6FLIT             478.310      -0.081      51.476    0.00%     389.791    453.933    481.432
+          107162.000   10321.411      -0.229     869.206    0.00%     507.709    565.990
+     PV7FLIT             478.187      -0.084      87.842    0.00%     389.211    454.355    481.576
+          107162.000   10362.645      -0.239     884.128    0.00%     507.756    565.567
+     PV8FLIT             478.174      -0.072      70.686    0.00%     389.904    453.921    480.635
+          107162.000   10324.965      -0.232     905.065    0.00%     507.403    565.779
+     PV9FLIT             478.498      -0.088      33.324    0.00%     389.342    454.692    481.838
+          107162.000   10324.563      -0.244     878.334    0.00%     508.062    565.907
+     PV10FLIT            478.230      -0.078      87.090    0.00%     389.448    453.907    481.303
+          107162.000   10351.737      -0.230     881.732    0.00%     507.791    566.045
      MALE                  0.502      -0.007       0.000   49.82%       0.000      0.000      1.000
           107160.000       0.250      -2.000       1.000   50.18%       1.000      1.000
      IMMI1GEN              0.029       5.608       0.000   97.09%       0.000      0.000      0.000
@@ -2804,6 +2907,50 @@ UNIVARIATE SAMPLE STATISTICS
            95133.000       1.090       0.030       2.452    0.04%       0.302      0.832
 
 
+TECHNICAL 9 OUTPUT
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+     THE H1 MODEL ESTIMATION DID NOT CONVERGE.  THE SAMPLE STATISTICS COULD NOT
+     BE COMPUTED.  INCREASE THE NUMBER OF H1ITERATIONS.
+
+
+
 SAVEDATA INFORMATION
 
 
@@ -2814,19 +2961,6 @@ SAVEDATA INFORMATION
 
     STRATIO
     EDUSHORT
-    MALE
-    IMMI1GEN
-    IMMI2GEN
-    ESCS
-    FCFMLRTY
-    FLCONFIN
-    FLSCHOOL
-    NOBULLY
-    FLFAMILY
-    FKI
-    CNTRYID
-    CNTSTUID
-    W_STU
     PV1MATH
     PV2MATH
     PV3MATH
@@ -2857,6 +2991,19 @@ SAVEDATA INFORMATION
     PV8FLIT
     PV9FLIT
     PV10FLIT
+    MALE
+    IMMI1GEN
+    IMMI2GEN
+    ESCS
+    FCFMLRTY
+    FLCONFIN
+    FLSCHOOL
+    NOBULLY
+    FLFAMILY
+    FKI
+    CNTRYID
+    CNTSTUID
+    W_STU
     W_SCH
     CNTSCHID
 
@@ -2865,15 +3012,9 @@ SAVEDATA INFORMATION
   Save file record length    10000
 
 
-DIAGRAM INFORMATION
-
-  Mplus diagrams are currently not available for multilevel analysis.
-  No diagram output was produced.
-
-
-     Beginning Time:  21:51:53
-        Ending Time:  01:48:28
-       Elapsed Time:  03:56:35
+     Beginning Time:  12:39:31
+        Ending Time:  11:42:31
+       Elapsed Time:  23:03:00
 
 
 
