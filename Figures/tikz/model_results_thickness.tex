@@ -54,7 +54,7 @@
     \draw[blue,->,line width=2*0.173mm] (C1.east) to node[sloped] {\press{0.173}{***}{0.009}} (conf1.west);
 
     \draw[blue,->,line width=2*0.048mm] (S1.east) to node[above,sloped] {\press{0.048}{***}{0.009}} (fami1.west);
-    \draw[dashed,blue,->,line width=2*0.006mm] (S1.east) to node[below,sloped,pos=0.6] {\press{0.006}{}{0.009}} (conf1.west);
+    \draw[dashed,blue,->] (S1.east) to node[below,sloped,pos=0.6] {\press{0.006}{}{0.009}} (conf1.west);
 
 % Link demo to M
     \draw[black!25!white,->,line width=2*0.222mm] (escs.east) to node[above,sloped] {\press{0.222}{***}{0.010}} (fami1.west);
@@ -72,7 +72,7 @@
 
 % Link X to Y
     \draw[red,->,line width=2*0.089mm] (A1.east) to node[above,sloped,pos=0.42] {\press{-0.089}{***}{0.011}} (flit1.west);
-    \draw[dashed,red,->,line width=2*0.016mm] (C1.east) to node[above,sloped,pos=0.38] {\press{-0.016}{\dagger}{0.010}} (flit1.west);
+    \draw[dashed,red,->] (C1.east) to node[above,sloped,pos=0.38] {\press{-0.016}{\dagger}{0.010}} (flit1.west);
     \draw[red,->,line width=2*0.046mm] (S1.east) to node[above,sloped,pos=0.4] {\press{0.046}{***}{0.009}} (flit1.west);
 
 % Link demo to Y
@@ -110,16 +110,15 @@
 % Draw a dashed line to mark Level 2
 %\draw[black,dashed,-,line width=2pt] (1.5,13)--(14.85,13);
 % Insert level labels
-\node at (0,12) {\textbf{$\m{L2}$: School}};
+\node at (0,13) {\textbf{$\m{L2}$: School}};
 
 % Input vars (school climate)
-    \node[latvar] (A2) at (3,11) {$\texttt{FLSCHOOL}_B$};
-    \node[latvar] (C2) at (3,9) {$\texttt{FLFAMILY}_B$};
-    \node[latvar] (S2) at (3,7) {$\texttt{NOBULLY}_B$};
-    \node[manvar] (R2) at (3,5) {$\texttt{EDUSHORT}$};
+    \node[latvar] (A2) at (3,12) {$\texttt{FLSCHOOL}_B$};
+    \node[latvar] (C2) at (3,10) {$\texttt{FLFAMILY}_B$};
+    \node[latvar] (S2) at (3,8) {$\texttt{NOBULLY}_B$};
+    \node[manvar] (R2) at (3,6) {$\texttt{EDUSHORT}$};
 
-% Control var
-    \node[manvar] (st2) at (13.5,5) {$\texttt{STRATIO}$};
+    \node[demo] (st2) at (3,5) {$\texttt{STRATIO}$};
 
 % Outcome var (financial literacy)
     \node[latvar] (flit2) at (9.5,8) {$\texttt{FLIT}_{B}$};
@@ -128,10 +127,9 @@
     \draw[->,line width=2*0.283mm] (A2.east) to node[above,sloped] {\press{-0.283}{***}{0.065}} (flit2.west);
     \draw[->,line width=2*0.214mm] (C2.east) to node[above,sloped,pos=0.4] {\press{-0.214}{***}{0.054}} (flit2.west);
     \draw[->,line width=2*0.266mm] (S2.east) to node[above,sloped,pos=0.4] {\press{0.266}{***}{0.071}} (flit2.west);
-    \draw[->,line width=2*0.287mm] (R2.east) to node[below,sloped] {\press{-0.287}{***}{0.039}} (flit2.west);
+    \draw[->,line width=2*0.287mm] (R2.east) to node[above,sloped] {\press{-0.287}{***}{0.039}} (flit2.west);
 
-% Link control vars with output var
-    \draw[->,line width=2*0.130mm] (st2.west) to node[below,sloped] {\press{-0.130}{***}{0.026}} (flit2.south east);
+    \draw[black!25!white,->,line width=2*0.130mm] (st2.east) to node[below,sloped] {\press{-0.130}{***}{0.026}} (flit2.west);
 
 % Draw residual arrow on output var
     \draw[<-] (11.25,8)--(11.75,8);
@@ -142,7 +140,10 @@
     \draw[<->] (S2.south) to [bend right] (R2.north);
     \draw[<->] (A2.south) to [bend left] (S2.north);
     \draw[dashed,<->] (C2.south) to [bend left] (R2.north);
-    \draw[<->] (A2.south west) to [bend left] (R2.north west);
+    \draw[<->] (A2.south west) to [bend left] (R2.west);
+
+    \draw[black!25!white,<->] (st2.west) to [bend right] (A2.west);
+    \draw[black!25!white,<->] (st2.west) to [bend right] (R2.west);
 
 \end{tikzpicture}
 }{[Insert notes here.]}

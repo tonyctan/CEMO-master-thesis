@@ -1,0 +1,10 @@
+del *.aux
+del *.bbl
+del *.bcf
+del *.blg
+del *.log
+del *.nav
+del *.out
+del *.run.xml
+del *.snm
+del *.toc

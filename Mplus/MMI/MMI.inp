@@ -1,5 +1,5 @@
 TITLE:
-    Multilevel multiple imputation
+    Multilevel multiple imputation using JM-AM H1
 
 
 DATA:
@@ -13,10 +13,10 @@ VARIABLE:
         PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
         PV1READ PV2READ PV3READ PV4READ PV5READ     ! Plausible values for READ
         PV6READ PV7READ PV8READ PV9READ PV10READ
-        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT     ! Plausible values for FLIT (Y)
+        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT     ! Plausible values for FLIT
         PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
         MALE IMMI1GEN IMMI2GEN ESCS                 ! Demographic info
-        FCFMLRTY FLCONFIN                           ! Affects (M)
+        FCFMLRTY FLCONFIN                           ! Affects
         FLSCHOOL                                    !   Lat var "Academic"
         NOBULLY                                     !   Lat var "Safety"
         FLFAMILY                                    !   Lat var "Community"
@@ -25,12 +25,6 @@ VARIABLE:
         ;
 
     usevar =
-        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
-        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
-        PV1READ PV2READ PV3READ PV4READ PV5READ
-        PV6READ PV7READ PV8READ PV9READ PV10READ
-        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
-        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
         MALE IMMI1GEN IMMI2GEN ESCS
         FCFMLRTY FLCONFIN
         FLSCHOOL NOBULLY FLFAMILY
@@ -48,19 +42,26 @@ VARIABLE:
         ;
 
     auxiliary =
-        FKI CNTRYID CNTSTUID W_STU
+        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH     ! Plausible values
+        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
+        PV1READ PV2READ PV3READ PV4READ PV5READ
+        PV6READ PV7READ PV8READ PV9READ PV10READ
+        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
+        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
+        FKI CNTRYID CNTSTUID W_STU                  ! Admin vars
         W_SCH
         ;
 
-    missing = all (-99);
-
     cluster = CNTSCHID;
+
+    missing = all (-99);
 
 
 ANALYSIS:
     processors = 4;
 
-    type = basic twolevel;
+    type = twolevel;
+    estimator = Bayes;
 
     fbiterations = 50000;                ! Number of burn-in iterations
     chains = 4;
