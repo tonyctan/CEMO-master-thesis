@@ -9,6 +9,9 @@ setwdOS(lin = "~/uio", win = "M:/", ext = "pc/Dokumenter/MSc/Thesis/Mplus/MMI/")
 
 # Save Bayesian distributions
 
+par(mfrow = c(1, 1))
+mplus.plot.bayesian.distribution("mmi.gh5", 1, 5)
+
 pdf("../../Figures/Bayesian_dist1.pdf",height=16.8, width=10.5)
     par(mfrow = c(3, 3))
     for (i in 1:9) {
@@ -147,4 +150,6 @@ pdf("../../Figures/Bayesian_chi2.pdf",height=16.8, width=10.5)
     )
     abline(h = 0, col="black") # Add horizontal axis
     abline(v = 28656.36715, col= "blue") # Add mean
- 
+    abline(v = 28403.12500, col = "green") # Add CI lower bound
+    abline(v = 28912.03125,col="green") # Add CI upper bound
+dev.off()
