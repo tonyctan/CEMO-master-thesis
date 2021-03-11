@@ -3,7 +3,7 @@ TITLE:
     Null model for all countries
 
 DATA:
-    file = "C:\Users\tctan\implist.dat";
+    file = "~/implist.dat";
 
     type = imputation;
 
@@ -26,14 +26,14 @@ VARIABLE:
 
     weight = W_STU;                         ! Student weight
     wtscale = cluster;                      ! Scale L1 weight to cluster size
-    bweight = W_SCH;                       ! School weight
+    bweight = W_SCH;                        ! School weight
     bwtscale = sample;                      ! Scale L2 weight to sample
 
     cluster = CNTSCHID;                     ! Cluster label: school ID
 
 
 ANALYSIS:
-    processors = 4;
+    processors = 8;
 
     type = twolevel;
 
@@ -43,7 +43,7 @@ MODEL:
 %Within%                                    ! === L1: Student-level ===
     FLIT;
 
-%Between%                          ! === L2: School-level ===
+%Between%                                   ! === L2: School-level ===
     FLIT;
 
 

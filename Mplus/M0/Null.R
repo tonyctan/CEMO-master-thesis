@@ -7,7 +7,7 @@ setwdOS(
 
 # Load necessary packages
 library(MplusAutomation)
-inslibrary(metafor)
+library(metafor)
 library(ggpubr)
 
 # Create input files
