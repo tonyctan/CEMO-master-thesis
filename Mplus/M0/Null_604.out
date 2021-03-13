@@ -1,0 +1,579 @@
+Mplus VERSION 8.5 (Linux)
+MUTHEN & MUTHEN
+03/11/2021   6:02 PM
+
+INPUT INSTRUCTIONS
+
+
+  TITLE:
+      Null model 604
+
+  DATA:
+      file = "~/implist.dat";
+
+      type = imputation;
+
+  VARIABLE:
+      names =
+          FKI CNTRYID CNTSCHID W_STU
+          MATH READ FLIT                      ! PISA achievement variables
+          MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+          FCFMLRTY FLCONFIN                   ! Affect
+          FLSCHOOL                            !   Lat var "Academic"
+          NOBULLY                             !   Lat var "Safety"
+          FLFAMILY                            !   Lat var "Community"
+          W_SCH STRATIO                       ! School character
+          EDUSHORT                            !   Lat var "inst. env."
+          ;
+
+      useobs = CNTRYID eq 604;          ! Pull out one country at a time
+
+      usevar =
+          FLIT                                ! Financial literacy outcome
+          ;
+
+      weight = W_STU;                         ! Student weight
+      wtscale = cluster;                      ! Scale L1 weight to cluster size
+      bweight = W_SCH;                        ! School weight
+      bwtscale = sample;                      ! Scale L2 weight to sample
+
+      cluster = CNTSCHID;                     ! Cluster by school ID
+
+
+  ANALYSIS:
+      processors = 8;
+
+      type = twolevel;
+
+
+  MODEL:
+
+  %Within%                                    ! === L1: Student-level ===
+      FLIT;
+
+  %Between%                                   ! === L2: School-level ===
+      FLIT;
+
+
+  OUTPUT:
+      stdyx                                   ! Fully standardised solution
+      ;
+
+
+
+*** WARNING in MODEL command
+  Variable is uncorrelated with all other variables: FLIT
+*** WARNING in MODEL command
+  At least one variable is uncorrelated with all other variables in the model.
+  Check that this is what is intended.
+   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Null model 604
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Average number of observations                                4732
+
+Number of replications
+    Requested                                                   10
+    Completed                                                   10
+
+Number of dependent variables                                    1
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   FLIT
+
+Variables with special functions
+
+  Cluster variable      CNTSCHID
+  Weight variable (cluster-size scaling)
+    W_STU
+  Between weight variable (sample-size scaling)
+    W_SCH
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                   100
+Convergence criterion                                    0.100D-05
+Maximum number of EM iterations                                500
+Convergence criteria for the EM algorithm
+  Loglikelihood change                                   0.100D-02
+  Relative loglikelihood change                          0.100D-05
+  Derivative                                             0.100D-03
+Minimum variance                                         0.100D-03
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  Multiple data files from
+    ~/implist.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA FOR THE FIRST DATA SET
+
+     Number of clusters                        337
+
+     Average cluster size       14.042
+
+     Estimated Intraclass Correlations for the Y Variables
+
+                Intraclass
+     Variable  Correlation
+
+     FLIT         0.387
+
+
+
+SAMPLE STATISTICS
+
+NOTE:  The sample statistics for within and between refer to the
+       maximum-likelihood estimated within and between covariance
+       matrices, respectively.
+
+NOTE:  These are average results over 10 data sets.
+
+
+     ESTIMATED SAMPLE STATISTICS FOR WITHIN
+
+
+           Means
+              FLIT
+              ________
+                0.000
+
+
+           Covariances
+              FLIT
+              ________
+ FLIT        5839.467
+
+
+           Correlations
+              FLIT
+              ________
+ FLIT           1.000
+
+
+     ESTIMATED SAMPLE STATISTICS FOR BETWEEN
+
+
+           Means
+              FLIT
+              ________
+              411.760
+
+
+           Covariances
+              FLIT
+              ________
+ FLIT        3566.666
+
+
+           Correlations
+              FLIT
+              ________
+ FLIT           1.000
+
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        3
+
+Loglikelihood
+
+    H0 Value
+
+        Mean                            -27574.720
+        Std Dev                             38.903
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       -27665.222     -27617.699
+           0.980       1.000       -27654.617     -27617.699
+           0.950       1.000       -27638.713     -27617.699
+           0.900       1.000       -27624.579     -27617.699
+           0.800       0.800       -27607.462     -27617.699
+           0.700       0.600       -27595.121     -27605.106
+           0.500       0.400       -27574.720     -27590.291
+           0.300       0.300       -27554.319     -27565.956
+           0.200       0.200       -27541.979     -27551.666
+           0.100       0.100       -27524.862     -27525.824
+           0.050       0.100       -27510.728     -27525.824
+           0.020       0.100       -27494.824     -27525.824
+           0.010       0.000       -27484.219     -27525.824
+
+    H1 Value
+
+        Mean                            -27574.637
+        Std Dev                             38.922
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000       -27665.181     -27617.558
+           0.980       1.000       -27654.571     -27617.558
+           0.950       1.000       -27638.660     -27617.558
+           0.900       1.000       -27624.519     -27617.558
+           0.800       0.800       -27607.393     -27617.558
+           0.700       0.600       -27595.047     -27605.089
+           0.500       0.400       -27574.637     -27590.285
+           0.300       0.300       -27554.226     -27565.776
+           0.200       0.200       -27541.880     -27551.557
+           0.100       0.100       -27524.754     -27525.811
+           0.050       0.100       -27510.614     -27525.811
+           0.020       0.100       -27494.702     -27525.811
+           0.010       0.000       -27484.092     -27525.811
+
+Information Criteria
+
+    Akaike (AIC)
+
+        Mean                             55155.441
+        Std Dev                             77.807
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000        54974.439      54990.639
+           0.980       0.900        54995.649      54990.639
+           0.950       0.900        55027.456      54990.639
+           0.900       0.900        55055.724      54990.639
+           0.800       0.800        55089.959      54990.639
+           0.700       0.700        55114.639      55109.333
+           0.500       0.600        55155.441      55177.504
+           0.300       0.400        55196.243      55197.753
+           0.200       0.200        55220.923      55216.213
+           0.100       0.000        55255.158      55239.430
+           0.050       0.000        55283.426      55239.430
+           0.020       0.000        55315.233      55239.430
+           0.010       0.000        55336.443      55239.430
+
+    Bayesian (BIC)
+
+        Mean                             55174.827
+        Std Dev                             77.807
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000        54993.825      55010.025
+           0.980       0.900        55015.035      55010.025
+           0.950       0.900        55046.843      55010.025
+           0.900       0.900        55075.110      55010.025
+           0.800       0.800        55109.345      55010.025
+           0.700       0.700        55134.025      55128.719
+           0.500       0.600        55174.827      55196.890
+           0.300       0.400        55215.629      55217.139
+           0.200       0.200        55240.310      55235.599
+           0.100       0.000        55274.545      55258.816
+           0.050       0.000        55302.812      55258.816
+           0.020       0.000        55334.619      55258.816
+           0.010       0.000        55355.830      55258.816
+
+    Sample-Size Adjusted BIC (n* = (n + 2) / 24)
+
+        Mean                             55165.294
+        Std Dev                             77.807
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000        54984.292      55000.493
+           0.980       0.900        55005.502      55000.493
+           0.950       0.900        55037.310      55000.493
+           0.900       0.900        55065.577      55000.493
+           0.800       0.800        55099.812      55000.493
+           0.700       0.700        55124.492      55119.186
+           0.500       0.600        55165.294      55187.357
+           0.300       0.400        55206.096      55207.606
+           0.200       0.200        55230.777      55226.066
+           0.100       0.000        55265.012      55249.283
+           0.050       0.000        55293.279      55249.283
+           0.020       0.000        55325.087      55249.283
+           0.010       0.000        55346.297      55249.283
+
+Chi-Square Test of Model Fit
+
+        Degrees of freedom                       0
+
+        Mean                                 0.168
+        Std Dev                              0.157
+        Number of successful computations       10
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.000          0.008
+           0.980       1.000            0.000          0.008
+           0.950       1.000            0.000          0.008
+           0.900       1.000            0.000          0.008
+           0.800       1.000            0.000          0.008
+           0.700       1.000            0.000          0.018
+           0.500       1.000            0.000          0.035
+           0.300       1.000            0.000          0.282
+           0.200       1.000            0.000          0.291
+           0.100       1.000            0.000          0.361
+           0.050       1.000            0.000          0.361
+           0.020       1.000            0.000          0.361
+           0.010       1.000            0.000          0.361
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+        Mean                                 0.000
+        Std Dev                              0.000
+        Number of successful computations       10
+
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       1.000
+           0.980       1.000
+           0.950       1.000
+           0.900       1.000
+           0.800       1.000
+           0.700       1.000
+           0.500       1.000
+           0.300       1.000
+           0.200       1.000
+           0.100       1.000
+           0.050       1.000
+           0.020       1.000
+           0.010       1.000
+
+CFI/TLI
+
+    CFI
+
+        Mean                                 0.000
+        Std Dev                              0.000
+        Number of successful computations       10
+
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       1.000
+           0.980       1.000
+           0.950       1.000
+           0.900       1.000
+           0.800       1.000
+           0.700       1.000
+           0.500       1.000
+           0.300       1.000
+           0.200       1.000
+           0.100       1.000
+           0.050       1.000
+           0.020       1.000
+           0.010       1.000
+
+    TLI
+
+        Mean                                 1.000
+        Std Dev                              0.000
+        Number of successful computations       10
+
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       0.000
+           0.980       0.000
+           0.950       0.000
+           0.900       0.000
+           0.800       0.000
+           0.700       0.000
+           0.500       0.000
+           0.300       0.000
+           0.200       0.000
+           0.100       0.000
+           0.050       0.000
+           0.020       0.000
+           0.010       0.000
+
+SRMR (Standardized Root Mean Square Residual) for the WITHIN level
+
+        Mean                                 0.006
+        Std Dev                              0.004
+        Number of successful computations       10
+
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       1.000
+           0.980       1.000
+           0.950       1.000
+           0.900       1.000
+           0.800       1.000
+           0.700       1.000
+           0.500       1.000
+           0.300       1.000
+           0.200       1.000
+           0.100       1.000
+           0.050       1.000
+           0.020       1.000
+           0.010       0.700
+
+SRMR (Standardized Root Mean Square Residual) for the BETWEEN level
+
+        Mean                                 0.016
+        Std Dev                              0.013
+        Number of successful computations       10
+
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       1.000
+           0.980       1.000
+           0.950       1.000
+           0.900       1.000
+           0.800       1.000
+           0.700       1.000
+           0.500       1.000
+           0.300       1.000
+           0.200       1.000
+           0.100       1.000
+           0.050       1.000
+           0.020       0.600
+           0.010       0.400
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Within Level
+
+ Variances
+    FLIT            5815.646    160.522     36.230      0.000      0.349
+
+Between Level
+
+ Means
+    FLIT             411.747      3.821    107.759      0.000      0.046
+
+ Variances
+    FLIT            3566.802    319.875     11.151      0.000      0.008
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
+
+Within Level
+
+ Variances
+    FLIT               1.000      0.000  *********      0.000      0.000
+
+Between Level
+
+ Means
+    FLIT               6.894      0.309     22.280      0.000      0.013
+
+ Variances
+    FLIT               1.000      0.000  *********      0.000      0.000
+
+
+R-SQUARE
+
+Within Level
+
+Between Level
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Average Condition Number for the Information Matrix      0.774E-02
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION FOR WITHIN
+
+
+           NU
+              FLIT
+              ________
+                    0
+
+
+           THETA
+              FLIT
+              ________
+ FLIT               1
+
+
+     PARAMETER SPECIFICATION FOR BETWEEN
+
+
+           NU
+              FLIT
+              ________
+                    2
+
+
+           THETA
+              FLIT
+              ________
+ FLIT               3
+
+
+     STARTING VALUES FOR WITHIN
+
+
+           NU
+              FLIT
+              ________
+                0.000
+
+
+           THETA
+              FLIT
+              ________
+ FLIT        4538.642
+
+
+     STARTING VALUES FOR BETWEEN
+
+
+           NU
+              FLIT
+              ________
+              413.650
+
+
+           THETA
+              FLIT
+              ________
+ FLIT        4538.642
+
+
+     Beginning Time:  18:02:13
+        Ending Time:  18:02:37
+       Elapsed Time:  00:00:24
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2020 Muthen & Muthen

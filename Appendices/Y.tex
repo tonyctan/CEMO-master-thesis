@@ -1,0 +1,253 @@
+\chapter[Derivation of Moderated Mediation Effect]{Derivation of Moderated\\Mediation Effect}
+
+\section{Models with Mediators Only}
+
+Consider a SEM model 
+%with three independent variables ($X_1$, $X_2$ and $X_3$) and two mediators ($M_1$ and $M_2$) as
+shown in \cref{fig:moderator} (excluding any paths in green), where
+\begin{equation*}
+    \left\{
+    \begin{aligned}
+        Y &= \mu_0 + b_1M_1 + b_2M_2 + c_1X_1 + c_2X_2 + c_3X_3\\
+        M_1 &= \mu_1 + a_{11}X_1 + a_{21}X_2 + a_{31}X_3\\
+        M_2 &= \mu_2 + a_{12}X_1 + a_{22}X_2 + a_{32}X_3
+    \end{aligned}
+    \right.
+\end{equation*}
+or, in matrix form
+\begin{equation}
+    \left\{
+    \begin{aligned}
+        Y &= \mu_0 + \T{b}\m{m} + \T{c}\m{x}\\
+        \m{m} &= \m{\mu} + \T{A}\m{x}
+    \end{aligned}
+    \right.
+\end{equation}
+where
+\begin{equation*}\label{eq:0}
+    \md{x}{3}{1} =
+        \begin{bmatrix}
+            X_1\\
+            X_2\\
+            X_3
+        \end{bmatrix},\ 
+    \md{m}{2}{1} =
+        \begin{bmatrix}
+            M_1\\
+            M_2
+        \end{bmatrix},\ 
+    \md{b}{2}{1} =
+        \begin{pmatrix}
+            b_1\\
+            b_2
+        \end{pmatrix},\ 
+    \md{c}{3}{1} =
+        \begin{pmatrix}
+            c_1\\
+            c_2\\
+            c_3
+        \end{pmatrix},\ 
+    \md{\mu}{2}{1} =
+        \begin{pmatrix}
+            \mu_1\\
+            \mu_2
+        \end{pmatrix}\text{and}\ 
+    \md{A}{3}{2} =
+        \begin{pmatrix}
+            a_{11}    &a_{12}\\
+            a_{21}    &a_{22}\\
+            a_{31}    &a_{32}
+        \end{pmatrix}
+\end{equation*}
+
+\cref{eq:0} can be written as a total equation:
+\begin{equation}\label{eq:tot0}
+    Y = \mu_0 + \T{b}\m{\mu} + \T{b}\T{A}\m{x} + \T{c}\m{x} = \left( \mu_0 + \T{b}\m{\mu} \right) + \T{x} \left( \m{A}\m{b} + \m{c} \right)
+\end{equation}
+where $\mu_0 + \T{b}\m{\mu}$ is the intercept, $\m{A}\m{b}$ is the indirect effect and $\m{c}$ is the direct effect.
+
+\section{Models with Moderated Mediators}
+
+Now introduce two moderators $D_1$ and $D_2$ (green paths in \cref{fig:moderator}).
+
+In scalar notation:
+\begin{equation*}
+    \begin{aligned}
+        Y_\text{mod} &= \mu_0 + b_1M_1 + b_2M_2 + c_1X_1 + c_2X_2 + c_3X_3\\
+        &+ f_1D_1 + f_2D_2\\
+        &+ g_{11}X_1D_1 + g_{12}X_1D_2\\
+        &+ g_{21}X_2D_1 + g_{22}X_2D_2\\
+        &+ g_{31}X_3D_1 + g_{32}X_1D_2\\
+        &+ h_{11}M_1D_1 + h_{12}M_1D_2\\
+        &+ h_{21}M_2D_1 + h_{22}M_2D_2
+    \end{aligned}
+\end{equation*}
+and in matrix notation:
+\begin{equation}\label{eq:mod}
+    Y_\text{mod} = \mu_0 + \T{b}\m{m} + \T{c}\m{x} + \T{f}\m{d} + \tr{\T{G}\m{x}\T{d}} + \tr{\T{H}\m{m}\T{d}}
+\end{equation}
+where,
+\begin{equation*}
+    \md{f}{2}{1} =
+        \begin{pmatrix}
+            f_1\\
+            f_2
+        \end{pmatrix},\ 
+    \md{d}{2}{1} =
+        \begin{bmatrix}
+            D_1\\
+            D_2
+        \end{bmatrix},\ 
+    \md{G}{3}{2} =
+        \begin{pmatrix}
+            g_{11}  &g_{12}\\
+            g_{21}  &g_{22}\\
+            g_{31}  &g_{32}
+        \end{pmatrix},\ 
+    \md{H}{2}{2} =
+    \begin{pmatrix}
+        h_{11}  &h_{12}\\
+        h_{21}  &h_{22}
+    \end{pmatrix},
+\end{equation*}
+and $\tr{\cdot}$ is the trace operator.
+
+Since $\m{m} = \m{\mu} + \T{A}\m{x}$, \cref{eq:mod} can be expanded into:
+\begin{equation}\label{eq:totmod}
+    \begin{aligned}
+        Y_\text{mod} &= \mu_0 + \T{b}\m{\mu} + \T{b}\T{A}\m{x} + \T{c}\m{x} + \T{f}\m{d} + \tr{\T{G}\m{x}\T{d}} + \tr{\T{H}\m{\mu}\T{d}} + \tr{\T{H}\T{A}\m{x}\T{d}}\\
+        &= \left[ \mu_0 + \T{b}\m{\mu} + \T{f}\m{d} + \tr{\T{H}\m{\mu}\T{d}} \right] + \left[ \left( \T{b}\T{A} + \T{c} \right) \m{x} + \tr{\T{d}\left( \T{G} + \T{H}\T{A} \right) \m{x}} \right]\\
+        &= \left[ \mu_0 + \T{b}\m{\mu} + \T{f}\m{d} + \tr{\T{H}\m{\mu}\T{d}} \right] + \left[ \left( \T{b}\T{A} + \T{c} \right) \m{x} + \T{d}\left( \T{G} + \T{H}\T{A} \right) \m{x} \right]\\
+        &= \left[ \mu_0 + \T{b}\m{\mu} + \T{f}\m{d} + \tr{\T{H}\m{\mu}\T{d}} \right] + \T{x} \left[ \m{A}\m{b} + \m{c} + \m{G}\m{d} + \m{A}\m{H}\m{d} \right]\\
+        &= \left[ \mu_0 + \T{b}\m{\mu} + \T{f}\m{d} + \tr{\T{H}\m{\mu}\T{d}} \right] + \T{x} \left[ \m{A} \left( \m{b} + \m{H}\m{d} \right) + \left( \m{c} + \m{G}\m{d} \right) \right]
+    \end{aligned}
+\end{equation}
+
+\cref{eq:totmod} differs from \cref{eq:tot0} by one extra term $\m{f}\T{d} + \tr{\T{H}\m{\mu}\T{d}}$ in the intercept. The indirect effect $\m{A}\m{b}$ expanded to $\m{A} \left( \m{b} + \m{H}\m{d} \right)$ as a result of introducing the moderators and the direct effect grows from $\m{c}$ to $\m{c} + \m{G}\m{d}$.
+
+\newpage
+
+Expand the indirect and direct effects back to their scalar forms:
+
+\begin{equation*}
+    \begin{aligned}
+        &\text{indirect effects}\\
+        = &\m{A} \left( \m{b} + \m{H}\m{d} \right)\\
+        = &\begin{pmatrix}
+            a_{11}    &a_{12}\\
+            a_{21}    &a_{22}\\
+            a_{31}    &a_{32}
+        \end{pmatrix}
+        \left[\begin{pmatrix}
+            b_1\\
+            b_2
+        \end{pmatrix} +
+        \begin{pmatrix}
+            h_{11}  &h_{12}\\
+            h_{21}  &h_{22}
+        \end{pmatrix}
+        \begin{bmatrix}
+            D_1\\
+            D_2
+        \end{bmatrix}
+        \right]\\
+        = &\begin{pmatrix}
+            a_{11}    &a_{12}\\
+            a_{21}    &a_{22}\\
+            a_{31}    &a_{32}
+        \end{pmatrix}
+        \begin{pmatrix}
+            b_1 + h_{11}D_1 + h_{12}D_2\\
+            b_2 + h_{21}D_1 + h_{22}D_2
+        \end{pmatrix}\\
+        = &\begin{pmatrix}
+            a_{11}b_1 + a_{11}h_{11}D_1 + a_{11}h_{12}D_2 +
+            a_{12}b_2 + a_{12}h_{21}D_1 + a_{12}h_{22}D_2\\
+            a_{21}b_1 + a_{21}h_{11}D_1 + a_{21}h_{12}D_2 +
+            a_{22}b_2 + a_{22}h_{21}D_1 + a_{22}h_{22}D_2\\
+            a_{31}b_1 + a_{31}h_{11}D_1 + a_{31}h_{12}D_2 +
+            a_{32}b_2 + a_{32}h_{21}D_1 + a_{32}h_{22}D_2
+        \end{pmatrix};\\
+        &\text{direct effects}\\
+        = &\m{c} + \m{G}\m{d}\\
+        = &\begin{pmatrix}
+            c_1\\
+            c_2\\
+            c_3
+        \end{pmatrix} +
+        \begin{pmatrix}
+            g_{11}  &g_{12}\\
+            g_{21}  &g_{22}\\
+            g_{31}  &g_{32}
+        \end{pmatrix}
+        \begin{bmatrix}
+            D_1\\
+            D_2
+        \end{bmatrix}\\
+        = &\begin{pmatrix}
+            c_1 + g_{11}D_1 + g_{12}D_2\\
+            c_2 + g_{21}D_1 + g_{22}D_2\\
+            c_3 + g_{31}D_1 + g_{32}D_2
+        \end{pmatrix}.
+    \end{aligned}
+\end{equation*}
+
+\section{Mplus Execution}
+
+The \texttt{DEFINE:} and \texttt{MODEL:} sections of the Mplus code is given as following:
+
+\begin{singlespace}\tiny
+    \begin{lstlisting}
+DEFINE:
+
+    ! G matrix
+    X1D1 = X1 * D1;
+    X2D1 = X2 * D1;
+    X3D1 = X3 * D1;
+    X1D2 = X1 * D2;
+    X2D2 = X2 * D2;
+    X3D2 = X3 * D2;
+    ! H matrix
+    M1D1 = M1 * D1;
+    M2D1 = M2 * D1;
+    M1D2 = M1 * D2;
+    M2D2 = M2 * D2;
+
+MODEL:
+
+    [Y] (mu0);
+    Y on M1 (b1);
+    Y on M2 (b2);
+    ! ---
+    Y on M1D1 (h11);
+    Y on M2D1 (h21);
+    Y on M1D1 (h12);
+    Y on M2D1 (h22);
+    ! ---
+    Y on X1 (c1);
+    Y on X2 (c2);
+    Y on X3 (c3);
+    ! ---
+    Y on D1 (f1);
+    Y on D2 (f2);
+    ! ---
+    Y on X1D1 (g11);
+    Y on X2D1 (g21);
+    Y on X3D1 (g31);
+    Y on X1D2 (g12);
+    Y on X2D2 (g22);
+    Y on X3D2 (g32);
+
+    [M1] (mu1);
+    M1 on X1 (a11);
+    M1 on X2 (a21);
+    M1 on X3 (a31);
+
+    [M2] (mu2);
+    M2 on X1 (a12);
+    M2 on X2 (a22);
+    M2 on X3 (a32);
+    \end{lstlisting}
+\end{singlespace}
+
+\input{./Figures/tikz/moderator}
