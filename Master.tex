@@ -218,12 +218,6 @@ Student-level independent variables are
 
 School-level independent variables are
 
-Country-level independent variables are
-
-Missing data are handled using Mplus's multiple imputation procedure with ten imputations generated and pooled subsequently following Rubin's Rule (Rubin, 1976).
-
-A three-level multigroup structural equation model was employed to account for the hiearchical structure of the PISA design, with private versus public school as the grouping variable.
-
 \section{Measures}
 %//mark What exactly I was using to address my research question?
 %//mark Sum score? Averages? One particular question?
@@ -231,21 +225,18 @@ A three-level multigroup structural equation model was employed to account for t
 
 \subsection{Cognitive Measure of Financial Literacy}
 
-\subsection{Affective Aspect of Financial Literacy}
+\subsection{Affective Aspects of Financial Literacy}
 
 \subsection{Demographic Variables}
 
 \subsection{Reliability of Level-two Averages}
+%//mark ICC2
 %//ref Multilevel latent covariate model (Ludtke et al., 2008)
 %//ref Doubly-laten model of school contextual effects (Marsh et al., 2009)
-
-\newpage
 
 \section{Model}
 %//mark Motivation for choosing this particular model: multilevel SEM, contextual effect
 %//mark Link model to the research question(s)
-
-\newpage
 
 Student-level ($L_1$):
 \begin{equation}
@@ -267,8 +258,6 @@ School-level ($L_2$):
         &+ a_5\texttt{STRATIO}_j + \epsilon^{Y}_j
     \end{aligned}
 \end{equation}
-
-\newpage
 
 Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{y}_{ij} + \m{\Gamma}_j\m{x}_{ij} + \m{r}_{ij}$ for student-level ($L_1$) and random intercept $\m{\alpha}_{j} = \m{\alpha}_{00} + \m{A}\m{w}_j + \m{\epsilon}_j$ for school-level ($L_2$):
 \begin{equation}
@@ -349,9 +338,9 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
     \end{aligned}
 \end{equation}
 
-\newpage
-
 \section{Missing Data Treatment}
+
+Missing data impose great potential for biased estimation. This study addressed the missing data issue through multilevel multiple imputation under the assumption that data were missing at random \parencite{little:2019}. Since 2018 PISA financial literacy datasets contain missing data in both student- and school-levels and in both continuous and categorical variables, the joint modelling approach is adopted under the advisory of \textcite{grund:2018}. More specifically, ten sets of imputed data were ordered through \pk{Mplus}'s unrestricted variance-covariance model \parencite[``JM-AM H1'',][]{asparouhov:2010} using Bayes estimation procedure with uninformative priors and 4-chain Gibbs sampler to verify convergence \parencite[][p. 314]{lambert:2018}. Additionally, the first 50000 MCMC iterations were discarded to ensure stablility and any two draws were separated with 5000 iterations to avoid autocorrelation (see \cref{sec:MMI_inp} for input file)---a safe setting even for moderate to high percentage missings \parencite{grund:2016}. Diagnostic plots in \cref{sec:MMI_diagnostic} presented visual evidence for convergence with imputation results summarised in \cref{tab:MMI}.
 
 \section{Analysis}
 %//mark Software and version
@@ -402,10 +391,7 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
 
 \pfigure{fig:decomposition}{School-Family Effect Decomposition by Country}{1}{./Figures/country_decomposition.pdf}{Cognitive and affective effects are represented on hozitonal and vertical axes respectively.}{0.5}{2}
 
-\newpage
 
-\input{./Tables/MMI_diagnostic}
-\includepdf[pages=-,width=\textwidth]{./Figures/MMI_diagnostic.pdf}
 
 \section{Address the research question}
 
@@ -449,15 +435,18 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
 
 % Insert appendices
 \begin{appendices}
-    \include{Appendices/A}
-    \begin{singlespace}
-    \include{Appendices/B}
-    \end{singlespace}
-    \include{Appendices/C}
-%    \include{Appendices/D}
+%    \include{Appendices/A}
+%         \begin{singlespace}
+%    \include{Appendices/B}
+%         \end{singlespace}
+%     \include{Appendices/C}
+        \begin{singlespace}
+    \include{Appendices/D}
+        \end{singlespace}
 %    \include{Appendices/E}
 %    \include{Appendices/F}
-    \include{Appendices/Z}
+%    \include{Appendices/Y}
+%    \include{Appendices/Z}
 \end{appendices}
 
 % Put Index here

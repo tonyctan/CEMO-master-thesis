@@ -36,6 +36,7 @@
 \usepackage{fontspec}
 \setmonofont{FiraCode-Regular.otf}[
     BoldFont=FiraCode-Bold.otf,
+    ItalicFont=FiraCode-Italic.otf,
     Contextuals=Alternate % Activate the calt feature
 ]
 
@@ -452,7 +453,203 @@
     keywordstyle=\bfseries\color{blue!60!black},
     commentstyle=\itshape\color{gray},
     identifierstyle=\color{BrickRed},
-    stringstyle=\color{PineGreen},
+    stringstyle=\color{PineGreen}
+}
+\lstdefinelanguage{Mplus}{
+    sensitive=true,
+    % Comments
+    comment=[l]!,
+    % Strings
+    string=[d]", % d = doubled, meaning stuff wrapped by " " is a string
+    morestring=[d]',
+    % Keywords
+    keywords={is,are,with,by,on,pon,pwith,xwith,ind,via},
+    morekeywords={},
+    ndkeywords={=,;},
+    % Digits and letters
+    alsoletter={=,;,:},
+    alsodigit={-,.},
+    % Emphases
+    emph={TITLE:,DATA:,VARIABLE:,DEFINE:,ANALYSIS:,MODEL:,OUTPUT:,SAVEDATA:,PLOT:,MONTECARLO:,MODEL,CONSTRAINT:,DATA,IMPUTATION:},
+    moreemph={},
+    % Deliminters\newcommand{\pk}[1]{\textsf{#1}}
+    moredelim=[s][emphstyle]{\%}{\%}
+%    moredelim=[l][emphstyle]{MODEL}{CONSTRAINT:},
+%    moredelim=[l][emphstyle]{DATA}{IMPUTATION:}
+}
+\lstdefinestyle{vscodeMplus}{
+    language=Mplus,
+    basicstyle=\scriptsize\ttfamily,
+    style=FiraCodeStyle,
+    identifierstyle=\color{black},
+    commentstyle=\itshape\color{gray},
+    emphstyle=\bfseries\color{blue!60!black},
+    keywordstyle=\color{blue!60!black},
+    stringstyle=\color{BrickRed},
+    xleftmargin=\parindent,
+    belowcaptionskip=1\baselineskip,
+    breaklines=true,
+    frame=l,
+    % Line numbers
+    numbers=left,
+    numberstyle=\scriptsize\color{gray},
+    stepnumber=5,
+    firstnumber=1,
+    numberfirstline=true,
+    numbersep=5pt,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    literate=
+        {0}{{\textcolor{PineGreen}{0}}}{1}%
+        {1}{{\textcolor{PineGreen}{1}}}{1}%
+        {2}{{\textcolor{PineGreen}{2}}}{1}%
+        {3}{{\textcolor{PineGreen}{3}}}{1}%
+        {4}{{\textcolor{PineGreen}{4}}}{1}%
+        {5}{{\textcolor{PineGreen}{5}}}{1}%
+        {6}{{\textcolor{PineGreen}{6}}}{1}%
+        {7}{{\textcolor{PineGreen}{7}}}{1}%
+        {8}{{\textcolor{PineGreen}{8}}}{1}%
+        {9}{{\textcolor{PineGreen}{9}}}{1}%
+        {.0}{{\textcolor{PineGreen}{.0}}}{2}%
+        {.1}{{\textcolor{PineGreen}{.1}}}{2}%
+        {.2}{{\textcolor{PineGreen}{.2}}}{2}%
+        {.3}{{\textcolor{PineGreen}{.3}}}{2}%
+        {.4}{{\textcolor{PineGreen}{.4}}}{2}%
+        {.5}{{\textcolor{PineGreen}{.5}}}{2}%
+        {.6}{{\textcolor{PineGreen}{.6}}}{2}%
+        {.7}{{\textcolor{PineGreen}{.7}}}{2}%
+        {.8}{{\textcolor{PineGreen}{.8}}}{2}%
+        {.9}{{\textcolor{PineGreen}{.9}}}{2}%
+        {-0}{{\textcolor{PineGreen}{-0}}}{2}%
+        {-1}{{\textcolor{PineGreen}{-1}}}{2}%
+        {-2}{{\textcolor{PineGreen}{-2}}}{2}%
+        {-3}{{\textcolor{PineGreen}{-3}}}{2}%
+        {-4}{{\textcolor{PineGreen}{-4}}}{2}%
+        {-5}{{\textcolor{PineGreen}{-5}}}{2}%
+        {-6}{{\textcolor{PineGreen}{-6}}}{2}%
+        {-7}{{\textcolor{PineGreen}{-7}}}{2}%
+        {-8}{{\textcolor{PineGreen}{-8}}}{2}%
+        {-9}{{\textcolor{PineGreen}{-9}}}{2}%
+        {0\%}{{\textcolor{PineGreen}{0\%}}}{2}%
+        {1\%}{{\textcolor{PineGreen}{1\%}}}{2}%
+        {2\%}{{\textcolor{PineGreen}{2\%}}}{2}%
+        {3\%}{{\textcolor{PineGreen}{3\%}}}{2}%
+        {4\%}{{\textcolor{PineGreen}{4\%}}}{2}%
+        {5\%}{{\textcolor{PineGreen}{5\%}}}{2}%
+        {6\%}{{\textcolor{PineGreen}{6\%}}}{2}%
+        {7\%}{{\textcolor{PineGreen}{7\%}}}{2}%
+        {8\%}{{\textcolor{PineGreen}{8\%}}}{2}%
+        {9\%}{{\textcolor{PineGreen}{9\%}}}{2}%
+        {.0\%}{{\textcolor{PineGreen}{.0\%}}}{3}%
+        {.1\%}{{\textcolor{PineGreen}{.1\%}}}{3}%
+        {.2\%}{{\textcolor{PineGreen}{.2\%}}}{3}%
+        {.3\%}{{\textcolor{PineGreen}{.3\%}}}{3}%
+        {.4\%}{{\textcolor{PineGreen}{.4\%}}}{3}%
+        {.5\%}{{\textcolor{PineGreen}{.5\%}}}{3}%
+        {.6\%}{{\textcolor{PineGreen}{.6\%}}}{3}%
+        {.7\%}{{\textcolor{PineGreen}{.7\%}}}{3}%
+        {.8\%}{{\textcolor{PineGreen}{.8\%}}}{3}%
+        {.9\%}{{\textcolor{PineGreen}{.9\%}}}{3}%
+        {infinity}{{\textcolor{PineGreen}{infinity}}}{8}
+}
+\lstdefinelanguage{Mplus_out}{
+    sensitive=true,
+    % Comments
+    comment=[l]!,
+    % Strings
+    string=[d]", % d = doubled, meaning stuff wrapped by " " is a string
+    morestring=[d]',
+    % Keywords
+    keywords={Within,Between,Level},
+    morekeywords={Means,Variances},
+    ndkeywords={=,;},
+    % Digits and letters
+    alsoletter={=,;},
+    alsodigit={-,.},
+    % Emphases
+    emph={MODEL,FIT,INFORMATION,RESULTS},
+    moreemph={},
+    % Deliminters
+    moredelim=[s][emphstyle]{\%}{\%}
+%    moredelim=[l][emphstyle]{MODEL}{CONSTRAINT:},
+%    moredelim=[l][emphstyle]{DATA}{IMPUTATION:}
+}
+\lstdefinestyle{vscodeMplus_out}{
+    language=Mplus_out,
+    basicstyle=\scriptsize\ttfamily,
+    style=FiraCodeStyle,
+    identifierstyle=\color{black},
+    commentstyle=\itshape\color{gray},
+    emphstyle=\bfseries\color{blue!60!black},
+    keywordstyle=\color{blue!60!black},
+    stringstyle=\color{BrickRed},
+    xleftmargin=\parindent,
+    belowcaptionskip=1\baselineskip,
+    breaklines=true,
+    frame=l,
+    % Line numbers
+    numbers=left,
+    numberstyle=\scriptsize\color{gray},
+    stepnumber=5,
+    firstnumber=1,
+    numberfirstline=true,
+    numbersep=5pt,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    literate=
+        {0}{{\textcolor{PineGreen}{0}}}{1}%
+        {1}{{\textcolor{PineGreen}{1}}}{1}%
+        {2}{{\textcolor{PineGreen}{2}}}{1}%
+        {3}{{\textcolor{PineGreen}{3}}}{1}%
+        {4}{{\textcolor{PineGreen}{4}}}{1}%
+        {5}{{\textcolor{PineGreen}{5}}}{1}%
+        {6}{{\textcolor{PineGreen}{6}}}{1}%
+        {7}{{\textcolor{PineGreen}{7}}}{1}%
+        {8}{{\textcolor{PineGreen}{8}}}{1}%
+        {9}{{\textcolor{PineGreen}{9}}}{1}%
+        {.0}{{\textcolor{PineGreen}{.0}}}{2}%
+        {.1}{{\textcolor{PineGreen}{.1}}}{2}%
+        {.2}{{\textcolor{PineGreen}{.2}}}{2}%
+        {.3}{{\textcolor{PineGreen}{.3}}}{2}%
+        {.4}{{\textcolor{PineGreen}{.4}}}{2}%
+        {.5}{{\textcolor{PineGreen}{.5}}}{2}%
+        {.6}{{\textcolor{PineGreen}{.6}}}{2}%
+        {.7}{{\textcolor{PineGreen}{.7}}}{2}%
+        {.8}{{\textcolor{PineGreen}{.8}}}{2}%
+        {.9}{{\textcolor{PineGreen}{.9}}}{2}%
+        {-0}{{\textcolor{PineGreen}{-0}}}{2}%
+        {-1}{{\textcolor{PineGreen}{-1}}}{2}%
+        {-2}{{\textcolor{PineGreen}{-2}}}{2}%
+        {-3}{{\textcolor{PineGreen}{-3}}}{2}%
+        {-4}{{\textcolor{PineGreen}{-4}}}{2}%
+        {-5}{{\textcolor{PineGreen}{-5}}}{2}%
+        {-6}{{\textcolor{PineGreen}{-6}}}{2}%
+        {-7}{{\textcolor{PineGreen}{-7}}}{2}%
+        {-8}{{\textcolor{PineGreen}{-8}}}{2}%
+        {-9}{{\textcolor{PineGreen}{-9}}}{2}%
+        {0\%}{{\textcolor{PineGreen}{0\%}}}{2}%
+        {1\%}{{\textcolor{PineGreen}{1\%}}}{2}%
+        {2\%}{{\textcolor{PineGreen}{2\%}}}{2}%
+        {3\%}{{\textcolor{PineGreen}{3\%}}}{2}%
+        {4\%}{{\textcolor{PineGreen}{4\%}}}{2}%
+        {5\%}{{\textcolor{PineGreen}{5\%}}}{2}%
+        {6\%}{{\textcolor{PineGreen}{6\%}}}{2}%
+        {7\%}{{\textcolor{PineGreen}{7\%}}}{2}%
+        {8\%}{{\textcolor{PineGreen}{8\%}}}{2}%
+        {9\%}{{\textcolor{PineGreen}{9\%}}}{2}%
+        {.0\%}{{\textcolor{PineGreen}{.0\%}}}{3}%
+        {.1\%}{{\textcolor{PineGreen}{.1\%}}}{3}%
+        {.2\%}{{\textcolor{PineGreen}{.2\%}}}{3}%
+        {.3\%}{{\textcolor{PineGreen}{.3\%}}}{3}%
+        {.4\%}{{\textcolor{PineGreen}{.4\%}}}{3}%
+        {.5\%}{{\textcolor{PineGreen}{.5\%}}}{3}%
+        {.6\%}{{\textcolor{PineGreen}{.6\%}}}{3}%
+        {.7\%}{{\textcolor{PineGreen}{.7\%}}}{3}%
+        {.8\%}{{\textcolor{PineGreen}{.8\%}}}{3}%
+        {.9\%}{{\textcolor{PineGreen}{.9\%}}}{3}%
+        {infinity}{{\textcolor{PineGreen}{infinity}}}{8}
 }
 
 \renewcommand{\lstlistingname}{R output} % Listing -> Algorithm
@@ -638,6 +835,8 @@
 %                                                                          %
 %                                                                          %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End maths stuff %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\pk}[1]{\textsf{#1}}
 
 %% Always load hyperref as the last package
 \usepackage[%

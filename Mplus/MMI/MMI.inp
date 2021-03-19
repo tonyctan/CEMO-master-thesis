@@ -1,9 +1,9 @@
 TITLE:
-    Multilevel multiple imputation using JM-AM H1
+    Multilevel multiple imputation using JM-AM H1   ! Unrestricted var-cov
 
 
 DATA:
-    file = "~\finlit.dat";
+    file = "~/finlit.dat";
 
 
 VARIABLE:
@@ -24,32 +24,32 @@ VARIABLE:
         EDUSHORT                                    !   Lat var "inst. env."
         ;
 
-    usevar =
+    usevar =                                        ! Var to be imputed
         MALE IMMI1GEN IMMI2GEN ESCS
         FCFMLRTY FLCONFIN
         FLSCHOOL NOBULLY FLFAMILY
         STRATIO EDUSHORT
         ;
 
-    within =
+    within =                                        ! Amongst which, L1 var are
         MALE IMMI1GEN IMMI2GEN ESCS
         FCFMLRTY FLCONFIN
         FLSCHOOL NOBULLY FLFAMILY
         ;
 
-    between =
+    between =                                       ! L2 are
         STRATIO EDUSHORT
         ;
 
-    auxiliary =
-        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH     ! Plausible values
-        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
+    auxiliary =                                     ! Var not participating in
+        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH     ! MI but still to be
+        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH    ! included in final output
         PV1READ PV2READ PV3READ PV4READ PV5READ
-        PV6READ PV7READ PV8READ PV9READ PV10READ
-        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
-        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
-        FKI CNTRYID CNTSTUID W_STU                  ! Admin vars
-        W_SCH
+        PV6READ PV7READ PV8READ PV9READ PV10READ    ! PVs are already "guesses"
+        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT     ! themselves so do NOT use
+        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT    ! PVs to guess others
+        FKI CNTRYID CNTSTUID W_STU
+        W_SCH                                       ! Admin vars
         ;
 
     cluster = CNTSCHID;
@@ -58,30 +58,30 @@ VARIABLE:
 
 
 ANALYSIS:
-    processors = 64;
+    processors = 64;                                ! Use all cores of HPC
 
     type = twolevel;
     estimator = Bayes;
 
-    fbiterations = 50000;                ! Number of burn-in iterations
-    chains = 4;
-    bseed = 1234;
+    fbiterations = 50000;                           ! Number of burn-in
+    chains = 4;                                     ! Verify convergence
+    bseed = 1234;                                   ! For replication study
 
 
 DATA IMPUTATION:
     impute =
-        MALE (c) IMMI1GEN (c) IMMI2GEN (c) ESCS
+        MALE (c) IMMI1GEN (c) IMMI2GEN (c) ESCS     ! Categoricals have (c)
         FCFMLRTY FLCONFIN
         FLSCHOOL NOBULLY FLFAMILY
         STRATIO EDUSHORT
         ;
 
-    ndatasets = 10;
+    ndatasets = 10;                                 ! To merge with 10 PVs
     save = FLIT_MMI_*.dat;
-    thin = 5000;                         ! Separations to avoid autocorrelation
+    thin = 5000;                                    ! To Avoid autocorrelation
 
 SAVEDATA:
-    bpar = bpar.dat;
+    bpar = bpar.dat;                                ! Capture Bayesian paths
 
 PLOT:
-    type = plot2;                       ! Prepare for MplusAutomation
+    type = plot2;                                   ! For R's MplusAutomation
