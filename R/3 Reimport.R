@@ -135,3 +135,36 @@ write.table(finlit,
     row.names=F,col.names=T,
     sep=",", na="NA"
 )
+
+
+# Some quick statistics
+
+
+# How many schools does each country have?
+list_school <- aggregate(CNTSCHID ~ CNTRYID, finlit, function(x) length(unique(x))); list_school
+# How many schools in total?
+sum(list_school[, 2])
+
+# How many students does each country have?
+list_student <- aggregate(CNTSTUID ~ CNTRYID, finlit, function(x) length(unique(x))); list_student
+sum(list_student[, 2])
+
+# How many male students does each country have?
+list_male <- aggregate(MALE ~ CNTRYID, finlit, sum)
+sum(list_male[, 2])
+
+# Balanced design by sex?
+obs_sex <- list_male[, 2]
+exp_sex <- list_student[,2] / 2
+chisq.test(obs_sex, p = exp_sex, rescale.p = T)
+# Yup, chi-sq = 20.90, p-value = 0.343. Fail to reject the null. Call it balanced.
+
+# Balanced design by school?
+obs_school <- list_school[, 2]
+exp_school <- rep(sum(obs_school)/20, 20)
+chisq.test(obs_school, p = exp_school, rescale.p = T)
+
+# Balanced design by student?
+obs_student <- list_student[, 2]
+exp_student <- rep(sum(obs_student)/20, 20)
+chisq.test(obs_student, p = exp_student, rescale.p = T)
