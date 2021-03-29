@@ -92,3 +92,4 @@ fwrite(finlit,
     file = "finlit.csv",
     na = "NA", row.names = F, col.names = T
 )
+
