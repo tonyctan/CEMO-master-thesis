@@ -100,7 +100,8 @@ IMMI2GEN <- recode(finlit$IMMIG, "
 # Stitch spreadsheet together
 names(finlit)
 finlit <- cbind(
-    FKI, finlit[, c(2:35)], MALE, IMMI1GEN, IMMI2GEN, finlit[, c(38:41)], NOBULLY, finlit[, c(43:46)]
+    FKI, finlit[, c(2:35)], MALE, IMMI1GEN, IMMI2GEN,
+    finlit[, c(38:41)], NOBULLY, finlit[, c(43:46)]
 )
 head(finlit)
 names(finlit)
@@ -141,12 +142,18 @@ write.table(finlit,
 
 
 # How many schools does each country have?
-list_school <- aggregate(CNTSCHID ~ CNTRYID, finlit, function(x) length(unique(x))); list_school
+list_school <- aggregate(
+    CNTSCHID ~ CNTRYID, finlit, function(x) length(unique(x))
+)
+list_school
 # How many schools in total?
 sum(list_school[, 2])
 
 # How many students does each country have?
-list_student <- aggregate(CNTSTUID ~ CNTRYID, finlit, function(x) length(unique(x))); list_student
+list_student <- aggregate(
+    CNTSTUID ~ CNTRYID, finlit, function(x) length(unique(x))
+)
+list_student
 sum(list_student[, 2])
 
 # How many male students does each country have?
