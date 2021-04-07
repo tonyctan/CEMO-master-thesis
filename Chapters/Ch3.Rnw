@@ -3,7 +3,7 @@
 
 \section{Sample}
 
-This study drew its primary data soruce from OECD's PISA 2018 database. Responses from both student \parencite{FLdata} and school questionnaires \parencite{SCHdata} were captured and merged into a master data file using \CR's \parencite[Version 4.0.5,][]{R} \pk{intsvy} package \parencite[Version 2.5,][]{intsvy} (see \cref{R.reimport} for analysis code), covering the following 20 participating countries\footnote{Australia also participated in 2018 PISA financial literacy but chose to withhold its data from public release and is therefore excluded in the current study.}: Brazil, Bulgaria, Canada, Chile, Estonia, Finland, Georgia, Indonesia, Italy, Latvia, Lithuania, the Netherlands, Peru, Poland, Portugal, Russian Federation\footnote{Moscow Region (\texttt{CNTRYID} = 982) and Tatarstan (983) have been merged into Russian Federation (643).}, Serbia, Slovak Republic, Span, and the USA. Due to clerical error concerns, twelve observations without school weights were dropped, leading to a sample size of 107162 students nested in 6631 schools (see \cref{tab:sample} for detailed sample profile).
+This study drew its primary data soruce from OECD's PISA 2018 database. Responses from both student \parencite{FLdata} and school questionnaires \parencite{SCHdata} were captured and merged into a master data file using \CR's \parencite[Version 4.0.5,][]{R} \pk{intsvy} package \parencite[Version 2.5,][]{intsvy} (see \cref{R.reimport} for analysis code) including the following 20 participating countries\footnote{Australia also participated in 2018 PISA financial literacy but chose to withhold its data from public release and is therefore excluded in the current study.}: Brazil, Bulgaria, Canada, Chile, Estonia, Finland, Georgia, Indonesia, Italy, Latvia, Lithuania, the Netherlands, Peru, Poland, Portugal, Russian Federation\footnote{Moscow Region (\texttt{CNTRYID} = 982) and Tatarstan (983) have been merged into Russian Federation (643).}, Serbia, Slovak Republic, Span, and the USA. Due to clerical error concerns, twelve observations without school weights were dropped, leading to a sample size of 107162 students nested in 6631 schools (see \cref{tab:sample} for detailed sample profile).
 
 \section{Measures}
 %//mark What exactly I was using to address my research question?
@@ -12,7 +12,7 @@ This study drew its primary data soruce from OECD's PISA 2018 database. Response
 
 \subsection{School Climate Variables}
 
-\poscite{wang:2016} catalogue of school climate into academic, community, safety, and institutional envrironment has been operationised using variables \texttt{FLSCHOOL} (financial education in school lessons), \texttt{FLFAMILY} (parental involvement in matters of financial literacy, i.e., ``financial socialisation''), \texttt{NOBULLY} (reverse coding of \texttt{BEINGBULLIED} such that larger numbers implies safer schools) and \texttt{EDUSHORT} (shortage of educational material), respectively. All four measures were derived variables based on IRT scaling, with good scale reliabilities for most countries and constructs (see \cref{tab:cronbach} for Cronbach's alphas). In addition, the PISA organiser has applied multi-group concurrent calibrations to all latent constructs using the root mean square deviance below $0.3$ criterion \parencite[for a technical discussion on RMSD, see][p. 244]{buchholz:2019} in order to ensure cross-country measurement invariance (see Chapter 9 of \textit{PISA 2018 Technical Report} \parencite[][pp. 14--15]{PISAtech} for analytical details).
+\poscite{wang:2016} catalogue of school climate into academic, community, safety, and institutional envrironment has been operationised using variables \texttt{FLSCHOOL} (financial education in school lessons), \texttt{FLFAMILY} (parental involvement in matters of financial literacy, i.e., ``financial socialisation''), \texttt{NOBULLY} (reverse coding of \texttt{BEINGBULLIED} such that larger numbers imply safer schools) and \texttt{EDUSHORT} (shortage of educational material), respectively. All four measures were derived variables based on IRT scaling, with good scale reliabilities for most countries and constructs (see \cref{tab:cronbach} for Cronbach's alphas). In addition, the OECD has applied multi-group concurrent calibrations to all latent constructs using the root mean square deviance below $0.3$ criterion \parencite[for a technical discussion on RMSD, see][p. 244]{buchholz:2019} in order to ensure cross-country measurement invariance (refer to Chapter 9 of \textit{PISA 2018 Technical Report} \parencite[][pp. 14--15]{PISAtech} for analytical details).
 
 \input{./Tables/Variables}
 
@@ -24,31 +24,31 @@ Similar to the treatment for reading and mathematics capabilities, ten plausible
 %Although not a focus of the current project, a detailed account of the PV generation process can be found in Chapter 9 of the \textit{Technical Report} \parencite[][pp. 19--23]{PISAtech}; it suffices to report that
 All ten plausible values have been used in this study following procedures prescribed by \textcite{rubin:1987}.
 
-\subsection{Multilevel Latent Covariate Approach to School-level Aggregation}
+\subsection{Multilevel Latent Covariate Approach to School-level Aggregation}\label{sec:mlc}
 %//mark ICC2
 %//ref Multilevel latent covariate model (Ludtke et al., 2008)
 %//ref Doubly-laten model of school contextual effects (Marsh et al., 2009)
 
-Student-level school climate variables were aggregated into school-level using multilevel latent covariate (MLC) approach \parencite{ludtke:2008, marsh:2009}.
+Conventional multilevel modelling approaches assume the observed group means to be prefectly reliable when individual-level characteristics are aggregated to the group-level---a particularly questionable assumption in current study. Thanks to recent advancedment in both theoretical derivations \parencite{ludtke:2008, marsh:2009} and computation power \parencite{mplus}, the multilevel latent covariate (MLC) approach has enabled the current project to decompose student-level school climate variables \texttt{FLSCHOOL}, \texttt{FLFAMILY}, \texttt{NOBULLY} as well as the cognitive outcome \texttt{FLIT} into their corresponding within- and between-level components (with subscript $_W$ and $_B$ respectively), substantially enhancing analyses credibility.
 
 \subsection{Control Variables}
 
-The PISA organiser computed students' economic, social and cultural status (\texttt{ESCS}) index by taking the arithmetic mean of three indicators: \textsf{PARED} (parental education), \textsf{HISEI} (parental occupational status) and \textsf{HOMEPOS} (home possessions). Figure 16.4 of \textit{PISA 2018 Technical Report} \parencite{PISAtech} visualised the procedure for the ESCS computation and \textcite{avvisati:2020} interrogated its validity.
+In the 2018 PISA cycle, the OECD simplified its computation for students' economic, social and cultural status (\texttt{ESCS}) index by taking the arithmetic mean of three indicators: \textsf{PARED} (parental education), \textsf{HISEI} (parental occupational status) and \textsf{HOMEPOS} (home possessions). Figure 16.4 of the \textit{Technical Report} \parencite{PISAtech} visualised this procedure while \textcite{avvisati:2020} further exmined the validity and reliability of the ESCS construct.
 
-Students' immigration status were determined by sythesising responses from student questionnaire items \textsf{ST019} (parents' country of birth) and \textsf{ST021} (students' age of arrival in test country) \parencite[][pp. 212--213]{PISAvol3}. The source dataset \parencite{FLdata} recorded students' immigration status as a categorical variable with levels \textsf{1 = Native}, \textsf{2 = Second-Generation} and \textsf{3 = First-Generation}. This study derived two binary variables from this information \texttt{IMMI1GEN} and \texttt{IMMI2GEN} for first- and second-generation migrants respectively, with natives receiving zero entries for both markers.
+Students' immigration status were determined by synthesising responses from student questionnaire items \textsf{ST019} (parents' country of birth) and \textsf{ST021} (students' age of arrival in test country) \parencite[][pp. 212--213]{PISAvol3}. The source dataset \parencite{FLdata} recorded students' immigration status as a categorical variable with levels \textsf{1 = Native}, \textsf{2 = Second-Generation} and \textsf{3 = First-Generation}. This information enabled the derivation of two binary variables \texttt{IMMI1GEN} and \texttt{IMMI2GEN} to mark first- and second-generation migrants respectively, with natives being the reference group receiving zero entries for both categories.
 
+Lastly, variable \textsf{ST004D01T} from the student questionnaire \parencite{FLdata} was transformed into a binary variable with female being the reference group: \textsf{0 = female}; \textsf{1 = male}.
 
-
-The 2018 PISA financial literacy assessment was conducted as a one-hour computer-based session in addition to the mathematics, reading and science components. Students responded to qustions about their familiarity with concepts of finance (\texttt{FCFMLRTY}), confidence about financial matters (\texttt{FLCONFIN}), their classroom (\texttt{FLSCHOOL}) as well as parental (\texttt{FLFAMILY}) involvement in matters of fianncial literacy. Due to a rotat Ten plausible values were subsequently generated by PISA organisers as measures of students' financial literacy outcomes and were used as the dependent variable (\texttt{FLIT}).
-
-\section{Model}
+\section{Model Equations}
 %//mark Motivation for choosing this particular model: multilevel SEM, contextual effect
 %//mark Link model to the research question(s)
 
-\noindent Student-level ($L_1$):
+In the interest of maximum compatibility with multilevel modelling conventions \parencite{snijders:2012}, this paper continued to use subscript $_{ij}$ and $_j$ for student- and school-level variables respectively in its model equations. Since the MLC approach (see \cref{sec:mlc}) had been applied to the within-between decomposition, subscript $_j$ now stands for the between-group component, rather than a (manifect) averages from its individual-level constituents.
+
+Student-level ($L1$):
 \begin{eqn}
     \begin{aligned}
-        \texttt{FCFMLRTY}_{ij} = \alpha^{M_1}_{j} &+ \gamma_{11}\texttt{FLSCHOOL}_{ij} + \gamma_{21}\texttt{FLFAMILY}_{ij} + \gamma_{31}\texttt{NOBULLY}_{ij}\\
+        \texttt{FCFMLRTY} = \alpha^{M_1}_{j} &+ \gamma_{11}\texttt{FLSCHOOL}_{ij} + \gamma_{21}\texttt{FLFAMILY}_{ij} + \gamma_{31}\texttt{NOBULLY}_{ij}\\
         &+ \gamma_{41}\texttt{ESCS}_{ij} + \gamma_{61}\texttt{IMMI2GEN}_{ij} + \gamma_{71}\texttt{MALE}_{ij} + r^{M_1}_{ij}\\
         \texttt{FLCONFIN}_{ij} = \alpha^{M_2}_{j} &+ \gamma_{12}\texttt{FLSCHOOL}_{ij} + \gamma_{22}\texttt{FLFAMILY}_{ij} + \gamma_{32}\texttt{NOBULLY}_{ij}\\
         &+ \gamma_{42}\texttt{ESCS}_{ij} + \gamma_{62}\texttt{IMMI2GEN}_{ij} + \gamma_{72}\texttt{MALE}_{ij} + r^{M_2}_{ij}\\
@@ -58,7 +58,7 @@ The 2018 PISA financial literacy assessment was conducted as a one-hour computer
     \end{aligned}
 \end{eqn}
 
-\noindent School-level ($L_2$):
+School-level ($L2$):
 \begin{eqn}
     \begin{aligned}
         \alpha^{Y}_{j} = \alpha^Y_{00} &+ a_1\texttt{FLSCHOOL}_j + a_2\texttt{NOBULLY}_j + a_3\texttt{FLFAMILY}_j + a_4\texttt{EDUSHTG}_j\\
@@ -66,7 +66,7 @@ The 2018 PISA financial literacy assessment was conducted as a one-hour computer
     \end{aligned}
 \end{eqn}
 
-Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{y}_{ij} + \m{\Gamma}_j\m{x}_{ij} + \m{r}_{ij}$ for student-level ($L_1$) and random intercept $\m{\alpha}_{j} = \m{\alpha}_{00} + \m{A}\m{w}_j + \m{\epsilon}_j$ for school-level ($L_2$):
+Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{y}_{ij} + \m{\Gamma}_j\m{x}_{ij} + \m{r}_{ij}$ for student-level ($L1$) and random intercept $\m{\alpha}_{j} = \m{\alpha}_{00} + \m{A}\m{w}_j + \m{\epsilon}_j$ for school-level ($L2$), the model equations can be further condensed into a matrix form, with the corresponding path diagram in \cref{fig:model}:
 \begin{eqn}
     \begin{aligned}
         \begin{bmatrix}
@@ -145,20 +145,24 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
     \end{aligned}
 \end{eqn}
 
+\input{./Figures/tikz/model}
+
 \section{Missing Data Treatment}
 
-Missing data impose great potential for biased estimation. This study addressed the missing data issue through multilevel multiple imputation under the assumption that data were missing at random \parencite{little:2019}. Since 2018 PISA financial literacy datasets contain missing data at both student- and school-levels and in both continuous and categorical variables, the joint modelling approach is adopted under the advisory of \textcite{grund:2018}. More specifically, ten sets of imputed data were ordered through \pk{Mplus}'s unrestricted variance-covariance model \parencite[``JM-AM H1'',][]{asparouhov:2010} using Bayes estimation procedure with uninformative priors and 4-chain Gibbs sampler to verify convergence as per suggestion by \textcite[][p. 230]{little:2019} and \textcite[][p. 314]{lambert:2018}. Additionally, the first 50000 MCMC iterations were discarded to ensure stablility and any two draws were separated with 5000 iterations to avoid autocorrelation (see \cref{sec:MMI_inp} for input file)---a safe setting even for moderate to high percentage missings \parencite{grund:2016}. Diagnostic plots in \cref{sec:MMI_diagnostic} presented visual evidence for convergence with imputation results summarised in \cref{tab:MMI}.
+Missing data impose great potential for biased estimation. This study addressed the missing data issue through multilevel multiple imputation under the assumption that data were missing at random \parencite{little:2019}. Since 2018 PISA financial literacy datasets contain missing data at both student- and school-levels and in both continuous and categorical variables, the joint modelling approach is adopted under the advisory of \textcite{grund:2018}. More specifically, ten sets of imputed data were ordered through \CM's (Version 8.5, \textcite{mplus}) unrestricted variance-covariance model \parencite[``JM-AM H1'',][]{asparouhov:2010} using Bayes estimation procedure with uninformative priors and 4-chain Gibbs sampler to verify convergence as per suggestion by \textcite[][p. 230]{little:2019} and \textcite[][p. 314]{lambert:2018}. Additionally, the first 50000 MCMC iterations were discarded to ensure stablility and any two draws were separated with 5000 iterations to avoid autocorrelation (see \cref{sec:MMI_inp} for input file)---a safe setting even for moderate to high percentage missings \parencite{grund:2016}. \cref{tab:MMI} summarised the imputation results, followed by the diagnostic plots demonstrating convergence.
 
-\section{Analysis}
-%//mark Software and version
+\section{Weights and Scaling Considerations}
 
-\subsection{Weights}
-
-\subsection{Plausible Values and Rubin's Rule}
+Due to PISA's two-stage sampling design, schools and students were selected with \emph{unequal} probabilities (Chapter 3, \textcite{PISAspss}, pp. 47--56). A proper incorporation of sampling weights is therefore crucial for establishing unbiased estimations. This study has made use of both student and school weights. More specifically, $L1$ weights have been scaled such that they sum to the sample size in each cluster while $L2$ weights were adjusted so that the product of the between- and within-weights sums to the total sample size \parencite[][pp. 622--624]{mplus:manual} under the advisory of \textcite{asparouhov:2006}.
 
 \section{Estimators}
-%//mark I am primarily interested in FLSCHOOL and FLFAMILY, including their total, direct and indirect effects.
-%//mark Motivation why these estimators rather than others?
+
+This study accepted \CM's default setting of pseudo maximum likelihood (MLR) estimator for the hierachical modelling \parencite[Chapter 16,][pp. 666 \& 668]{mplus:manual}. MLR's robust standare errors are in general Huber-White sandwich estimators \parencite{huber:1967, white:1982} with asymptotic standard error corrections using observed residual variances. Literature has long recognised MLR's robust $\chi^2$ tests and standard errors as being more accurate than the asymptotic tests when data are non-normal and when models are mis-specified \parencite{chou:1991, curran:1996}. In the multilevel modelling context, robust $\chi^2$ and standard errors may also provide protection against unmodelled heterogeneity resanltant from mis-specification at the group-level or from omitting a level \parencite{hox:2010}.
+
 
 \section{Model Comparison}
 %//mark Model fit indices. Guidlines and cut-offs?
+
+\section{Evaluation of Mediation}
+%//mark I am primarily interested in FLSCHOOL and FLFAMILY, including their total, direct and indirect effects.
+%//mark Motivation why these estimators rather than others?

@@ -71,9 +71,12 @@
     {\chaptertitlename\ \thechapter\ }{0em}{\huge}
 
 % APA7 Rule 2.21 Line Spacing
-% It is not necessary to add blank lines befroe or after headings, even if a heading falls at the end of a page. Do not add extra spacing between paragraphs.
-%titlespacing*{\chapter}{<leftsep>}{<beforesep>}{<aftersep>}
-\titlespacing*{\chapter}{0pt}{0pt}{11pt}
+% It is not necessary to add blank lines before or after headings, even if a heading falls at the end of a page. Do not add extra spacing between paragraphs.
+%titlespacing*{\type}{<leftsep>}{<beforesep>}{<aftersep>}
+\titlespacing*{\chapter}{0pt}{0pt}{1em}
+\titlespacing*{\section}{0pt}{0pt}{0pt}
+\titlespacing*{\subsection}{0pt}{0pt}{0pt}
+\titlespacing*{\subsubsection}{0pt}{0pt}{0pt}
 
 \usepackage{epigraph}
 \setlength{\epigraphwidth}{0.618\textwidth}
@@ -485,6 +488,11 @@
 }
 \lstdefinestyle{vscodeMplus}{
     language=Mplus,
+    belowcaptionskip=1\baselineskip,
+    breaklines=true,
+    frame=l,
+    xleftmargin=\parindent,
+    showstringspaces=false,
     basicstyle=\scriptsize\ttfamily,
     style=FiraCodeStyle,
     identifierstyle=\color{black},
@@ -583,6 +591,11 @@
 }
 \lstdefinestyle{vscodeMplus_out}{
     language=Mplus_out,
+    belowcaptionskip=1\baselineskip,
+    breaklines=true,
+    frame=l,
+    xleftmargin=\parindent,
+    showstringspaces=false,
     basicstyle=\scriptsize\ttfamily,
     style=FiraCodeStyle,
     identifierstyle=\color{black},
@@ -855,9 +868,16 @@
 %                                                                          %
 
 % Define commonly used computer package
+
+% //ref https://tex.stackexchange.com/questions/148879/meaning-of-font-size
+% One point is defined as 1/72.27 inches
 % Convert pt to mm: s pt = s x 25.4/72.27
-\newcommand{\cR}{\includegraphics[width=4.2175mm]{Figures/R.png}\ }
-\newcommand{\CR}{\includegraphics[width=4.2175mm]{Figures/R.png}}
+% Use em (M box) for dynamic font size changes
+\newcommand{\cR}{\includegraphics[width=1.1em]{Figures/R.png}\ }
+\newcommand{\CR}{\includegraphics[width=1.1em]{Figures/R.png}}
+
+\newcommand{\cM}{\raisebox{-0.333em}{\includegraphics[height=1.1em]{Figures/Mplus.png}}\ }
+\newcommand{\CM}{\raisebox{-0.333em}{\includegraphics[height=1.1em]{Figures/Mplus.png}}}
 
 \newcommand{\pk}[1]{\textsf{#1}}
 
