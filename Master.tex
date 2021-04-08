@@ -209,7 +209,7 @@ Combining individual and institutional data cources can be a productive approach
 
 \section{Sample}
 
-This study drew its primary data soruce from OECD's PISA 2018 database. Responses from both student \parencite{FLdata} and school questionnaires \parencite{SCHdata} were captured and merged into a master data file using \CR's \parencite[Version 4.0.5,][]{R} \pk{intsvy} package \parencite[Version 2.5,][]{intsvy} (see \cref{R.reimport} for analysis code) including the following 20 participating countries\footnote{Australia also participated in 2018 PISA financial literacy but chose to withhold its data from public release and is therefore excluded in the current study.}: Brazil, Bulgaria, Canada, Chile, Estonia, Finland, Georgia, Indonesia, Italy, Latvia, Lithuania, the Netherlands, Peru, Poland, Portugal, Russian Federation\footnote{Moscow Region (\texttt{CNTRYID} = 982) and Tatarstan (983) have been merged into Russian Federation (643).}, Serbia, Slovak Republic, Span, and the USA. Due to clerical error concerns, twelve observations without school weights were dropped, leading to a sample size of 107162 students nested in 6631 schools (see \cref{tab:sample} for detailed sample profile).
+This study drew its primary data soruce from OECD's PISA 2018 database. Responses from both student \parencite{FLdata} and school questionnaires \parencite{SCHdata} were captured and merged into a master data file using \CR's \parencite[Version 4.0.5,][]{R} \pk{intsvy} package \parencite[Version 2.5,][]{intsvy} (see \cref{R.reimport} for analysis code) including the following 20 participating countries\footnote{Australia also participated in 2018 PISA financial literacy but chose to withhold its data from public release and is therefore excluded in the current study.}: Brazil, Bulgaria, Canada, Chile, Estonia, Finland, Georgia, Indonesia, Italy, Latvia, Lithuania, the Netherlands, Peru, Poland, Portugal, Russian Federation\footnote{Moscow Region (\texttt{CNTRYID} = 982) and Tatarstan (983) have been merged into Russian Federation (643).}, Serbia, Slovak Republic, Span, and the USA. Due to clerical error concerns, twelve observations without school weights were dropped, leading to a sample size of 107,162 students nested in 6,631 schools (see \cref{tab:sample} for detailed sample profile).
 
 \section{Measures}
 %//mark What exactly I was using to address my research question?
@@ -355,23 +355,30 @@ Using \poscite{kaplan:2009} notation $\m{y}_{ij} = \m{\alpha}_j + \m{\Beta}_j\m{
 
 \section{Missing Data Treatment}
 
-Missing data impose great potential for biased estimation. This study addressed the missing data issue through multilevel multiple imputation under the assumption that data were missing at random \parencite{little:2019}. Since 2018 PISA financial literacy datasets contain missing data at both student- and school-levels and in both continuous and categorical variables, the joint modelling approach is adopted under the advisory of \textcite{grund:2018}. More specifically, ten sets of imputed data were ordered through \CM's (Version 8.5, \textcite{mplus}) unrestricted variance-covariance model \parencite[``JM-AM H1'',][]{asparouhov:2010} using Bayes estimation procedure with uninformative priors and 4-chain Gibbs sampler to verify convergence as per suggestion by \textcite[][p. 230]{little:2019} and \textcite[][p. 314]{lambert:2018}. Additionally, the first 50000 MCMC iterations were discarded to ensure stablility and any two draws were separated with 5000 iterations to avoid autocorrelation (see \cref{sec:MMI_inp} for input file)---a safe setting even for moderate to high percentage missings \parencite{grund:2016}. \cref{tab:MMI} summarised the imputation results, followed by the diagnostic plots demonstrating convergence.
+Missing data are the norm rather than the exception in empirical research and they demand great care from the researchers to ensure analytical validity. While fulll information maximum likelihood enjoys the benefit of being well understood and readily availabe in software, the multiple imputation (MI) approach outperforms
+\begin{enumerate*}[label={(\alph*)}]
+    \item when the data set contains mixtures of incomplete categorical and continuous variables,
+    \item when dealing with questionnaire data where items usually come in parcels,
+    \item fwhen auxiliary variables are required and lastly,
+    \item when the missing completely at random assumption cannot be reasonably assumed
+\end{enumerate*}
+\parencite{enders:2018}. These considerations conclusively directed the current study towards the multilevel MI route under the assumption that data were missing at random \parencite{little:2019}. In addition, since 2018 PISA financial literacy source files contain missing data at both student- and school-levels and in both continuous and categorical variables, the joint modelling approach is adopted under the advisory of \textcite{grund:2018}. More specifically, ten sets of imputed data were ordered through \CM's (Version 8.5, \textcite{mplus}) unrestricted variance-covariance model \parencite[``JM-AM H1'',][]{asparouhov:2010b} using Bayes estimator, with uninformative priors and 4-chain Gibbs sampler to verify convergence as per suggestion by \textcite[][p. 230]{little:2019} and \textcite[][p. 314]{lambert:2018}. Finaly, the first 50000 MCMC iterations were discarded to ensure stablility and any two draws were separated with 5000 iterations to avoid autocorrelation (see \cref{sec:MMI_inp} for input file)---a safe setting even for moderate to high percentage missings \parencite{grund:2016}. \cref{tab:MMI} summarised the imputation results, followed by the diagnostic plots demonstrating convergence.
 
 \section{Weights and Scaling Considerations}
 
 Due to PISA's two-stage sampling design, schools and students were selected with \emph{unequal} probabilities (Chapter 3, \textcite{PISAspss}, pp. 47--56). A proper incorporation of sampling weights is therefore crucial for establishing unbiased estimations. This study has made use of both student and school weights. More specifically, $L1$ weights have been scaled such that they sum to the sample size in each cluster while $L2$ weights were adjusted so that the product of the between- and within-weights sums to the total sample size \parencite[][pp. 622--624]{mplus:manual} under the advisory of \textcite{asparouhov:2006}.
 
-\section{Estimators}
+\section{Estimator}
+%//mark Motivation why these estimators rather than others?
 
 This study accepted \CM's default setting of pseudo maximum likelihood (MLR) estimator for the hierachical modelling \parencite[Chapter 16,][pp. 666 \& 668]{mplus:manual}. MLR's robust standare errors are in general Huber-White sandwich estimators \parencite{huber:1967, white:1982} with asymptotic standard error corrections using observed residual variances. Literature has long recognised MLR's robust $\chi^2$ tests and standard errors as being more accurate than the asymptotic tests when data are non-normal and when models are mis-specified \parencite{chou:1991, curran:1996}. In the multilevel modelling context, robust $\chi^2$ and standard errors may also provide protection against unmodelled heterogeneity resanltant from mis-specification at the group-level or from omitting a level \parencite{hox:2010}.
-
 
 \section{Model Comparison}
 %//mark Model fit indices. Guidlines and cut-offs?
 
-\section{Evaluation of Mediation}
-%//mark I am primarily interested in FLSCHOOL and FLFAMILY, including their total, direct and indirect effects.
-%//mark Motivation why these estimators rather than others?
+Multiple imputation substantially complicates model fit interpretations. It is important to reflect that \poscite{rubin:1987} rules apply only to \emph{model parameters} under the assumption that over repeated samples, estimates eventually form normal curves peaked at some population values. The distributions of fit indices, on the other hand, are almost always unknown or non-normal, imposing high standards of proof onto any proposed aggregation procedures. Early work such as \textcite{meng:1992} on pooled likelihood ratio statistic, the precursor to many model fit indices, has been substantiated by simulation studies more recently with encouraging results that it is feasible to construct pooled information criteria \parencite{claeskens:2008} as well as pooled model fit indices \parencite{asparouhov:2010a} under MI. \textcite{enders:2018} further suggested that with large samples ($N>100$) and low missing rates ($<$ 30\%--40\%), common cutoff criteria such as \textcite{hu:1999} remain valid. This study took advantage of \CM's capability of automatically pooling model fit information in the presence of MI. Thanks to its sample size ($N=107,162$) and low missing rate (maximum 22.08\%), conventional cutoffs of RMSEA $\leq 0.06$, SRMR $\leq .08$, CFI $\geq .95$ and TLI $\geq 0.95$ were used for model comparison purposes.
+
+
 
 % Chapter 4 Results
 
