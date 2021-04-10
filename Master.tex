@@ -188,20 +188,6 @@ PISA 2018 financial literacy dataset \parencite{FLdata} provides rich informatio
 
 Combining individual and institutional data cources can be a productive approach in international large-scale assessment (ILSA) research. According to the framework for comparative education analyses \parencite{bray:1995}, this project extends education outcome measures to a country level, addresses the aspect of society and labour market, and relates countries' entire populations to ILSA research \parencite{strietholt:2018}. By combining education outcome data with countries' economic performance indicators, this project remains most comparable to \textcite{hanushek:2012a}---while these authors looked into the relationship between countries' education achievement and their GDP growth, the current investigation highlights how countries' GDP, along with other macroeconomic practices, in turn systematically impacts on their youth's educational performance.
 
-\newpage
-
-\input{./Tables/Missing}
-
-\newpage
-
-\newpage
-
-\input{./Figures/tikz/model_results}
-
-\newpage
-
-\input{./Figures/tikz/model_results_thickness}
-
 % Chapter 3 Methods
 
 \chapter{Methods}
@@ -224,7 +210,7 @@ This study drew its primary data soruce from OECD's PISA 2018 database. Response
 
 \subsection{Financial Literacy Measures}
 
-The OECD has constructed two variables to measure 15-year-old students' affects towards financial matters: \texttt{FCFMLRTY} (familiarity with concepts of finance) and \texttt{FLCONFIN} (confidence about financial matters). The former was a non-sclaed derived variable by summing up all 18 items from financial literacy questionnaire \textsf{FL164}, whereas the latter was derived based on IRT scaling with good reliability properties (see \cref{tab:cronbach} for Cronbach's alphas for \texttt{FLCONFIN}).
+The OECD has constructed two variables to measure 15-year-old students' affects towards financial matters: \texttt{FCFMLRTY} (familiarity with concepts of finance) and \texttt{FLCONFIN} (confidence about financial matters). The former was a non-sclaed derived variable by summing up all 18 items from financial literacy questionnaire \textsf{FL164}, whereas the latter was derived based on IRT scaling with good reliability properties (see \cref{tab:cronbach} for reliabilities).
 
 Similar to the treatment for reading and mathematics capabilities, ten plausible values (\texttt{PV1FLIT} to \texttt{PV10FLIT}, collectively written as \texttt{FLIT} form here on) were generated as indicators of students' financial literacy cognition capability. %
 %Although not a focus of the current project, a detailed account of the PV generation process can be found in Chapter 9 of the \textit{Technical Report} \parencite[][pp. 19--23]{PISAtech}; it suffices to report that
@@ -265,6 +251,7 @@ Student-level ($L1$):
 \end{eqn}
 
 School-level ($L2$):
+
 \begin{eqn}
     \begin{aligned}
         \alpha^{Y}_{j} = \alpha^Y_{00} &+ a_1\texttt{FLSCHOOL}_j + a_2\texttt{NOBULLY}_j + a_3\texttt{FLFAMILY}_j + a_4\texttt{EDUSHTG}_j\\
@@ -359,14 +346,14 @@ Missing data are the norm rather than the exception in empirical research and th
 \begin{enumerate*}[label={(\alph*)}]
     \item when the data set contains mixtures of incomplete categorical and continuous variables,
     \item when dealing with questionnaire data where items usually come in parcels,
-    \item fwhen auxiliary variables are required and lastly,
+    \item when auxiliary variables are required and lastly,
     \item when the missing completely at random assumption cannot be reasonably assumed
 \end{enumerate*}
 \parencite{enders:2018}. These considerations conclusively directed the current study towards the multilevel MI route under the assumption that data were missing at random \parencite{little:2019}. In addition, since 2018 PISA financial literacy source files contain missing data at both student- and school-levels and in both continuous and categorical variables, the joint modelling approach is adopted under the advisory of \textcite{grund:2018}. More specifically, ten sets of imputed data were ordered through \CM's (Version 8.5, \textcite{mplus}) unrestricted variance-covariance model \parencite[``JM-AM H1'',][]{asparouhov:2010b} using Bayes estimator, with uninformative priors and 4-chain Gibbs sampler to verify convergence as per suggestion by \textcite[][p. 230]{little:2019} and \textcite[][p. 314]{lambert:2018}. Finaly, the first 50000 MCMC iterations were discarded to ensure stablility and any two draws were separated with 5000 iterations to avoid autocorrelation (see \cref{sec:MMI_inp} for input file)---a safe setting even for moderate to high percentage missings \parencite{grund:2016}. \cref{tab:MMI} summarised the imputation results, followed by the diagnostic plots demonstrating convergence.
 
 \section{Weights and Scaling Considerations}
 
-Due to PISA's two-stage sampling design, schools and students were selected with \emph{unequal} probabilities (Chapter 3, \textcite{PISAspss}, pp. 47--56). A proper incorporation of sampling weights is therefore crucial for establishing unbiased estimations. This study has made use of both student and school weights. More specifically, $L1$ weights have been scaled such that they sum to the sample size in each cluster while $L2$ weights were adjusted so that the product of the between- and within-weights sums to the total sample size \parencite[][pp. 622--624]{mplus:manual} under the advisory of \textcite{asparouhov:2006}.
+Due to PISA's two-stage sampling design, schools and students were selected with \emph{unequal} probabilities (Chapter 3, \textcite{PISAspss}, pp. 47--56). A proper incorporation of sampling weights is therefore crucial for establishing unbiased estimations. This study has made use of both student and school weights. Under the advisory of \textcite{asparouhov:2006}, $L1$ weights were scaled such that they sum to the sample size in each cluster while $L2$ weights were adjusted so that the product of the between- and within-weights sums to the total sample size \parencite[][pp. 622--624]{mplus:manual}.
 
 \section{Estimator}
 %//mark Motivation why these estimators rather than others?
@@ -389,23 +376,47 @@ Multiple imputation substantially complicates model fit interpretations. It is i
 
 %//tip Quickly re-word my research questions. Not to answer them right now but to remind the readers "why we are here". In order to answer these questions, let's first of all examine the descriptive statistics, the correlationss, by country and by levels, blah blah. Most importantly, I would like to interrogate the measurement part because its robustness directly determine the validity of my models.
 
-\section{Descriptive statistics}
+\section{Descriptive Statistics and Correlations}
+
+\cref{tab:descriptive} presents descriptive statistics of all measures included in the multilevel models. $L1$ variable \texttt{NOBULLY} and $L2$ variable \texttt{STRATIO} were highlighted as strongly non-normal due to sizeable disagreements between their means and medians in combination with significant skewness. These variables suggested that majority of 15-year-olds reported their schools as safe and most schools reported student-to-teacher ratios in the low teens in PISA 2018.
+
+Correlations in \cref{tab:varcovcor} further suggested that schools and families tended to join force when it came to youth's financial literacy ($\rho \approx .20$) and both efforts were associated with higher affective outcomes ($\rho$ between $.15$ and $.30$). Students' ESCS were positively correlated with both affective ($\rho\approx .10$ and $.20$) and cognitive ($\rho \approx .45$) financial literacy outcomes. Lastly, outcome variables familiarity, confidence and capability covaried amongst themselves ($\rho$ between $.15$ and $.30$).
+
+\section{Intra-class Correlation and Effective Sample Size}
+
+The degree of resemblance between students enrolled in the same school has impact on both statistical analyses and policy formation. As homogeneity increases amongst students in the same school, repeated samples start to appear like carbon copies of each other, hence adding little extra information to statistical knowledge. Analysts must take this reduction in ``useful samples'' into account when modelling nested data. On the other hand, when resemblance is high, policy variables would deliver sizeable return should they be applied at the school level then let the multiplier effect spread the benefit acroos students.
+
+The degrees of similarities amongst students in a school can be quantified by the intraclass correlation coefficient $\rho_1$, computable from the random effects ANOVA model (``Null model'' in \cref{tab:est1}):
+\begin{eqn}
+    \rho_1 = \frac{\text{School-level residual variance}}{\text{Total residual variance}}
+    =\frac{\var{\epsilon^{Y_B}_j}}{\var{r^{Y_W}_{ij}} + \var{\epsilon^{Y_B}_j}}
+    = \frac{5240}{6122 + 5240}
+    = 0.461.
+\end{eqn}
+\noindent This result recommends schools as the level of interest because between-group differences were responsible for over 45\% of the total variation in students' financial literacy performance.
 
 \input{./Tables/Descriptive}
 
-\section{Correlation matrices}
+\input{./Tables/Var-cov-cor}
 
-\subsection{Across countries}
-
-\subsection{Across levels: Country | School | Students}
-
-\section{Examination of measurement models}
+For sample size adjustment, \textcite{snijders:2012} advised to first of all calculate the design effect of one's multilevel model:
+\vspace{-0.25em}
+\begin{eqn}
+    \text{design effect} = 1 + (\text{average group size} - 1) \rho_1 = 1 + \left( \frac{107,162}{6,631} - 1 \right) \times 0.461 = 7.989,
+\end{eqn}
+\vspace{-0.75em}
+\noindent then compute the effective sample size:
+\vspace{1em}
+\begin{eqn}
+    N_\text{effective} = \frac{N_\text{original}}{\text{design effect}} = \frac{107,162}{7.989} = 13,414.
+\end{eqn}
+\noindent This result signals that students from the same school were so similar in their financial literacy outcomes that the sample size of 107,162 used by this study was only equivalent to a simple random sample using 13,414 students---a result once again highlighted the strong effect of schools for understanding youth's financial literacy development.
 
 \input{./Tables/Estimates1}
 
 \input{./Tables/Estimates2}
 
-\newpage
+\input{./Figures/tikz/results}
 
 \pfigure{fig:flschool}{Total, Direct and Indirect Effects of School Intervention (\texttt{FLSCHOOL})}{1}{./Figures/FLSCHOOL.pdf}{Countries with high (low) financial knowlege indices are represented in darker (lighter) colours. Top panel: Estimates with 95\% confidence intervals crossing the verticle blue line are not statistically significant. Lower panel: Estimates whose 95\% confidence ellipses cross the verticle, horizontal and $-45\degree$ lines are not significant for direct, indirect and total effect, respectively.}{1}{1.25}
 
@@ -417,9 +428,7 @@ Multiple imputation substantially complicates model fit interpretations. It is i
 
 \pfigure{fig:decomposition}{School-Family Effect Decomposition by Country}{1}{./Figures/country_decomposition.pdf}{Cognitive and affective effects are represented on hozitonal and vertical axes respectively.}{0.5}{2}
 
-
-
-\section{Address the research question}
+%//mark Address the research question!
 
 
 % Chapter 5 Discussion

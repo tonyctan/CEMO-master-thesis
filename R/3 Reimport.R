@@ -175,3 +175,31 @@ chisq.test(obs_school, p = exp_school, rescale.p = T)
 obs_student <- list_student[, 2]
 exp_student <- rep(sum(obs_student)/20, 20)
 chisq.test(obs_student, p = exp_student, rescale.p = T)
+
+attach(finlit)
+
+# Average 10 PV only for variance and correlation matrices purposes
+FLIT <- rowMeans(data.frame(
+    PV1FLIT, PV2FLIT, PV3FLIT, PV4FLIT, PV5FLIT,
+    PV6FLIT, PV7FLIT, PV8FLIT, PV9FLIT, PV10FLIT
+))
+library(psych)
+print(describe(FLIT), digits = 3)
+
+# Give me a variance-covariance matrix between the variables
+L1 <- data.frame(
+    FLSCHOOL, FLFAMILY, NOBULLY,
+    ESCS, IMMI1GEN, IMMI2GEN, MALE,
+    FCFMLRTY, FLCONFIN, FLIT
+)
+round(cov(L1, method = "pearson", use = "pairwise.complete.obs"), digits = 3)
+round(cor(L1, method = "pearson", use = "pairwise.complete.obs"), digits = 3)
+
+L2 <- data.frame(EDUSHORT, STRATIO)
+round(cov(L2, method = "pearson", use = "pairwise.complete.obs"), digits = 3)
+round(cor(L2, method = "pearson", use = "pairwise.complete.obs"), digits = 3)
+
+# I also want the p-values of the correlations
+library("Hmisc")
+rcorr(as.matrix(L1), type = "pearson")
+rcorr(as.matrix(L2), type = "pearson")

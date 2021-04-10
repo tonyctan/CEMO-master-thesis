@@ -5,6 +5,9 @@
 
 % APA7 Rule 2.23: Paragraph Alignment
 \usepackage[document]{ragged2e}
+
+% APA7 Rule 2.24: Indent every paragraph, including the first
+\usepackage{indentfirst}
 % % APA7 Rule 2.24: Paragraph Indentation
 \setlength\parindent{0.5in}
 \setlength{\RaggedRightParindent}{\parindent}
@@ -132,7 +135,7 @@
                 \label{#1}
                 \vspace{-#5mm} % to eliminate the white gap
                 #3 % this is where \begin{tabular}...\end{tabular} go
-            \tabnote{\noindent #4}
+            \tabnote{\doublespacing \noindent #4}
             \end{threeparttable}
         \end{table}
     \end{landscape}
@@ -169,7 +172,7 @@
                 \caption*{Continued}
                 \vspace{-#3mm} % to eliminate the white gap
                 #1 % this is where \begin{tabular}...\end{tabular} go
-            \tabnote{#2}
+            \tabnote{\doublespacing \noindent #2}
             \end{threeparttable}
         \end{table}
     \end{landscape}
@@ -177,7 +180,7 @@
 \setlength{\RaggedRightParindent}{\parindent}
 \end{singlespace}
 }
-\newcommand{\ltableContX}[2]{% %%% Landscape table WITH note
+\newcommand{\ltableContX}[2]{% %%% Landscape table WITHOUT note
 \begin{singlespace}
 \setlength\parindent{0in}
 \setlength{\RaggedRightParindent}{\parindent}
@@ -204,7 +207,7 @@
             \label{#1}
             \vspace{-#5mm} % to eliminate the white gap
             #3 % this is where \begin{tabular}...\end{tabular} go
-        \tabnote{#4}
+        \tabnote{\doublespacing \noindent #4}
         \end{threeparttable}
     \end{table}
 \setlength\parindent{0.5in}
@@ -236,7 +239,7 @@
             \caption*{Continued}
             \vspace{-#3mm} % to eliminate the white gap
             #1 % this is where \begin{tabular}...\end{tabular} go
-        \tabnote{#2}
+        \tabnote{\doublespacing \noindent #2}
         \end{threeparttable}
     \end{table}
 \setlength\parindent{0.5in}
@@ -342,7 +345,7 @@
         \caption{#2}
         \label{#1}
             #3
-        \floatfoot{\normalsize \textit{Note.} #4}
+        \floatfoot{\doublespacing \normalsize \textit{Note.} #4}
     \end{figure}
 \setlength\parindent{0.5in}
 \setlength{\RaggedRightParindent}{\parindent}
@@ -366,7 +369,7 @@
             \caption{#2}
             \label{#1}
                 #3
-            \floatfoot{\normalsize \textit{Note.} #4}
+            \floatfoot{\doublespacing \normalsize \textit{Note.} #4}
         \end{figure}
     \end{landscape}
 \setlength\parindent{0.5in}
@@ -715,14 +718,14 @@
 
 \newenvironment{eqn}
     {
-        \vspace{-0.8cm}
+        \vspace{-2em}
         \begin{singlespace}
         \begin{equation}
     }
     {
         \end{equation}
         \end{singlespace}
-        \vspace{-0.1cm}
+%        \vspace{-1em}
     }
 
 % I want to change QED square from an empty square (white) to a solid square (black).

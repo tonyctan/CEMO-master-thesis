@@ -18,7 +18,7 @@ This study drew its primary data soruce from OECD's PISA 2018 database. Response
 
 \subsection{Financial Literacy Measures}
 
-The OECD has constructed two variables to measure 15-year-old students' affects towards financial matters: \texttt{FCFMLRTY} (familiarity with concepts of finance) and \texttt{FLCONFIN} (confidence about financial matters). The former was a non-sclaed derived variable by summing up all 18 items from financial literacy questionnaire \textsf{FL164}, whereas the latter was derived based on IRT scaling with good reliability properties (see \cref{tab:cronbach} for Cronbach's alphas for \texttt{FLCONFIN}).
+The OECD has constructed two variables to measure 15-year-old students' affects towards financial matters: \texttt{FCFMLRTY} (familiarity with concepts of finance) and \texttt{FLCONFIN} (confidence about financial matters). The former was a non-sclaed derived variable by summing up all 18 items from financial literacy questionnaire \textsf{FL164}, whereas the latter was derived based on IRT scaling with good reliability properties (see \cref{tab:cronbach} for reliabilities).
 
 Similar to the treatment for reading and mathematics capabilities, ten plausible values (\texttt{PV1FLIT} to \texttt{PV10FLIT}, collectively written as \texttt{FLIT} form here on) were generated as indicators of students' financial literacy cognition capability. %
 %Although not a focus of the current project, a detailed account of the PV generation process can be found in Chapter 9 of the \textit{Technical Report} \parencite[][pp. 19--23]{PISAtech}; it suffices to report that
@@ -59,6 +59,7 @@ Student-level ($L1$):
 \end{eqn}
 
 School-level ($L2$):
+
 \begin{eqn}
     \begin{aligned}
         \alpha^{Y}_{j} = \alpha^Y_{00} &+ a_1\texttt{FLSCHOOL}_j + a_2\texttt{NOBULLY}_j + a_3\texttt{FLFAMILY}_j + a_4\texttt{EDUSHTG}_j\\
@@ -153,14 +154,14 @@ Missing data are the norm rather than the exception in empirical research and th
 \begin{enumerate*}[label={(\alph*)}]
     \item when the data set contains mixtures of incomplete categorical and continuous variables,
     \item when dealing with questionnaire data where items usually come in parcels,
-    \item fwhen auxiliary variables are required and lastly,
+    \item when auxiliary variables are required and lastly,
     \item when the missing completely at random assumption cannot be reasonably assumed
 \end{enumerate*}
 \parencite{enders:2018}. These considerations conclusively directed the current study towards the multilevel MI route under the assumption that data were missing at random \parencite{little:2019}. In addition, since 2018 PISA financial literacy source files contain missing data at both student- and school-levels and in both continuous and categorical variables, the joint modelling approach is adopted under the advisory of \textcite{grund:2018}. More specifically, ten sets of imputed data were ordered through \CM's (Version 8.5, \textcite{mplus}) unrestricted variance-covariance model \parencite[``JM-AM H1'',][]{asparouhov:2010b} using Bayes estimator, with uninformative priors and 4-chain Gibbs sampler to verify convergence as per suggestion by \textcite[][p. 230]{little:2019} and \textcite[][p. 314]{lambert:2018}. Finaly, the first 50000 MCMC iterations were discarded to ensure stablility and any two draws were separated with 5000 iterations to avoid autocorrelation (see \cref{sec:MMI_inp} for input file)---a safe setting even for moderate to high percentage missings \parencite{grund:2016}. \cref{tab:MMI} summarised the imputation results, followed by the diagnostic plots demonstrating convergence.
 
 \section{Weights and Scaling Considerations}
 
-Due to PISA's two-stage sampling design, schools and students were selected with \emph{unequal} probabilities (Chapter 3, \textcite{PISAspss}, pp. 47--56). A proper incorporation of sampling weights is therefore crucial for establishing unbiased estimations. This study has made use of both student and school weights. More specifically, $L1$ weights have been scaled such that they sum to the sample size in each cluster while $L2$ weights were adjusted so that the product of the between- and within-weights sums to the total sample size \parencite[][pp. 622--624]{mplus:manual} under the advisory of \textcite{asparouhov:2006}.
+Due to PISA's two-stage sampling design, schools and students were selected with \emph{unequal} probabilities (Chapter 3, \textcite{PISAspss}, pp. 47--56). A proper incorporation of sampling weights is therefore crucial for establishing unbiased estimations. This study has made use of both student and school weights. Under the advisory of \textcite{asparouhov:2006}, $L1$ weights were scaled such that they sum to the sample size in each cluster while $L2$ weights were adjusted so that the product of the between- and within-weights sums to the total sample size \parencite[][pp. 622--624]{mplus:manual}.
 
 \section{Estimator}
 %//mark Motivation why these estimators rather than others?
