@@ -77,7 +77,9 @@ MODEL:
         ! Indirect pathways (2nd half): affective vars onto financial literacy
         FCFMLRTY FLCONFIN
         ! Direct pathways: school climate vars onto financial literacy
-        FLSCHOOL FLFAMILY NOBULLY
+        FLSCHOOL (a_w)                      ! academic_within
+        FLFAMILY (c_w)                      ! community_within
+        NOBULLY (s_w)                       ! safety_within
         ! Demographic vars
         ESCS IMMI1GEN
         ;
@@ -99,8 +101,11 @@ MODEL:
 
 %Between%                                   ! === L2: School-level ===
 
-    FLIT on
-        FLSCHOOL FLFAMILY NOBULLY EDUSHORT  ! School climate variables
+    FLIT on                                 ! School climate variables
+        FLSCHOOL (a_b)                          ! academic_between
+        FLFAMILY (c_b)                          ! community_between
+        NOBULLY (s_b)                           ! safety_between
+        EDUSHORT
         STRATIO                             ! Control: Student-teacher ratio
         ;
 
@@ -131,6 +136,19 @@ MODEL INDIRECT:
     FLIT ind MALE;
 
 
+MODEL CONSTRAINT:
+
+    new(a_contextual);
+    a_contextual = a_b - a_w;
+
+    new(c_contextual);
+    c_contextual = c_b - c_w;
+
+    new(s_contextual);
+    s_contextual = s_b - s_w;
+
+
 OUTPUT:
     stdyx                                   ! Fully standardised solution
+    res                                     ! Residual correlation
     ;
