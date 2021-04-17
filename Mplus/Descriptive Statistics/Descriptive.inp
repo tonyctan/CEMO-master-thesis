@@ -1,0 +1,70 @@
+
+TITLE:
+    Two-level saturated model for all countries
+
+DATA:
+    file = "~/implist.dat";
+
+    type = imputation;
+
+
+VARIABLE:
+    names =
+        FKI CNTRYID CNTSCHID W_STU
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
+        ;
+
+    usevar =
+        EDUSHORT STRATIO                    ! L2 only (between)
+        FLIT                                ! Y: to be decomposed
+        FLSCHOOL FLFAMILY NOBULLY           ! X: to be decomposed
+        FCFMLRTY FLCONFIN                   ! L1 only (within)
+        ESCS IMMI1GEN IMMI2GEN MALE         ! L1 only (within)
+        ;
+
+    ! Vars that ONLY appear in L1
+    within =
+        FCFMLRTY FLCONFIN
+        ESCS IMMI1GEN IMMI2GEN MALE
+        ;
+
+    ! Vars that ONLY appear in L2
+    between =
+        EDUSHORT STRATIO                    ! L2: school
+        ;
+
+    weight = W_STU;                         ! Student weight
+    wtscale = cluster;                      ! Scale L1 weight to cluster size
+    bweight = W_SCH;                        ! School weight
+    bwtscale = sample;                      ! Scale L2 weight to sample
+
+    cluster = CNTSCHID;                     ! Cluster by school ID
+
+
+ANALYSIS:
+    processors = 4;
+
+    type = twolevel;
+
+
+MODEL:
+
+%Within%                                    ! === L1: Student-level ===
+
+    FLIT-MALE with FLIT-MALE;
+
+%Between%                                   ! === L2: School-level ===
+
+    EDUSHORT-NOBULLY with EDUSHORT-NOBULLY;
+
+
+OUTPUT:
+    stdyx                                   ! Fully standardised solution
+    ;

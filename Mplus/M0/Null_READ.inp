@@ -1,0 +1,50 @@
+TITLE:
+    Null model for MATH achievement
+
+DATA:
+    file = "~/implist.dat";
+
+    type = imputation;
+
+VARIABLE:
+    names =
+        FKI CNTRYID CNTSCHID W_STU
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
+        ;
+
+    usevar =
+        READ                                ! Financial literacy outcome
+        ;
+
+    weight = W_STU;                         ! Student weight
+    wtscale = cluster;                      ! Scale L1 weight to cluster size
+    bweight = W_SCH;                        ! School weight
+    bwtscale = sample;                      ! Scale L2 weight to sample
+
+    cluster = CNTSCHID;                     ! Cluster label: school ID
+
+
+ANALYSIS:
+    processors = 4;
+
+    type = twolevel;
+
+
+MODEL:
+
+%Within%                                    ! === L1: Student-level ===
+    READ;
+
+%Between%                                   ! === L2: School-level ===
+    READ;
+
+
+OUTPUT:
+    stdyx;                                  ! Fully standardised solution
