@@ -1,6 +1,6 @@
 Mplus VERSION 8.5 (Linux)
 MUTHEN & MUTHEN
-03/11/2021   6:22 PM
+04/18/2021   3:56 PM
 
 INPUT INSTRUCTIONS
 
@@ -59,7 +59,7 @@ INPUT INSTRUCTIONS
 
 
   ANALYSIS:
-      processors = 8;
+      processors = 64;
 
       type = twolevel;
 
@@ -68,27 +68,43 @@ INPUT INSTRUCTIONS
 
   %Within%                                    ! === L1: Student-level ===
 
+      ! Save the variances of L1 FLSCHOOL, FLFAMILY, NOBULLY and FLIT
+      FLSCHOOL (va_w);                        ! variance of academic (within)
+      FLFAMILY (vc_w);                        ! variance of community (within)
+      NOBULLY (vs_w);                         ! variance of safety (within)
+      FLIT (vf_w);                            ! variance of FLIT (within)
+
       ! Indirect pathways (1st half): school climate vars onto mediators
           ! Onto mediator FAMILIARITY
-      FCFMLRTY on FLSCHOOL FLFAMILY NOBULLY ESCS IMMI2GEN MALE;
+      FCFMLRTY on
+          FLSCHOOL FLFAMILY NOBULLY
+          ESCS IMMI2GEN MALE
+          ;
           ! Onto mediator CONFIDENCE
-      FLCONFIN on FLSCHOOL FLFAMILY NOBULLY ESCS IMMI2GEN MALE;
+      FLCONFIN on
+          FLSCHOOL FLFAMILY NOBULLY
+          ESCS IMMI2GEN MALE
+          ;
 
       ! Total effect
       FLIT on
           ! Indirect pathways (2nd half): affective vars onto financial literacy
           FCFMLRTY FLCONFIN
           ! Direct pathways: school climate vars onto financial literacy
-          FLSCHOOL FLFAMILY NOBULLY
+          FLSCHOOL (a_w)                      ! academic_within
+          FLFAMILY (c_w)                      ! community_within
+          NOBULLY (s_w)                       ! safety_within
           ! Demographic vars
           ESCS IMMI1GEN
           ;
 
       ! Covariances
+
           ! Between school climate vars
       FLSCHOOL with FLFAMILY;
       FLFAMILY with NOBULLY;
       FLSCHOOL with NOBULLY;
+
           ! Between mediators
       FCFMLRTY with FLCONFIN;
 
@@ -99,11 +115,23 @@ INPUT INSTRUCTIONS
 
   %Between%                                   ! === L2: School-level ===
 
-      FLIT on
-          FLSCHOOL FLFAMILY NOBULLY EDUSHORT  ! School climate variables
+      ! Save the variances of L1 FLSCHOOL, FLFAMILY and NOBULLY
+      FLSCHOOL (va_b);                        ! variance of academic (between)
+      FLFAMILY (vc_b);                        ! variance of community (between)
+      NOBULLY (vs_b);                         ! variance of safety (between)
+      FLIT (vf_b);                            ! variance of FLIT (between)
+
+      FLIT on                                 ! School climate variables
+          FLSCHOOL (a_b)                          ! academic_between
+          FLFAMILY (c_b)                          ! community_between
+          NOBULLY (s_b)                           ! safety_between
+          EDUSHORT
           STRATIO                             ! Control: Student-teacher ratio
           ;
 
+      ! Covariances
+
+          ! Between school climate vars
       FLSCHOOL with FLFAMILY;
       FLFAMILY with NOBULLY;
       NOBULLY with EDUSHORT;
@@ -126,6 +154,47 @@ INPUT INSTRUCTIONS
       FLIT ind ESCS;
       FLIT ind IMMI2GEN;
       FLIT ind MALE;
+
+
+  MODEL CONSTRAINT:
+
+      ! Save non-standardised contextual effects
+      new(ctx_a);
+      ctx_a = a_b - a_w;
+      new(ctx_c);
+      ctx_c = c_b - c_w;
+      new(ctx_s);
+      ctx_s = s_b - s_w;
+
+      ! Standardise contextual effects
+      new(ctx_a_st);
+      ctx_a_st = ctx_a*(sqrt(va_b)/sqrt(va_b*a_b**2+vf_b+va_w*a_w**2+vf_w));
+      new(ctx_c_st);
+      ctx_c_st = ctx_c*(sqrt(vc_b)/sqrt(vc_b*c_b**2+vf_b+vc_w*c_w**2+vf_w));
+      new(ctx_s_st);
+      ctx_s_st = ctx_s*(sqrt(vs_b)/sqrt(vs_b*s_b**2+vf_b+vs_w*s_w**2+vf_w));
+
+      ! Compute effect sizes (EF)
+      new(es1_a);
+      es1_a = ctx_a*(2*sqrt(va_b)/sqrt(vf_w));
+      new(es1_c);
+      es1_c = ctx_c*(2*sqrt(vc_b)/sqrt(vf_w));
+      new(es1_s);
+      es1_s = ctx_s*(2*sqrt(vs_b)/sqrt(vf_w));
+
+      new(es2_a);
+      es2_a = ctx_a*(2*sqrt(va_b)/sqrt(va_w*a_w**2+vf_w));
+      new(es2_c);
+      es2_c = ctx_c*(2*sqrt(vc_b)/sqrt(vc_w*c_w**2+vf_w));
+      new(es2_s);
+      es2_s = ctx_s*(2*sqrt(vs_b)/sqrt(vs_w*s_w**2+vf_w));
+
+      new(es3_a);
+      es3_a = ctx_a*(2*sqrt(va_b)/sqrt(va_b*a_b**2+va_w*a_w**2+vf_w));
+      new(es3_c);
+      es3_c = ctx_c*(2*sqrt(vc_b)/sqrt(vc_b*c_b**2+vc_w*c_w**2+vf_w));
+      new(es3_s);
+      es3_s = ctx_s*(2*sqrt(vs_b)/sqrt(vs_b*s_b**2+vs_w*s_w**2+vf_w));
 
 
   OUTPUT:
@@ -744,7 +813,7 @@ Between Level
  FLIT       ON
     FLSCHOOL        -101.050     21.056     -4.799      0.000      0.247
     FLFAMILY         -75.064     79.610     -0.943      0.346      0.188
-    NOBULLY           73.479     66.711      1.101      0.271      0.180
+    NOBULLY           73.479     66.710      1.101      0.271      0.180
     EDUSHORT          -3.665      5.505     -0.666      0.506      0.086
     STRATIO            0.042      0.229      0.184      0.854      0.295
 
@@ -782,7 +851,24 @@ Between Level
     FLFAMILY           0.025      0.009      2.812      0.005      0.209
 
  Residual Variances
-    FLIT             983.576    321.827      3.056      0.002      0.217
+    FLIT             983.576    321.826      3.056      0.002      0.217
+
+New/Additional Parameters
+    CTX_A            -92.588     20.800     -4.451      0.000      0.000
+    CTX_C            -76.298     79.625     -0.958      0.338      0.000
+    CTX_S             70.317     66.830      1.052      0.293      0.000
+    CTX_A_ST          -0.363      0.067     -5.433      0.000      0.000
+    CTX_C_ST          -0.143      0.133     -1.078      0.281      0.000
+    CTX_S_ST           0.164      0.149      1.101      0.271      0.000
+    ES1_A             -0.864      0.185     -4.669      0.000      0.000
+    ES1_C             -0.314      0.295     -1.065      0.287      0.000
+    ES1_S              0.363      0.338      1.074      0.283      0.000
+    ES2_A             -0.859      0.184     -4.673      0.000      0.000
+    ES2_C             -0.314      0.295     -1.065      0.287      0.000
+    ES2_S              0.362      0.337      1.074      0.283      0.000
+    ES3_A             -0.776      0.140     -5.533      0.000      0.000
+    ES3_C             -0.309      0.280     -1.104      0.270      0.000
+    ES3_S              0.354      0.314      1.126      0.260      0.000
 
 
 STANDARDIZED MODEL RESULTS
@@ -849,8 +935,8 @@ Within Level
     FLSCHOOL           1.000      0.000  *********      0.000      0.000
     NOBULLY            1.000      0.000  *********      0.000      0.000
     FLFAMILY           1.000      0.000  *********      0.000      0.000
-    IMMI1GEN           1.000      0.000    999.000    999.000      0.000
-    IMMI2GEN           1.000      0.000    999.000    999.000      0.000
+    IMMI1GEN           1.000      0.000  *********      0.000      0.000
+    IMMI2GEN           1.000      0.000  *********      0.000      0.000
     ESCS               1.000      0.000  *********      0.000      0.000
 
  Residual Variances
@@ -896,9 +982,9 @@ Between Level
  Variances
     EDUSHORT           1.000      0.000  *********      0.000      0.000
     STRATIO            1.000      0.000  *********      0.000      0.000
-    FLSCHOOL           1.000      0.000    999.000    999.000      0.000
+    FLSCHOOL           1.000      0.000  *********      0.000      0.000
     NOBULLY            1.000      0.000  *********      0.000      0.000
-    FLFAMILY           1.000      0.000  *********      0.000      0.000
+    FLFAMILY           1.000      0.000    999.000    999.000      0.000
 
  Residual Variances
     FLIT               0.353      0.114      3.092      0.002      0.219
@@ -1064,7 +1150,7 @@ Effects from FLSCHOOL to FLIT
 Effects from FLFAMILY to FLIT
 
   Total              -75.064     79.610     -0.943      0.346      0.188
-  Total indirect       0.000      0.000     -0.545      0.585      0.167
+  Total indirect       0.000      0.000      0.175      0.861      0.167
 
   Direct
     FLIT
@@ -1073,12 +1159,12 @@ Effects from FLFAMILY to FLIT
 
 Effects from NOBULLY to FLIT
 
-  Total               73.479     66.711      1.101      0.271      0.180
-  Total indirect       0.000      0.000      0.075      0.940      0.167
+  Total               73.479     66.710      1.101      0.271      0.180
+  Total indirect       0.000      0.000      0.411      0.681      0.167
 
   Direct
     FLIT
-    NOBULLY           73.479     66.711      1.101      0.271      0.180
+    NOBULLY           73.479     66.710      1.101      0.271      0.180
 
 
 Effects from ESCS to FLIT
@@ -1519,6 +1605,27 @@ TECHNICAL 1 OUTPUT
  FLFAMILY          66
 
 
+     PARAMETER SPECIFICATION FOR THE ADDITIONAL PARAMETERS
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_A         CTX_C         CTX_S         CTX_A_ST      CTX_C_ST
+              ________      ________      ________      ________      ________
+                   67            68            69            70            71
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_S_ST      ES1_A         ES1_C         ES1_S         ES2_A
+              ________      ________      ________      ________      ________
+                   72            73            74            75            76
+
+
+           NEW/ADDITIONAL PARAMETERS
+              ES2_C         ES2_S         ES3_A         ES3_C         ES3_S
+              ________      ________      ________      ________      ________
+                   77            78            79            80            81
+
+
      STARTING VALUES FOR WITHIN
 
 
@@ -1761,9 +1868,30 @@ TECHNICAL 1 OUTPUT
  FLFAMILY       0.642
 
 
-     Beginning Time:  18:22:56
-        Ending Time:  18:23:54
-       Elapsed Time:  00:00:58
+     STARTING VALUES FOR THE ADDITIONAL PARAMETERS
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_A         CTX_C         CTX_S         CTX_A_ST      CTX_C_ST
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_S_ST      ES1_A         ES1_C         ES1_S         ES2_A
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+           NEW/ADDITIONAL PARAMETERS
+              ES2_C         ES2_S         ES3_A         ES3_C         ES3_S
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+     Beginning Time:  15:56:18
+        Ending Time:  15:56:37
+       Elapsed Time:  00:00:19
 
 
 

@@ -1,6 +1,6 @@
 Mplus VERSION 8.5 (Linux)
 MUTHEN & MUTHEN
-04/15/2021   5:44 PM
+04/18/2021   5:42 PM
 
 INPUT INSTRUCTIONS
 
@@ -66,6 +66,12 @@ INPUT INSTRUCTIONS
 
   %Within%                                    ! === L1: Student-level ===
 
+      ! Save the variances of L1 FLSCHOOL, FLFAMILY, NOBULLY and FLIT
+      FLSCHOOL (va_w);                        ! variance of academic (within)
+      FLFAMILY (vc_w);                        ! variance of community (within)
+      NOBULLY (vs_w);                         ! variance of safety (within)
+      FLIT (vf_w);                            ! variance of FLIT (within)
+
       ! Indirect pathways (1st half): school climate vars onto mediators
           ! Onto mediator FAMILIARITY
       FCFMLRTY on
@@ -107,6 +113,12 @@ INPUT INSTRUCTIONS
 
   %Between%                                   ! === L2: School-level ===
 
+      ! Save the variances of L1 FLSCHOOL, FLFAMILY and NOBULLY
+      FLSCHOOL (va_b);                        ! variance of academic (between)
+      FLFAMILY (vc_b);                        ! variance of community (between)
+      NOBULLY (vs_b);                         ! variance of safety (between)
+      FLIT (vf_b);                            ! variance of FLIT (between)
+
       FLIT on                                 ! School climate variables
           FLSCHOOL (a_b)                          ! academic_between
           FLFAMILY (c_b)                          ! community_between
@@ -144,19 +156,47 @@ INPUT INSTRUCTIONS
 
   MODEL CONSTRAINT:
 
-      new(a_contextual);
-      a_contextual = a_b - a_w;
+      ! Save non-standardised contextual effects
+      new(ctx_a);
+      ctx_a = a_b - a_w;
+      new(ctx_c);
+      ctx_c = c_b - c_w;
+      new(ctx_s);
+      ctx_s = s_b - s_w;
 
-      new(c_contextual);
-      c_contextual = c_b - c_w;
+      ! Standardise contextual effects
+      new(ctx_a_st);
+      ctx_a_st = ctx_a*(sqrt(va_b)/sqrt(va_b*a_b**2+vf_b+va_w*a_w**2+vf_w));
+      new(ctx_c_st);
+      ctx_c_st = ctx_c*(sqrt(vc_b)/sqrt(vc_b*c_b**2+vf_b+vc_w*c_w**2+vf_w));
+      new(ctx_s_st);
+      ctx_s_st = ctx_s*(sqrt(vs_b)/sqrt(vs_b*s_b**2+vf_b+vs_w*s_w**2+vf_w));
 
-      new(s_contextual);
-      s_contextual = s_b - s_w;
+      ! Compute effect sizes (EF)
+      new(es1_a);
+      es1_a = ctx_a*(2*sqrt(va_b)/sqrt(vf_w));
+      new(es1_c);
+      es1_c = ctx_c*(2*sqrt(vc_b)/sqrt(vf_w));
+      new(es1_s);
+      es1_s = ctx_s*(2*sqrt(vs_b)/sqrt(vf_w));
+
+      new(es2_a);
+      es2_a = ctx_a*(2*sqrt(va_b)/sqrt(va_w*a_w**2+vf_w));
+      new(es2_c);
+      es2_c = ctx_c*(2*sqrt(vc_b)/sqrt(vc_w*c_w**2+vf_w));
+      new(es2_s);
+      es2_s = ctx_s*(2*sqrt(vs_b)/sqrt(vs_w*s_w**2+vf_w));
+
+      new(es3_a);
+      es3_a = ctx_a*(2*sqrt(va_b)/sqrt(va_b*a_b**2+va_w*a_w**2+vf_w));
+      new(es3_c);
+      es3_c = ctx_c*(2*sqrt(vc_b)/sqrt(vc_b*c_b**2+vc_w*c_w**2+vf_w));
+      new(es3_s);
+      es3_s = ctx_s*(2*sqrt(vs_b)/sqrt(vs_b*s_b**2+vs_w*s_w**2+vf_w));
 
 
   OUTPUT:
       stdyx                                   ! Fully standardised solution
-      res                                     ! Residual correlation
       ;
 
 
@@ -812,9 +852,21 @@ Between Level
     FLIT            1705.616    135.044     12.630      0.000      0.083
 
 New/Additional Parameters
-    A_CONTEX         -42.261     10.720     -3.942      0.000      0.000
-    C_CONTEX         -75.808     20.353     -3.725      0.000      0.000
-    S_CONTEX          60.071     19.673      3.054      0.002      0.000
+    CTX_A            -42.261     10.720     -3.942      0.000      0.000
+    CTX_C            -75.808     20.353     -3.725      0.000      0.000
+    CTX_S             60.071     19.673      3.054      0.002      0.000
+    CTX_A_ST          -0.163      0.041     -3.993      0.000      0.000
+    CTX_C_ST          -0.144      0.037     -3.949      0.000      0.000
+    CTX_S_ST           0.144      0.046      3.154      0.002      0.000
+    ES1_A             -0.380      0.099     -3.849      0.000      0.000
+    ES1_C             -0.332      0.084     -3.941      0.000      0.000
+    ES1_S              0.331      0.107      3.091      0.002      0.000
+    ES2_A             -0.378      0.098     -3.849      0.000      0.000
+    ES2_C             -0.332      0.084     -3.940      0.000      0.000
+    ES2_S              0.331      0.107      3.090      0.002      0.000
+    ES3_A             -0.369      0.092     -4.007      0.000      0.000
+    ES3_C             -0.328      0.081     -4.050      0.000      0.000
+    ES3_S              0.326      0.102      3.179      0.001      0.000
 
 
 STANDARDIZED MODEL RESULTS
@@ -928,7 +980,7 @@ Between Level
  Variances
     EDUSHORT           1.000      0.000  *********      0.000      0.000
     STRATIO            1.000      0.000  *********      0.000      0.000
-    FLSCHOOL           1.000      0.000    999.000    999.000      0.000
+    FLSCHOOL           1.000      0.000  *********      0.000      0.000
     NOBULLY            1.000      0.000  *********      0.000      0.000
     FLFAMILY           1.000      0.000  *********      0.000      0.000
 
@@ -957,7 +1009,7 @@ Between Level
 
 QUALITY OF NUMERICAL RESULTS
 
-     Average Condition Number for the Information Matrix      0.247E-08
+     Average Condition Number for the Information Matrix      0.410E-10
        (ratio of smallest to largest eigenvalue)
 
 
@@ -1086,7 +1138,7 @@ BETWEEN
 Effects from FLSCHOOL to FLIT
 
   Total              -49.339     10.764     -4.584      0.000      0.142
-  Total indirect       0.000      0.000      0.739      0.460      0.167
+  Total indirect       0.000      0.000      0.129      0.897      0.167
 
   Direct
     FLIT
@@ -1096,7 +1148,7 @@ Effects from FLSCHOOL to FLIT
 Effects from FLFAMILY to FLIT
 
   Total              -77.282     20.258     -3.815      0.000      0.094
-  Total indirect       0.000      0.000      0.591      0.555      0.167
+  Total indirect       0.000      0.000      0.000      1.000      0.167
 
   Direct
     FLIT
@@ -1106,7 +1158,7 @@ Effects from FLFAMILY to FLIT
 Effects from NOBULLY to FLIT
 
   Total               63.608     19.578      3.249      0.001      0.092
-  Total indirect       0.000      0.000      0.000      1.000      0.167
+  Total indirect       0.000      0.000     -0.347      0.728      0.167
 
   Direct
     FLIT
@@ -1304,233 +1356,6 @@ Effects from MALE to FLIT
   Total indirect       0.000      0.000      0.000      1.000      0.167
 
 
-
-
-RESIDUAL OUTPUT
-
-NOTE:  These are average results over 10 data sets.
-
-
-     ESTIMATED MODEL AND RESIDUALS (OBSERVED - ESTIMATED) FOR WITHIN
-
-
-           Model Estimated Means
-              EDUSHORT      STRATIO       FLIT          FCFMLRTY      FLCONFIN
-              ________      ________      ________      ________      ________
-                0.000         0.000        10.286         6.721        -0.099
-
-
-           Model Estimated Means
-              FLSCHOOL      NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
-                0.000         0.000         0.000         0.028         0.070
-
-
-           Model Estimated Means
-              ESCS          MALE
-              ________      ________
-               -0.531         0.495
-
-
-           Residuals for Means
-              EDUSHORT      STRATIO       FLIT          FCFMLRTY      FLCONFIN
-              ________      ________      ________      ________      ________
-                0.000         0.000         0.000         0.000         0.000
-
-
-           Residuals for Means
-              FLSCHOOL      NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
-                0.000         0.000         0.000         0.000         0.000
-
-
-           Residuals for Means
-              ESCS          MALE
-              ________      ________
-                0.000         0.000
-
-
-           Model Estimated Covariances
-              EDUSHORT      STRATIO       FLIT          FCFMLRTY      FLCONFIN
-              ________      ________      ________      ________      ________
- EDUSHORT       0.000
- STRATIO        0.000         0.000
- FLIT           0.000         0.000      3282.688
- FCFMLRTY       0.000         0.000        49.975        14.929
- FLCONFIN       0.000         0.000         2.810         0.725         1.005
- FLSCHOOL       0.000         0.000        -0.813         0.896         0.196
- NOBULLY        0.000         0.000         2.343         0.083        -0.012
- FLFAMILY       0.000         0.000         0.864         0.576         0.199
- IMMI1GEN       0.000         0.000        -0.201         0.008         0.001
- IMMI2GEN       0.000         0.000         0.070        -0.019        -0.017
- ESCS           0.000         0.000        14.742         0.895         0.076
- MALE           0.000         0.000         0.144         0.035         0.085
-
-
-           Model Estimated Covariances
-              FLSCHOOL      NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
- FLSCHOOL       1.004
- NOBULLY       -0.032         1.057
- FLFAMILY       0.233        -0.047         1.050
- IMMI1GEN       0.000         0.000         0.000         0.514
- IMMI2GEN       0.000         0.000         0.000         0.000         0.533
- ESCS           0.065         0.000         0.103         0.024         0.027
- MALE           0.000         0.000         0.000         0.000         0.000
-
-
-           Model Estimated Covariances
-              ESCS          MALE
-              ________      ________
- ESCS           1.296
- MALE           0.000         0.625
-
-
-           Residuals for Covariances
-              EDUSHORT      STRATIO       FLIT          FCFMLRTY      FLCONFIN
-              ________      ________      ________      ________      ________
- EDUSHORT       0.000
- STRATIO        0.000         0.000
- FLIT           0.000         0.000         6.300
- FCFMLRTY       0.000         0.000         0.217         0.005
- FLCONFIN       0.000         0.000        -0.010         0.004         0.000
- FLSCHOOL       0.000         0.000        -0.036         0.000         0.006
- NOBULLY        0.000         0.000        -0.052        -0.007        -0.009
- FLFAMILY       0.000         0.000         0.058         0.002        -0.004
- IMMI1GEN       0.000         0.000        -0.009        -0.016         0.000
- IMMI2GEN       0.000         0.000         0.201        -0.001        -0.001
- ESCS           0.000         0.000         0.145         0.001         0.003
- MALE           0.000         0.000         0.267         0.020         0.002
-
-
-           Residuals for Covariances
-              FLSCHOOL      NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
- FLSCHOOL       0.000
- NOBULLY       -0.001         0.000
- FLFAMILY       0.000         0.000         0.001
- IMMI1GEN      -0.001         0.004        -0.001         0.000
- IMMI2GEN      -0.005         0.012         0.002        -0.024         0.000
- ESCS          -0.003        -0.003         0.004        -0.001        -0.001
- MALE           0.037        -0.054        -0.029        -0.001        -0.004
-
-
-           Residuals for Covariances
-              ESCS          MALE
-              ________      ________
- ESCS           0.000
- MALE           0.021         0.000
-
-
-     ESTIMATED MODEL AND RESIDUALS (OBSERVED - ESTIMATED) FOR BETWEEN
-
-
-           Model Estimated Means
-              EDUSHORT      STRATIO       FLIT          FCFMLRTY      FLCONFIN
-              ________      ________      ________      ________      ________
-                0.180        17.731       445.811         0.000         0.000
-
-
-           Model Estimated Means
-              FLSCHOOL      NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
-                0.122        -0.178         0.124         0.000         0.000
-
-
-           Model Estimated Means
-              ESCS          MALE
-              ________      ________
-                0.000         0.000
-
-
-           Residuals for Means
-              EDUSHORT      STRATIO       FLIT          FCFMLRTY      FLCONFIN
-              ________      ________      ________      ________      ________
-                0.000         0.000         0.055         0.000         0.000
-
-
-           Residuals for Means
-              FLSCHOOL      NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
-               -0.001         0.001         0.000         0.000         0.000
-
-
-           Residuals for Means
-              ESCS          MALE
-              ________      ________
-                0.000         0.000
-
-
-           Model Estimated Covariances
-              EDUSHORT      STRATIO       FLIT          FCFMLRTY      FLCONFIN
-              ________      ________      ________      ________      ________
- EDUSHORT       1.249
- STRATIO       -0.314        66.437
- FLIT         -15.621       -30.554      1630.447
- FCFMLRTY       0.000         0.000         0.000         0.000
- FLCONFIN       0.000         0.000         0.000         0.000         0.000
- FLSCHOOL       0.226        -0.224        -5.538         0.000         0.000
- NOBULLY       -0.137         0.000         2.898         0.000         0.000
- FLFAMILY       0.026         0.000        -1.661         0.000         0.000
- IMMI1GEN       0.000         0.000         0.000         0.000         0.000
- IMMI2GEN       0.000         0.000         0.000         0.000         0.000
- ESCS           0.000         0.000         0.000         0.000         0.000
- MALE           0.000         0.000         0.000         0.000         0.000
-
-
-           Model Estimated Covariances
-              FLSCHOOL      NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
- FLSCHOOL       0.558
- NOBULLY       -0.258         0.522
- FLFAMILY       0.124        -0.020         0.514
- IMMI1GEN       0.000         0.000         0.000         0.000
- IMMI2GEN       0.000         0.000         0.000         0.000         0.000
- ESCS           0.000         0.000         0.000         0.000         0.000
- MALE           0.000         0.000         0.000         0.000         0.000
-
-
-           Model Estimated Covariances
-              ESCS          MALE
-              ________      ________
- ESCS           0.000
- MALE           0.000         0.000
-
-
-           Residuals for Covariances
-              EDUSHORT      STRATIO       FLIT          FCFMLRTY      FLCONFIN
-              ________      ________      ________      ________      ________
- EDUSHORT       0.000
- STRATIO       -0.010         0.000
- FLIT           0.155        -2.329       -16.571
- FCFMLRTY       0.000         0.000         0.000         0.000
- FLCONFIN       0.000         0.000         0.000         0.000         0.000
- FLSCHOOL      -0.004         0.025         0.197         0.000         0.000
- NOBULLY        0.007         0.044        -0.201         0.000         0.000
- FLFAMILY       0.006         0.191        -0.208         0.000         0.000
- IMMI1GEN       0.000         0.000         0.000         0.000         0.000
- IMMI2GEN       0.000         0.000         0.000         0.000         0.000
- ESCS           0.000         0.000         0.000         0.000         0.000
- MALE           0.000         0.000         0.000         0.000         0.000
-
-
-           Residuals for Covariances
-              FLSCHOOL      NOBULLY       FLFAMILY      IMMI1GEN      IMMI2GEN
-              ________      ________      ________      ________      ________
- FLSCHOOL      -0.001
- NOBULLY        0.008        -0.001
- FLFAMILY       0.003        -0.013         0.000
- IMMI1GEN       0.000         0.000         0.000         0.000
- IMMI2GEN       0.000         0.000         0.000         0.000         0.000
- ESCS           0.000         0.000         0.000         0.000         0.000
- MALE           0.000         0.000         0.000         0.000         0.000
-
-
-           Residuals for Covariances
-              ESCS          MALE
-              ________      ________
- ESCS           0.000
- MALE           0.000         0.000
 
 
 TECHNICAL 1 OUTPUT
@@ -1782,9 +1607,21 @@ TECHNICAL 1 OUTPUT
 
 
            NEW/ADDITIONAL PARAMETERS
-              A_CONTEX      C_CONTEX      S_CONTEX
-              ________      ________      ________
-                   67            68            69
+              CTX_A         CTX_C         CTX_S         CTX_A_ST      CTX_C_ST
+              ________      ________      ________      ________      ________
+                   67            68            69            70            71
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_S_ST      ES1_A         ES1_C         ES1_S         ES2_A
+              ________      ________      ________      ________      ________
+                   72            73            74            75            76
+
+
+           NEW/ADDITIONAL PARAMETERS
+              ES2_C         ES2_S         ES3_A         ES3_C         ES3_S
+              ________      ________      ________      ________      ________
+                   77            78            79            80            81
 
 
      STARTING VALUES FOR WITHIN
@@ -2033,14 +1870,26 @@ TECHNICAL 1 OUTPUT
 
 
            NEW/ADDITIONAL PARAMETERS
-              A_CONTEX      C_CONTEX      S_CONTEX
-              ________      ________      ________
-                0.500         0.500         0.500
+              CTX_A         CTX_C         CTX_S         CTX_A_ST      CTX_C_ST
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
 
 
-     Beginning Time:  17:44:28
-        Ending Time:  17:48:24
-       Elapsed Time:  00:03:56
+           NEW/ADDITIONAL PARAMETERS
+              CTX_S_ST      ES1_A         ES1_C         ES1_S         ES2_A
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+           NEW/ADDITIONAL PARAMETERS
+              ES2_C         ES2_S         ES3_A         ES3_C         ES3_S
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+     Beginning Time:  17:42:51
+        Ending Time:  17:47:13
+       Elapsed Time:  00:04:22
 
 
 

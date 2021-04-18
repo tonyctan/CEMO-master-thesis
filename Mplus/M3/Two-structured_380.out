@@ -1,6 +1,6 @@
 Mplus VERSION 8.5 (Linux)
 MUTHEN & MUTHEN
-03/11/2021   6:22 PM
+04/18/2021   3:56 PM
 
 INPUT INSTRUCTIONS
 
@@ -59,7 +59,7 @@ INPUT INSTRUCTIONS
 
 
   ANALYSIS:
-      processors = 8;
+      processors = 64;
 
       type = twolevel;
 
@@ -68,27 +68,43 @@ INPUT INSTRUCTIONS
 
   %Within%                                    ! === L1: Student-level ===
 
+      ! Save the variances of L1 FLSCHOOL, FLFAMILY, NOBULLY and FLIT
+      FLSCHOOL (va_w);                        ! variance of academic (within)
+      FLFAMILY (vc_w);                        ! variance of community (within)
+      NOBULLY (vs_w);                         ! variance of safety (within)
+      FLIT (vf_w);                            ! variance of FLIT (within)
+
       ! Indirect pathways (1st half): school climate vars onto mediators
           ! Onto mediator FAMILIARITY
-      FCFMLRTY on FLSCHOOL FLFAMILY NOBULLY ESCS IMMI2GEN MALE;
+      FCFMLRTY on
+          FLSCHOOL FLFAMILY NOBULLY
+          ESCS IMMI2GEN MALE
+          ;
           ! Onto mediator CONFIDENCE
-      FLCONFIN on FLSCHOOL FLFAMILY NOBULLY ESCS IMMI2GEN MALE;
+      FLCONFIN on
+          FLSCHOOL FLFAMILY NOBULLY
+          ESCS IMMI2GEN MALE
+          ;
 
       ! Total effect
       FLIT on
           ! Indirect pathways (2nd half): affective vars onto financial literacy
           FCFMLRTY FLCONFIN
           ! Direct pathways: school climate vars onto financial literacy
-          FLSCHOOL FLFAMILY NOBULLY
+          FLSCHOOL (a_w)                      ! academic_within
+          FLFAMILY (c_w)                      ! community_within
+          NOBULLY (s_w)                       ! safety_within
           ! Demographic vars
           ESCS IMMI1GEN
           ;
 
       ! Covariances
+
           ! Between school climate vars
       FLSCHOOL with FLFAMILY;
       FLFAMILY with NOBULLY;
       FLSCHOOL with NOBULLY;
+
           ! Between mediators
       FCFMLRTY with FLCONFIN;
 
@@ -99,11 +115,23 @@ INPUT INSTRUCTIONS
 
   %Between%                                   ! === L2: School-level ===
 
-      FLIT on
-          FLSCHOOL FLFAMILY NOBULLY EDUSHORT  ! School climate variables
+      ! Save the variances of L1 FLSCHOOL, FLFAMILY and NOBULLY
+      FLSCHOOL (va_b);                        ! variance of academic (between)
+      FLFAMILY (vc_b);                        ! variance of community (between)
+      NOBULLY (vs_b);                         ! variance of safety (between)
+      FLIT (vf_b);                            ! variance of FLIT (between)
+
+      FLIT on                                 ! School climate variables
+          FLSCHOOL (a_b)                          ! academic_between
+          FLFAMILY (c_b)                          ! community_between
+          NOBULLY (s_b)                           ! safety_between
+          EDUSHORT
           STRATIO                             ! Control: Student-teacher ratio
           ;
 
+      ! Covariances
+
+          ! Between school climate vars
       FLSCHOOL with FLFAMILY;
       FLFAMILY with NOBULLY;
       NOBULLY with EDUSHORT;
@@ -126,6 +154,47 @@ INPUT INSTRUCTIONS
       FLIT ind ESCS;
       FLIT ind IMMI2GEN;
       FLIT ind MALE;
+
+
+  MODEL CONSTRAINT:
+
+      ! Save non-standardised contextual effects
+      new(ctx_a);
+      ctx_a = a_b - a_w;
+      new(ctx_c);
+      ctx_c = c_b - c_w;
+      new(ctx_s);
+      ctx_s = s_b - s_w;
+
+      ! Standardise contextual effects
+      new(ctx_a_st);
+      ctx_a_st = ctx_a*(sqrt(va_b)/sqrt(va_b*a_b**2+vf_b+va_w*a_w**2+vf_w));
+      new(ctx_c_st);
+      ctx_c_st = ctx_c*(sqrt(vc_b)/sqrt(vc_b*c_b**2+vf_b+vc_w*c_w**2+vf_w));
+      new(ctx_s_st);
+      ctx_s_st = ctx_s*(sqrt(vs_b)/sqrt(vs_b*s_b**2+vf_b+vs_w*s_w**2+vf_w));
+
+      ! Compute effect sizes (EF)
+      new(es1_a);
+      es1_a = ctx_a*(2*sqrt(va_b)/sqrt(vf_w));
+      new(es1_c);
+      es1_c = ctx_c*(2*sqrt(vc_b)/sqrt(vf_w));
+      new(es1_s);
+      es1_s = ctx_s*(2*sqrt(vs_b)/sqrt(vf_w));
+
+      new(es2_a);
+      es2_a = ctx_a*(2*sqrt(va_b)/sqrt(va_w*a_w**2+vf_w));
+      new(es2_c);
+      es2_c = ctx_c*(2*sqrt(vc_b)/sqrt(vc_w*c_w**2+vf_w));
+      new(es2_s);
+      es2_s = ctx_s*(2*sqrt(vs_b)/sqrt(vs_w*s_w**2+vf_w));
+
+      new(es3_a);
+      es3_a = ctx_a*(2*sqrt(va_b)/sqrt(va_b*a_b**2+va_w*a_w**2+vf_w));
+      new(es3_c);
+      es3_c = ctx_c*(2*sqrt(vc_b)/sqrt(vc_b*c_b**2+vc_w*c_w**2+vf_w));
+      new(es3_s);
+      es3_s = ctx_s*(2*sqrt(vs_b)/sqrt(vs_b*s_b**2+vs_w*s_w**2+vf_w));
 
 
   OUTPUT:
@@ -535,8 +604,8 @@ Chi-Square Test of Model Fit
 
         Degrees of freedom                      20
 
-        Mean                               133.134
-        Std Dev                             10.067
+        Mean                               133.135
+        Std Dev                             10.066
         Number of successful computations       10
 
              Proportions                   Percentiles
@@ -546,7 +615,7 @@ Chi-Square Test of Model Fit
            0.950       1.000           10.851        118.147
            0.900       1.000           12.443        118.147
            0.800       1.000           14.578        118.147
-           0.700       1.000           16.266        124.649
+           0.700       1.000           16.266        124.652
            0.500       1.000           19.337        131.999
            0.300       1.000           22.775        135.911
            0.200       1.000           25.038        142.332
@@ -742,9 +811,9 @@ Within Level
 Between Level
 
  FLIT       ON
-    FLSCHOOL        -140.101     59.440     -2.357      0.018      0.204
-    FLFAMILY        -185.069    167.264     -1.106      0.269      0.194
-    NOBULLY           -7.843    123.264     -0.064      0.949      0.231
+    FLSCHOOL        -140.101     59.441     -2.357      0.018      0.204
+    FLFAMILY        -185.070    167.288     -1.106      0.269      0.194
+    NOBULLY           -7.843    123.266     -0.064      0.949      0.231
     EDUSHORT          -2.781      6.822     -0.408      0.684      0.187
     STRATIO            0.570      0.417      1.367      0.172      0.290
 
@@ -772,7 +841,7 @@ Between Level
     FLFAMILY           0.062      0.018      3.452      0.001      0.091
 
  Intercepts
-    FLIT             441.893     10.873     40.643      0.000      0.058
+    FLIT             441.893     10.873     40.642      0.000      0.058
 
  Variances
     EDUSHORT           0.809      0.086      9.441      0.000      0.031
@@ -782,7 +851,24 @@ Between Level
     FLFAMILY           0.011      0.006      1.730      0.084      0.186
 
  Residual Variances
-    FLIT             834.508    461.861      1.807      0.071      0.189
+    FLIT             834.505    461.898      1.807      0.071      0.189
+
+New/Additional Parameters
+    CTX_A           -131.959     59.203     -2.229      0.026      0.000
+    CTX_C           -189.382    167.436     -1.131      0.258      0.000
+    CTX_S            -11.199    123.330     -0.091      0.928      0.000
+    CTX_A_ST          -0.454      0.155     -2.926      0.003      0.000
+    CTX_C_ST          -0.242      0.147     -1.642      0.101      0.000
+    CTX_S_ST          -0.026      0.266     -0.099      0.921      0.000
+    ES1_A             -1.137      0.515     -2.208      0.027      0.000
+    ES1_C             -0.541      0.335     -1.616      0.106      0.000
+    ES1_S             -0.058      0.593     -0.098      0.922      0.000
+    ES2_A             -1.130      0.511     -2.210      0.027      0.000
+    ES2_C             -0.540      0.334     -1.616      0.106      0.000
+    ES2_S             -0.058      0.592     -0.098      0.922      0.000
+    ES3_A             -0.960      0.301     -3.190      0.001      0.000
+    ES3_C             -0.519      0.294     -1.765      0.078      0.000
+    ES3_S             -0.055      0.566     -0.098      0.922      0.000
 
 
 STANDARDIZED MODEL RESULTS
@@ -848,7 +934,7 @@ Within Level
  Variances
     FLSCHOOL           1.000      0.000  *********      0.000      0.000
     NOBULLY            1.000      0.000  *********      0.000      0.000
-    FLFAMILY           1.000      0.000  *********      0.000      0.000
+    FLFAMILY           1.000      0.000    999.000    999.000      0.000
     IMMI1GEN           1.000      0.000  *********      0.000      0.000
     IMMI2GEN           1.000      0.000  *********      0.000      0.000
     ESCS               1.000      0.000  *********      0.000      0.000
@@ -888,15 +974,15 @@ Between Level
     STRATIO            1.483      0.272      5.450      0.000      0.022
     FLSCHOOL          -0.776      0.104     -7.436      0.000      0.054
     NOBULLY            0.245      0.133      1.836      0.066      0.157
-    FLFAMILY           0.602      0.265      2.275      0.023      0.080
+    FLFAMILY           0.602      0.265      2.274      0.023      0.080
 
  Intercepts
     FLIT               8.296      0.502     16.514      0.000      0.030
 
  Variances
-    EDUSHORT           1.000      0.000  *********      0.000      0.000
+    EDUSHORT           1.000      0.000    999.000    999.000      0.000
     STRATIO            1.000      0.000  *********      0.000      0.000
-    FLSCHOOL           1.000      0.000  *********      0.000      0.000
+    FLSCHOOL           1.000      0.000    999.000    999.000      0.000
     NOBULLY            1.000      0.000  *********      0.000      0.000
     FLFAMILY           1.000      0.000  *********      0.000      0.000
 
@@ -920,7 +1006,7 @@ Between Level
     Observed                                        Two-Tailed   Rate of
     Variable        Estimate       S.E.  Est./S.E.    P-Value    Missing
 
-    FLIT               0.706      0.161      4.396      0.000      0.204
+    FLIT               0.706      0.161      4.395      0.000      0.204
 
 
 QUALITY OF NUMERICAL RESULTS
@@ -1053,32 +1139,32 @@ BETWEEN
 
 Effects from FLSCHOOL to FLIT
 
-  Total             -140.101     59.440     -2.357      0.018      0.204
-  Total indirect       0.000      0.000      0.000      1.000      0.167
+  Total             -140.101     59.441     -2.357      0.018      0.204
+  Total indirect       0.000      0.000     -0.273      0.785      0.167
 
   Direct
     FLIT
-    FLSCHOOL        -140.101     59.440     -2.357      0.018      0.204
+    FLSCHOOL        -140.101     59.441     -2.357      0.018      0.204
 
 
 Effects from FLFAMILY to FLIT
 
-  Total             -185.069    167.264     -1.106      0.269      0.194
-  Total indirect       0.000      0.000      0.069      0.945      0.167
+  Total             -185.070    167.288     -1.106      0.269      0.194
+  Total indirect       0.000      0.000      0.302      0.763      0.167
 
   Direct
     FLIT
-    FLFAMILY        -185.069    167.264     -1.106      0.269      0.194
+    FLFAMILY        -185.070    167.288     -1.106      0.269      0.194
 
 
 Effects from NOBULLY to FLIT
 
-  Total               -7.843    123.264     -0.064      0.949      0.231
-  Total indirect       0.000      0.000     -0.341      0.733      0.167
+  Total               -7.843    123.266     -0.064      0.949      0.231
+  Total indirect       0.000      0.000      0.302      0.763      0.167
 
   Direct
     FLIT
-    NOBULLY           -7.843    123.264     -0.064      0.949      0.231
+    NOBULLY           -7.843    123.266     -0.064      0.949      0.231
 
 
 Effects from ESCS to FLIT
@@ -1519,6 +1605,27 @@ TECHNICAL 1 OUTPUT
  FLFAMILY          66
 
 
+     PARAMETER SPECIFICATION FOR THE ADDITIONAL PARAMETERS
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_A         CTX_C         CTX_S         CTX_A_ST      CTX_C_ST
+              ________      ________      ________      ________      ________
+                   67            68            69            70            71
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_S_ST      ES1_A         ES1_C         ES1_S         ES2_A
+              ________      ________      ________      ________      ________
+                   72            73            74            75            76
+
+
+           NEW/ADDITIONAL PARAMETERS
+              ES2_C         ES2_S         ES3_A         ES3_C         ES3_S
+              ________      ________      ________      ________      ________
+                   77            78            79            80            81
+
+
      STARTING VALUES FOR WITHIN
 
 
@@ -1761,9 +1868,30 @@ TECHNICAL 1 OUTPUT
  FLFAMILY       0.502
 
 
-     Beginning Time:  18:22:56
-        Ending Time:  18:25:32
-       Elapsed Time:  00:02:36
+     STARTING VALUES FOR THE ADDITIONAL PARAMETERS
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_A         CTX_C         CTX_S         CTX_A_ST      CTX_C_ST
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+           NEW/ADDITIONAL PARAMETERS
+              CTX_S_ST      ES1_A         ES1_C         ES1_S         ES2_A
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+           NEW/ADDITIONAL PARAMETERS
+              ES2_C         ES2_S         ES3_A         ES3_C         ES3_S
+              ________      ________      ________      ________      ________
+                0.500         0.500         0.500         0.500         0.500
+
+
+     Beginning Time:  15:56:18
+        Ending Time:  15:57:05
+       Elapsed Time:  00:00:47
 
 
 
