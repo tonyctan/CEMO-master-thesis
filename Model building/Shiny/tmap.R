@@ -3,6 +3,9 @@ library(Orcs)
 setwdOS(lin = "~/uio/", win = "M:/", ext = "pc/Dokumenter/MSc/Thesis/Model building/Shiny/")
 flit <- read.csv("flit.csv", sep = ",", header = T)
 
+# # Install these packages to enable map-making if not yet done so
+# install.packages(c("rgeos", "tmap", "rworldmap", "rworldxtra"))
+
 # Load high resolution world map
 library(rworldmap)
 world <- getMap(resolution = "high") # Need package rworldxtra installed
@@ -25,7 +28,7 @@ tmap_mode("plot")
 pdf("FLSCHOOL.pdf", paper = "a4r")
 tm_shape(flit) +
     tm_polygons(
-        "FLSCHOOL..total.",
+        "FLSCHOOL_total",
         style = "fixed",
         breaks = c(-0.20, -0.10, 0, 0.10, 0.20),
         midpoint = NA,
@@ -56,7 +59,7 @@ tmap_mode("view")
 
 tm_shape(flit) +
 tm_polygons(
-        "FLSCHOOL..total.",
+        "FLSCHOOL_total",
         style = "fixed",
         breaks = c(-0.20, -0.10, 0, 0.10, 0.20),
         midpoint = NA,
