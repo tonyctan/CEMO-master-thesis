@@ -1,0 +1,67 @@
+\ptikz{fig:hypotheses}{Summary of Study Hypotheses}{
+\begin{tikzpicture}[
+    latvar/.style={ellipse,draw=black,minimum width=3.5cm,minimum height=1cm},
+    manvar/.style={rectangle,draw=black},
+    demo/.style={rectangle,fill=black!10!white},
+    mean/.style={fill=black!10!white,regular polygon,regular polygon sides=3},
+    ->,>=stealth',semithick,
+    bend angle=-45,
+    decoration={
+        zigzag,
+        amplitude=1pt,
+        segment length=1mm,
+        post=lineto,
+        post length=4pt
+    }
+]
+
+% Set demographic vars
+    \node[demo] (escs) at (0,4) {$\texttt{SES}$};
+    \node[demo] (immi) at (0,2) {$\texttt{Immigration}$};
+    \node[demo] (male) at (0,0) {$\texttt{Being male}$};
+
+% Set school climate vars (X)
+    \node[manvar] (fedu) at (0,10) {$\texttt{F education}$};
+    \node[manvar] (fsoc) at (0,8) {$\texttt{F socialisation}$};
+    \node[manvar] (safe) at (0,6) {$\texttt{Safety}$};
+
+% Set outcome var (M and Y)
+    \node[manvar] (fc) at (7.5,10) {$\texttt{F knowledge}$};
+    \node[manvar] (fb) at (7.5,5) {$\texttt{F behaviour}$};
+    \node[manvar] (fa) at (7.5,0) {$\texttt{F confidence}$};
+
+% Set school-level var
+    \node[manvar] (ssh) at (13,8) {$\texttt{Edu shortage}$};
+    \node[demo] (sst) at (13,2) {$\texttt{Class size}$};
+
+
+% Link F edu to F outcomes
+    \draw[<->] (fedu.east) to node[above,sloped] {H1 $>0$} (fc.west);
+    \draw[<->] (fedu.east) to node[above,sloped,pos=0.65] {H3 $\geq0$} (fb.west);
+    \draw[<->] (fedu.east) to node[above,sloped,pos=0.65] {H2 $>0$} (fa.west);
+
+% Link F soc to F outcomes
+    \draw[<->] (fsoc.east) to node[above,sloped,pos=0.55] {H4 $\geq0$} (fc.west);
+    \draw[<->] (fsoc.east) to node[below,sloped,pos=0.55] {H6 $>0$} (fb.west);
+    \draw[<->] (fsoc.east) to node[below,sloped,pos=0.57] {H5 $>0$} (fa.west);
+
+% Link safety to F outcomes
+    \draw[<->] (safe.east) to node[below,sloped,pos=0.7] {H7 $>0$} (fc.west);
+    \draw[<->] (safe.east) to node[below,sloped,pos=0.75] {H9 $>0$} (fb.west);
+    \draw[<->] (safe.east) to node[below,sloped,pos=0.5] {H8 $>0$} (fa.west);
+
+% Link school var to F outcomes
+\draw[<->] (ssh.west) to node[above,sloped] {H10 $<0$} (fb.east);
+\draw[black!25!white,<->] (sst.west) to node[below,sloped] {H11 $<0$} (fb.east);
+
+% Link between F outcomes
+    \draw[<->] (fc) to node {H12 $>0$} (fb);
+    \draw[<->] (fa) to node {H13 $>0$} (fb);
+
+% Link demo var to F outcomes
+    \draw[black!25!white,<->] (escs.east) to node[above,pos=0.35] {H14 $>0$} (3,4);
+    \draw[black!25!white,<->] (immi.east) to node[above] {H15 $<0$} (3,2);
+    \draw[black!25!white,<->] (male.east) to node[above] {H16 $>0$} (3,0);
+
+\end{tikzpicture}
+}{Notes.}
