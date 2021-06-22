@@ -1,0 +1,98 @@
+\section{Results}\label{chp:4}
+
+\subsection{Descriptive Statistics and Correlations}
+
+\cref{tab:descriptive} presents descriptive statistics of all measures included in the MSEM model. $L1$ variable \texttt{NOBULLY} and $L2$ variable \texttt{STRATIO} were highlighted as particularly non-normal due to sizeable disagreements between their means and medians in combination with significant skewness. The MLR estimator introduced in \cref{sec:mlr} explicitly takes non-normality into account when computing robust standard errors, safeguard the validity of subsequent analyses. These asymmetric variables suggested that the majority of 15-year-olds experienced safe schools and classrooms overcrowding was uncommon in PISA 2018.
+
+Correlations in \cref{tab:correlation} further suggested that schools and families cared about youth's financial literacy in synchrony ($\lbar{\rho} \approx .23$) and both efforts were associated with higher cognitive and affective outcomes ($\lbar{\rho}$ between $.17$ and $.28$). Additionally, students' ESCS were positively correlated with both familiarity with ($\lbar{\rho} = .23$) and achievement in ($\lbar{\rho} \approx .29$) financial literacy. Lastly, there was a positive correlation between familiarity and confidence ($\lbar{\rho} \approx 0.23$) and a similar strength existed between confidence and performance ($\lbar{\rho} = 0.23$).
+
+Correlations at the school-level exhibited interesting patterns. Schools with strong emphases on financial education also tended to have engaging parents ($\lbar{\rho} \approx .24$), a relationship similar to its $L1$ counterpart in size and magnitude. Although the negative correlation between resource shortage and school safety ($\lbar{\rho} \approx -.21$) was expected, it remained counterintuitive that schools that were less safe ($\lbar{\rho} \approx -.47$) and were suffering from resource shortages ($\lbar{\rho} \approx .31$) tended to be more active in delivering financial education programs. Finally, average performance tended to be higher in safer ($\lbar{\rho} \approx .43$) and better equipped ($\lbar{\rho} \approx -.44$) schools; while higher levels of school ($\lbar{\rho} \approx -.53$) and family interventions ($\lbar{\rho} \approx -.36$) have been observed from schools that under-performed in financial literacy.
+
+\subsection{Intraclass Correlation and Effective Sample Size}
+
+The intraclass correlation $\rho_1$ can be computed from the random effects ANOVA model (``Null model'' in \cref{tab:est1}):
+
+%\input{./Tables/Descriptive}
+
+%\input{./Tables/Correlation}
+
+\begin{equation}
+    \rho_1 = \frac{\text{School-level residual variance}}{\text{Total residual variance}}
+    =\frac{\var{\epsilon^{Y_B}_j}}{\var{r^{Y_W}_{ij}} + \var{\epsilon^{Y_B}_j}}
+    = \frac{5240}{6122 + 5240}
+    = 0.461.
+\end{equation}
+\noindent This result suggested that 46.1\% of the variation in financial literacy performance was due to the clustering in schools.
+
+For sample size adjustment, \citet{snijders:2012} advised to first of all calculate the design effect of one's multilevel model:
+
+\begin{equation}\label{eqn:design}
+    \text{design effect} = 1 + (\text{average group size} - 1) \rho_1 = 1 + \left( \frac{107,162}{6,631} - 1 \right) \times 0.461 = 7.989,
+\end{equation}
+
+\noindent then compute the effective sample size:
+
+\begin{equation}
+    N_\text{effective} = \frac{N_\text{original}}{\text{design effect}} = \frac{107,162}{7.989} = 13,414.
+\end{equation}
+\noindent This result signaled that students from the same school were so similar in their financial literacy outcomes that the sample size of 107,162 used by this study was equivalent to a simple random sample using 13,414 students. This result not only provided assurance of a sufficiently large sample size required by asymptotic theories but also highlighted the strong effect of schools for understanding youth's financial literacy development.
+
+\subsection{Intermediate Models}
+
+In order to separate the incremental effect attributable to school-level variables, a student-level only model was first established as a reference (``Single-level model'' in \cref{tab:est1}). Even with $L1$-only variables, model fit indices $\text{CFI} = .97$, $\text{TLI} = .927$ and $\text{SRMR} = .016$ jointly suggested that the proposed input (school climate)--mediator (FC \& FA)--output (FB) model was a meaningful one. Next, school-level variables were allowed to covary between one other on top of the $L1$ structure, forming a two-level saturated model. This procedure had an effect of decomposing the total residual variances into student- and school-levels. As a result, $L1$ residual variance reduced by more than a quarter from 7,866 to 5,764, indicating the necessity of the $L2$ structure.
+
+\subsection{Full Model}
+
+Relationships amongst school-level variables were further introduced at $L2$, transforming the saturated model into the final MSEM model illustrated in \cref{fig:model}.
+
+\subsubsection{Model Fit}
+
+Model fit indices $\text{CFI} = .968$, $\text{SRMR}_{L1} = .015$ and $\text{SRMR}_{L2} =.030$ all satisfied the cut-off criteria suggested by \citet{hu:1999} while $\text{TLI} = .903$ fell slightly short of being good but still acceptable---a penalty on the growing number of variables introduced. On balance, there was sufficient evidence suggesting good fit between the proposed MSEM model and financial literacy data.
+
+\subsubsection{Student-level Relationships}
+
+\paragraph{School Climate Variables}
+
+All three $L1$ school climate variables shared statistically significant relationships with financial literacy performance (\texttt{FLIT}). A safe school environment (\texttt{NOBULLY}) was positively correlated with financial literacy via both the direct pathway and through mediation with familiarity (\texttt{FCFMLRTY}).
+
+Efforts by schools (\texttt{FLSCHOOL}) and families (\texttt{FLFAMILY}), on the other hand, had more nuanced relationships with the cognitive outcome. Both variables had strong positive associations with \texttt{FLIT} via mediation pathways, but statistically significant \emph{negative} relationships via direct pathways. Such positive-negative pair happened to cancel each other for \texttt{FLFAMILY}, leading to a non-significant result should financial socialisation and financial literacy were correlated superficially. The negative cognitive path overshadowed the positive affective pathways for \texttt{FLSCHOOL}, leading to a seemingly paradoxical negative overall relationship between classroom efforts and financial literacy scores.
+
+\paragraph{Demographic Attributes}
+
+The strongest covariation identified by this study was between students' ESCS and their financial literacy outcomes. Substantial positive associations have been observed along both the direct and indirect pathways. Having controlled ESCS as a confounder is therefore essential for the study of school climate effects.
+
+The relationship between one's immigration history and their financial literacy performance also delivered important insight. Children who relocated to the host country between births and reaching 15-year-old (\texttt{IMMI1GEN} = 1) seemed to possess less application skills in financial matters whereas the offspring of migrants did not show deficiency via knowledge and confidence.
+
+Meanwhile, school curricula addressing students' affinity towards finance-related topics would likely to benefit not only second-generation migrants but also young girls. This conjecture was made based on the observed male advantage in financial literacy performance---everything
+
+%\input{./Tables/Estimates1}
+
+%\input{./Tables/Estimates2}
+
+\noindent else being equal, 15-year-old boys on average demonstrated higher financial capability, a fully mediated effect particularly through higher confidence.
+
+%\input{./Figures/tikz/results}
+
+\subsubsection{School-level Relationships}
+
+Shortages in either capital or labour resources were associated with lower average financial literacy outcomes at the school-level. The MSEM showed a negative relationship between the fourth element of school climate variable, educational resource shortage \texttt{EDUSHORT}, and average \texttt{FLIT}. In fact, the association between schools' physical capital and their educational output remained one of the strongest statistical relationships identified by this study, over twice the size of that between labour arrangement (student-teacher ratio \texttt{STRATIO}) and financial literacy achievement.
+
+\subsubsection{Contextual Effects}
+%//mark Address the research question!
+
+One particular strength of an MSEM is its ability to model contextual effects. In a school research context, there exists a \emph{contextual effect} when school-level characteristics contribute to individual learners' outcomes beyond what can be explained by student-level characteristics. Following \citet{marsh:2009}'s procedure, this study obtained the point estimate of the unstandardised contextual effect for \texttt{FLSCHOOL}:
+\begin{equation}
+    \text{Unstandardised contextual effect} = \lhat{a}_1 - \lhat{\gamma}_1 = -49.339 - (-7.078) = -42.261,
+\end{equation}
+\noindent and its standardised solution:
+\begin{equation}
+    \begin{aligned}
+        &\text{Standardised contextual effect}\\
+        =& \frac{\text{Unstandardised contextual effect} \times \sqrt{\hvar{\texttt{FLSCHOOL}_B}}}{\sqrt{\lhat{a}_1^2 \cdot \hvar{\texttt{FLSCHOOL}_B} + \hvar{\texttt{FLIT}_B} + \lhat{\gamma}_1^2 \cdot \hvar{\texttt{FLSCHOOL}_W} + \hvar{\texttt{FLIT}_W}}}\\
+        =& \frac{(-42.261) \times \sqrt{0.114}}{\sqrt{(-49.339)^2 \times 0.114 + 3226.753 + (-7.078)^2 \times 1.009 + 6576.975}}\\
+        =& -0.163,\ \text{($-0.142$ if calculated manually due to cumulative rounding errors)}
+    \end{aligned}
+\end{equation}
+\noindent while the associated standard error can be obtained using the delta method \citep{raykov:2004}. \cref{tab:contextual} summarised the contextual effect estimates for \texttt{FLSCHOOL}, \texttt{FLFAMILY}, and \texttt{NOBULLY}. These results suggested that students' financial literacy performance was not only affected by individual characteristics and endeavour but also heavily influenced by the larger school environment surrounding the learners. Lastly, the effect size (ES) statistics in \cref{tab:contextual} further suggested that the significant contextual effect findings were unlikely to be a mere statistical artefact out of large sample sizes, evidenced by their large sizes ($\abs{\text{ES}} \approx .38\ \text{and}\ .33$) and robustness against various of calculation methods (conventional ES1 by \citet{tymms:2004} and recent innovations ES2 and ES3 by \citet{marsh:2009}).
+
+%\input{./Tables/Contextual}
