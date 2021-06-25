@@ -108,15 +108,14 @@ for (j in 1:dim(CNT_dummy)[2]) {
         }
     }
 }
+
 # Stitch country dummies onto the main data frame
 finlit <- cbind(CNT_dummy, finlit)
 rm(CNT_dummy) # Keep object list clean
 # Re-order the columns so that country dummies follows country code order
 finlit <- finlit[, c(2,1,3,4,6,7,8,9,10,12,11,13,14,15,16,17,18,19,5,20,21:68)]
 
-finlit[,c(1:20)] <- as.numeric(finlit[, c(1:20)])
-
-as.numeric(finlit[, c(1:20)])
+finlit[,c(1:20)] <- lapply(finlit[,c(1:20)], as.numeric)
 
 # Use data.table for better RAM management
 library(data.table); setDTthreads(0) # 0 means all the available cores
@@ -125,4 +124,3 @@ fwrite(finlit,
     file = "pub.csv",
     na = "NA", row.names = F, col.names = T
 )
-
