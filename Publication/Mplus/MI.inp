@@ -6,18 +6,85 @@ DATA:
 
 VARIABLE:
     names =
-        BRA BGR CAN CHL EST
+        BRA BGR CAN CHL EST                         ! Country dummies
         FIN GEO IDN ITA LVA
         LTU NLD PER POL PRT
         RUS SRB SVK ESP USA
-        CNTRYID CNTSCHID CNTSTUID W_STU
-        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH
+        CNTRYID CNTSCHID CNTSTUID W_STU             ! Admin var
+        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH     ! PVs for MATH
+        PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
+        PV1READ PV2READ PV3READ PV4READ PV5READ     ! PVs for READ
+        PV6READ PV7READ PV8READ PV9READ PV10READ
+        PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT     ! PVs for FLIT
+        PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
+        MALE IMMI1GEN IMMI2GEN ESCS                 ! Demographic var
+        FCFMLRTY FLCONFIN                           ! Mediators
+        FLSCHOOL FLFAMILY NOBULLY                   ! L1 school climate var
+        W_SCH STRATIO EDUSHORT                      ! L2 school climate var
+        ;
+
+    usevar =
+        MALE IMMI1GEN IMMI2GEN ESCS
+        FCFMLRTY FLCONFIN
+        FLSCHOOL FLFAMILY NOBULLY
+        STRATIO EDUSHORT
+        ;
+
+    within =                                        ! L1-only var
+        MALE IMMI1GEN IMMI2GEN ESCS
+        FCFMLRTY FLCONFIN
+        FLSCHOOL FLFAMILY NOBULLY
+        ;
+
+    between =                                       ! L2-only var
+        STRATIO EDUSHORT
+        ;
+
+    auxiliary =                                     ! No MI required but keep
+        BRA BGR CAN CHL EST                         ! Country dummies
+        FIN GEO IDN ITA LVA
+        LTU NLD PER POL PRT
+        RUS SRB SVK ESP USA
+        PV1MATH PV2MATH PV3MATH PV4MATH PV5MATH     ! still keep in output
         PV6MATH PV7MATH PV8MATH PV9MATH PV10MATH
         PV1READ PV2READ PV3READ PV4READ PV5READ
         PV6READ PV7READ PV8READ PV9READ PV10READ
         PV1FLIT PV2FLIT PV3FLIT PV4FLIT PV5FLIT
         PV6FLIT PV7FLIT PV8FLIT PV9FLIT PV10FLIT
-        MALE IMMI1GEN IMMI2GEN ESCS
+        CNTRYID W_STU W_SCH
+        ;
+
+    cluster = CNTSCHID;                             ! Grouping var
+
+    missing = all (-99);                            ! NA symbol
+
+
+ANALYSIS:
+    processors = 64;                                ! Use all cores in HPC
+
+    type = twolevel;
+    estimator = Bayes;
+
+    fbiteration = 500;                              ! Burn-in
+    chains = 4;                                     ! To verify convergence
+    bseed = 1234;                                   ! For replicability
+
+DATA IMPUTATION:
+    impute =                                        ! Var that need MI
+        MALE (c) IMMI1GEN (c) IMMI2GEN (c) ESCS     ! Categoricals have (c)
         FCFMLRTY FLCONFIN
         FLSCHOOL FLFAMILY NOBULLY
-        W_SCH STRATIO EDUSHORT
+        STRATIO EDUSHORT
+        ;
+
+    NDATASETS = 10;                                 ! 10 MI to merge with 10 PV
+    save = pub_mi_*.dat;
+    thin = 10;                                      ! Avoid autocorrelation
+
+
+SAVEDATA:
+    bpar = pub_bpar.dat;                            ! Capture Bayesian paths
+
+
+PLOT:
+    type = plot2;                                   ! For R's MplusAutomation
