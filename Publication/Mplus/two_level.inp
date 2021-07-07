@@ -1,0 +1,209 @@
+TITLE:
+    Two-level structured model for all countries
+
+DATA:
+    file = "~/pub_list.dat";
+
+    type = imputation;
+
+
+VARIABLE:
+    names =
+        BRA BGR CAN CHL EST                 ! Country dummies
+        FIN GEO IND ITA LVA
+        LTU NLD PER POL PRT
+        RUS SRB SVK ESP USA
+        CNTRYID CNTSCHID W_STU              ! Admin var
+        FLIT                                ! Financial literacy (Y)
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Mediators (M)
+        FLSCHOOL                            !   Lat var "Academic" (X1)
+        FLFAMILY                            !   Lat var "Community" (X2)
+        NOBULLY                             !   Lat var "Safety"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
+        ;
+
+    usevar =
+        BRA BGR CAN CHL EST                 ! Country dummies
+        GEO IND ITA LVA                     ! Removed FIN
+        LTU NLD PER POL PRT
+        RUS SRB SVK ESP USA
+        FLIT                                ! F problem-solving behaviour (FB)
+        FLSCHOOL                            ! F education (FE)
+        FLFAMILY                            ! F socialisation (FS)
+        NOBULLY                             ! Safety
+        FCFMLRTY                            ! F knowledge (FC)
+        FLCONFIN                            ! F attitude (FA)
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic controls
+        EDUSHORT                            ! Educational resource shortage
+        STRATIO                             ! Student-teacher ratio
+        ;
+
+    ! Vars that ONLY appear in L1
+    within =
+        FCFMLRTY                            ! FC
+        FLCONFIN                            ! FA
+        MALE IMMI1GEN IMMI2GEN ESCS         ! L1 controls
+        ;
+
+    ! Vars that ONLY appear in L2
+    between =
+        EDUSHORT STRATIO                    ! L2: school-level var
+        ;
+
+    weight = W_STU;                         ! Student weight
+    wtscale = cluster;                      ! Scale L1 weight to cluster size
+
+    bweight = W_SCH;                        ! School weight
+    bwtscale = sample;                      ! Scale L2 weight to sample
+
+    cluster = CNTSCHID;                     ! Cluster by school ID
+
+
+ANALYSIS:
+    processors = 64;
+
+    type = twolevel;
+
+
+MODEL:
+
+%Within%                                    ! === L1: Student-level ===
+    ! Save the variances of L1 FLSCHOOL, FLFAMILY, NOBULLY and FLIT
+    FLSCHOOL (va_w);                        ! variance of academic (within)
+    FLFAMILY (vc_w);                        ! variance of community (within)
+    NOBULLY (vs_w);                         ! variance of safety (within)
+    FLIT (vf_w);                            ! variance of FLIT (within)
+
+    ! Indirect pathways (1st half): school climate vars onto mediators
+        ! Onto mediator FAMILIARITY
+    FCFMLRTY on
+        FLSCHOOL FLFAMILY NOBULLY
+        ESCS IMMI2GEN MALE
+        ;
+
+        ! Onto mediator CONFIDENCE
+    FLCONFIN on
+        FLSCHOOL FLFAMILY NOBULLY
+        ESCS IMMI2GEN MALE
+        ;
+
+    ! Total effect
+    FLIT on
+        ! Indirect pathways (2nd half): FC and FA onto FB
+        FCFMLRTY FLCONFIN
+        ! Direct pathways: school climate vars onto financial literacy
+        FLSCHOOL (a_w)                      ! academic_within
+        FLFAMILY (c_w)                      ! community_within
+        NOBULLY (s_w)                       ! safety_within
+        ! Demographic vars
+        ESCS IMMI1GEN
+        ;
+
+    ! Covariances
+
+        ! Between school climate vars
+    FLSCHOOL with FLFAMILY;
+    FLFAMILY with NOBULLY;
+    FLSCHOOL with NOBULLY;
+
+        ! Between mediators
+    FCFMLRTY with FLCONFIN;
+
+        ! SES with school climate vars
+    ESCS with FLSCHOOL FLFAMILY;
+        ! SES with demographic vars
+    ESCS with IMMI1GEN IMMI2GEN;
+
+%Between%                                   ! === L2: School-level ===
+
+    ! Save the variances of L1 FLSCHOOL, FLFAMILY and NOBULLY
+    FLSCHOOL (va_b);                        ! variance of academic (between)
+    FLFAMILY (vc_b);                        ! variance of community (between)
+    NOBULLY (vs_b);                         ! variance of safety (between)
+    FLIT (vf_b);                            ! variance of FLIT (between)
+
+    FLIT on                                 ! School climate variables
+        FLSCHOOL (a_b)                          ! academic_between
+        FLFAMILY (c_b)                          ! community_between
+        NOBULLY (s_b)                           ! safety_between
+        EDUSHORT
+        STRATIO                             ! Control: Student-teacher ratio
+        BRA BGR CAN CHL EST                 ! Country dummies
+        GEO IND ITA LVA                     ! Remove FIN
+        LTU NLD PER POL PRT
+        RUS SRB SVK ESP USA
+        ;
+
+    ! Covariances
+
+        ! Between school climate vars
+    FLSCHOOL with FLFAMILY;
+    FLFAMILY with NOBULLY;
+    NOBULLY with EDUSHORT;
+
+    FLSCHOOL with NOBULLY;
+    FLFAMILY with EDUSHORT;
+
+    FLSCHOOL with EDUSHORT;
+
+    STRATIO with FLSCHOOL EDUSHORT;
+
+
+MODEL INDIRECT:
+
+    ! Indirect effects
+    FLIT ind FLSCHOOL;
+    FLIT ind FLFAMILY;
+    FLIT ind NOBULLY;
+
+    FLIT ind ESCS;
+    FLIT ind IMMI2GEN;
+    FLIT ind MALE;
+
+
+MODEL CONSTRAINT:
+
+    ! Save non-standardised contextual effects
+    new(ctx_a);
+    ctx_a = a_b - a_w;
+    new(ctx_c);
+    ctx_c = c_b - c_w;
+    new(ctx_s);
+    ctx_s = s_b - s_w;
+
+    ! Standardise contextual effects
+    new(ctx_a_st);
+    ctx_a_st = ctx_a*(sqrt(va_b)/sqrt(va_b*a_b**2+vf_b+va_w*a_w**2+vf_w));
+    new(ctx_c_st);
+    ctx_c_st = ctx_c*(sqrt(vc_b)/sqrt(vc_b*c_b**2+vf_b+vc_w*c_w**2+vf_w));
+    new(ctx_s_st);
+    ctx_s_st = ctx_s*(sqrt(vs_b)/sqrt(vs_b*s_b**2+vf_b+vs_w*s_w**2+vf_w));
+
+    ! Compute effect sizes (EF)
+    new(es1_a);
+    es1_a = ctx_a*(2*sqrt(va_b)/sqrt(vf_w));
+    new(es1_c);
+    es1_c = ctx_c*(2*sqrt(vc_b)/sqrt(vf_w));
+    new(es1_s);
+    es1_s = ctx_s*(2*sqrt(vs_b)/sqrt(vf_w));
+
+    new(es2_a);
+    es2_a = ctx_a*(2*sqrt(va_b)/sqrt(va_w*a_w**2+vf_w));
+    new(es2_c);
+    es2_c = ctx_c*(2*sqrt(vc_b)/sqrt(vc_w*c_w**2+vf_w));
+    new(es2_s);
+    es2_s = ctx_s*(2*sqrt(vs_b)/sqrt(vs_w*s_w**2+vf_w));
+
+    new(es3_a);
+    es3_a = ctx_a*(2*sqrt(va_b)/sqrt(va_b*a_b**2+va_w*a_w**2+vf_w));
+    new(es3_c);
+    es3_c = ctx_c*(2*sqrt(vc_b)/sqrt(vc_b*c_b**2+vc_w*c_w**2+vf_w));
+    new(es3_s);
+    es3_s = ctx_s*(2*sqrt(vs_b)/sqrt(vs_b*s_b**2+vs_w*s_w**2+vf_w));
+
+
+OUTPUT:
+    stdyx                                   ! Fully standardised solution
+    ;
