@@ -56,13 +56,13 @@ pub9 <- pub9[, c(12:31, 62, 65, 63, 60, 3:11, 64, 1:2)]
 pub10 <- pub10[, c(12:31, 62, 65, 63, 61, 3:11, 64, 1:2)]
 
 # Save pubx.dat to home directory
-fwrite(pub1, "~/pub1.dat", row.names = F, col.names = F)
-fwrite(pub2, "~/pub2.dat", row.names = F, col.names = F)
-fwrite(pub3, "~/pub3.dat", row.names = F, col.names = F)
-fwrite(pub4, "~/pub4.dat", row.names = F, col.names = F)
-fwrite(pub5, "~/pub5.dat", row.names = F, col.names = F)
-fwrite(pub6, "~/pub6.dat", row.names = F, col.names = F)
-fwrite(pub7, "~/pub7.dat", row.names = F, col.names = F)
-fwrite(pub8, "~/pub8.dat", row.names = F, col.names = F)
-fwrite(pub9, "~/pub9.dat", row.names = F, col.names = F)
-fwrite(pub10, "~/pub10.dat", row.names = F, col.names = F)
+fwrite(pub1, "~/pub1.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub2, "~/pub2.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub3, "~/pub3.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub4, "~/pub4.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub5, "~/pub5.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub6, "~/pub6.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub7, "~/pub7.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub8, "~/pub8.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub9, "~/pub9.dat", row.names = F, col.names = F, eol = "\r\n")
+fwrite(pub10, "~/pub10.dat", row.names = F, col.names = F, eol = "\r\n")

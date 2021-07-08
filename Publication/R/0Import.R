@@ -124,5 +124,6 @@ library(data.table); setDTthreads(0) # 0 means all the available cores
 # Export data to an Mplus-ready format
 fwrite(finlit,
     file = "pub.dat",
-    na = "-99", row.names = F, col.names = F
+    na = "-99", row.names = F, col.names = F, eol = "\r\n"
 )
+# N.B.: Mplus can only read CR or CRLF. Overwrite Linux's default LF to CRLF.
