@@ -1,8 +1,8 @@
 TITLE:
-    Two-level structured model for all countries
+    Two-level structured model with country dummies
 
 DATA:
-    file = "C:/Users/Admin/pub_list.dat";
+    file = "~/pub_list.dat";
 
     type = imputation;
 
@@ -25,10 +25,10 @@ VARIABLE:
         ;
 
     usevar =
-        BRA BGR CAN CHL EST                 ! Country dummies
-        FIN GEO IND ITA LVA
+        BRA BGR CAN CHL                     ! Country dummies
+        FIN GEO IND ITA LVA                 ! Omitted EST
         LTU NLD PER POL PRT
-        RUS SRB SVK ESP                         ! Omit USA
+        RUS SRB SVK ESP USA
         FLIT                                ! F problem-solving behaviour (FB)
         FLSCHOOL                            ! F education (FE)
         FLFAMILY                            ! F socialisation (FS)
@@ -49,10 +49,10 @@ VARIABLE:
 
     ! Vars that ONLY appear in L2
     between =
-        BRA BGR CAN CHL EST                 ! Country dummies
-        FIN GEO IND ITA LVA
+        BRA BGR CAN CHL                     ! Country dummies
+        FIN GEO IND ITA LVA                 ! Omitted EST
         LTU NLD PER POL PRT
-        RUS SRB SVK ESP                         ! Omit USA
+        RUS SRB SVK ESP USA
         EDUSHORT STRATIO                    ! L2: school-level var
         ;
 
@@ -66,7 +66,7 @@ VARIABLE:
 
 
 ANALYSIS:
-    processors = 16;
+    processors = 4;
 
     type = twolevel;
 
@@ -134,10 +134,10 @@ MODEL:
         NOBULLY (s_b)                           ! safety_between
         EDUSHORT
         STRATIO                             ! Control: Student-teacher ratio
-        BRA BGR CAN CHL EST                 ! Country dummies
-        FIN GEO IND ITA LVA
+        BRA BGR CAN CHL                     ! Country dummies
+        FIN GEO IND ITA LVA                 ! Omitted EST
         LTU NLD PER POL PRT
-        RUS SRB SVK ESP                     ! Omit USA
+        RUS SRB SVK ESP USA
         ;
 
     ! Covariances
