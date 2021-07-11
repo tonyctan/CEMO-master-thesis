@@ -1,0 +1,219 @@
+TITLE:
+    Three-level model (L3 empty)
+
+DATA:
+    file = "~/pub_list.dat";
+
+    type = imputation;
+
+
+VARIABLE:
+    names =
+        FKI CNTRYID CNTSCHID W_STU
+        MATH READ FLIT                      ! PISA achievement variables
+        MALE IMMI1GEN IMMI2GEN ESCS         ! Demographic info
+        FCFMLRTY FLCONFIN                   ! Affect
+        FLSCHOOL                            !   Lat var "Academic"
+        NOBULLY                             !   Lat var "Safety"
+        FLFAMILY                            !   Lat var "Community"
+        W_SCH STRATIO                       ! School character
+        EDUSHORT                            !   Lat var "inst. env."
+        ;
+
+    usev =
+        FLIT                                ! Financial literacy outcome
+        FLSCHOOL                            !   "Academic"
+        NOBULLY                             !   "Safety"
+        FLFAMILY                            !   "Community" (Financial socialisation)
+        EDUSHORT STRATIO                    !   "Institutional environment"
+        FCFMLRTY FLCONFIN                   ! L1 mediators
+        MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
+        FKI                                 ! L3 predictor
+        ;
+
+    cluster =
+        CNTRYID                             ! L3: country
+        CNTSCHID                            ! L2: school
+        ;
+
+    ! Vars that ONLY appear in L1
+    within =
+        FCFMLRTY FLCONFIN                   ! Affective vars
+        MALE IMMI1GEN IMMI2GEN ESCS         ! L1 control vars
+        ;
+
+    ! Vars that ONLY appear in L2 and L3
+    between =
+        (CNTRYID) FKI                       ! L3: country
+        (CNTSCHID) EDUSHORT STRATIO         ! L2: school
+        ;
+
+    weight = W_STU;                         ! Student weight
+    b2weight = W_SCH;                       ! School weight
+
+
+ANALYSIS:
+    processors = 8;
+
+    type = threelevel;
+
+
+MODEL:
+
+%Within%                                    ! === L1: Student-level ===
+
+    ! First of all, save the variances of X and Y vars
+    ! These parameters are necessary for the MODEL CONSTRAINT section
+    FLSCHOOL (var_A);
+    FLFAMILY (var_C);
+    NOBULLY (var_S);
+    ESCS (var_E);
+    IMMI2GEN (var_I);
+    Male (var_M);
+    FLIT (var_Y);
+
+    ! Indirect pathways (1st half): school climate vars onto mediators
+        ! Onto mediator FAMILIARITY
+    FCFMLRTY on FLSCHOOL (gamma11);
+    FCFMLRTY on FLFAMILY (gamma21);
+    FCFMLRTY on NOBULLY (gamma31);
+
+    FCFMLRTY on ESCS (gamma41);
+    FCFMLRTY on IMMI2GEN (gamma61);
+    FCFMLRTY on MALE (gamma71);
+
+        ! Onto mediator CONFIDENCE
+    FLCONFIN on FLSCHOOL (gamma12);
+    FLCONFIN on FLFAMILY (gamma22);
+    FLCONFIN on NOBULLY (gamma32);
+
+    FLCONFIN on ESCS (gamma42);
+    FLCONFIN on IMMI2GEN (gamma62);
+    FLCONFIN on MALE (gamma72);
+
+    ! Total effect
+        ! Indirect pathways (2nd half): affective vars onto financial literacy
+    FLIT on FCFMLRTY (beta1);
+    FLIT on FLCONFIN (beta2);
+        ! Direct pathways: school climate vars onto financial literacy
+    FLIT on FLSCHOOL (gamma1);
+    FLIT on FLFAMILY (gamma2);
+    FLIT on NOBULLY (gamma3);
+        ! Direct pathways: demographic vars onto financial literacy
+    FLIT on ESCS (gamma4);
+    FLIT on IMMI1GEN;
+
+    ! Covariances
+        ! Between school climate vars
+    FLSCHOOL with FLFAMILY;
+    FLFAMILY with NOBULLY;
+    FLSCHOOL with NOBULLY;
+
+        ! Between mediators
+    FCFMLRTY with FLCONFIN;
+
+        ! ESCS with school climate vars
+    ESCS with FLSCHOOL FLFAMILY;
+        ! ESCS with demographic vars
+    ESCS with IMMI1GEN IMMI2GEN;
+
+%Between CNTSCHID%                          ! === L2: School-level ===
+
+    ! School climate vars
+    FLIT on
+        FLSCHOOL FLFAMILY NOBULLY EDUSHORT
+        STRATIO
+        ;
+
+    ! Covariances
+    FLSCHOOL with FLFAMILY;
+    FLFAMILY with NOBULLY;
+    NOBULLY with EDUSHORT;
+
+    FLSCHOOL with NOBULLY;
+    FLFAMILY with EDUSHORT;
+
+    FLSCHOOL with EDUSHORT;
+
+%Between CNTRYID%                           ! === L3: Country-level ===
+
+    FLIT on FKI;
+
+
+! Since MODEL INDIRECT is not available for 3-level models,
+! I have to calculate indirect effects manually:
+MODEL CONSTRAINT:
+
+    ! Effect from ACADEMIC to FLIT
+    new(total_A
+            direct_A
+            indire_A
+                ind_A_FM
+                ind_A_CF
+    );
+        total_A = (gamma1 + gamma11*beta1 + gamma12*beta2)*sqrt(var_A)/sqrt(var_Y);
+        direct_A = gamma1*sqrt(var_A)/sqrt(var_Y);
+        indire_A = (gamma11*beta1 + gamma12*beta2)*sqrt(var_A)/sqrt(var_Y);
+        ind_A_FM = (gamma11*beta1)*sqrt(var_A)/sqrt(var_Y);
+        ind_A_CF = (gamma12*beta2)*sqrt(var_A)/sqrt(var_Y);
+
+    ! Effect from COMMUNITY to FLIT
+    new(total_C
+            direct_C
+            indire_C
+                ind_C_FM
+                ind_C_CF
+    );
+        total_C = (gamma2 + gamma21*beta1 + gamma22*beta2)*sqrt(var_C)/sqrt(var_Y);
+        direct_C = gamma2*sqrt(var_C)/sqrt(var_Y);
+        indire_C = (gamma21*beta1 + gamma22*beta2)*sqrt(var_C)/sqrt(var_Y);
+        ind_C_FM = (gamma21*beta1)*sqrt(var_C)/sqrt(var_Y);
+        ind_C_CF = (gamma22*beta2)*sqrt(var_C)/sqrt(var_Y);
+
+    ! Effect from SAFETY to FLIT
+    new(total_S
+            direct_S
+            indire_S
+                ind_S_FM
+                ind_S_CF
+    );
+        total_S = (gamma3 + gamma31*beta1 + gamma32*beta2)*sqrt(var_S)/sqrt(var_Y);
+        direct_S = gamma3*sqrt(var_S)/sqrt(var_Y);
+        indire_S = (gamma31*beta1 + gamma32*beta2)*sqrt(var_S)/sqrt(var_Y);
+        ind_S_FM = (gamma31*beta1)*sqrt(var_S)/sqrt(var_Y);
+        ind_S_CF = (gamma32*beta2)*sqrt(var_S)/sqrt(var_Y);
+
+    ! Effect from ESCS to FLIT
+    new(total_E
+            direct_E
+            indire_E
+                ind_E_FM
+                ind_E_CF
+    );
+        total_E = (gamma4 + gamma41*beta1 + gamma42*beta2)*sqrt(var_E)/sqrt(var_Y);
+        direct_E = gamma4*sqrt(var_E)/sqrt(var_Y);
+        indire_E = (gamma41*beta1 + gamma42*beta2)*sqrt(var_E)/sqrt(var_Y);
+        ind_E_FM = (gamma41*beta1)*sqrt(var_E)/sqrt(var_Y);
+        ind_E_CF = (gamma42*beta2)*sqrt(var_E)/sqrt(var_Y);
+
+    ! Effect from IMMI2GEN to FLIT
+    new(indire_I
+            ind_I_FM
+            ind_I_CF
+    );
+        indire_I = (gamma61*beta1 + gamma62*beta2)*sqrt(var_I)/sqrt(var_Y);
+        ind_I_FM = (gamma61*beta1)*sqrt(var_I)/sqrt(var_Y);
+        ind_I_CF = (gamma62*beta2)*sqrt(var_I)/sqrt(var_Y);
+
+    ! Effect from MALE to FLIT
+    new(indire_M
+            ind_M_FM
+            ind_M_CF
+    );
+        indire_M = (gamma71*beta1 + gamma72*beta2)*sqrt(var_M)/sqrt(var_Y);
+        ind_M_FM = (gamma71*beta1)*sqrt(var_M)/sqrt(var_Y);
+        ind_M_CF = (gamma72*beta2)*sqrt(var_M)/sqrt(var_Y);
+
+
+OUTPUT:
+    stdyx;
