@@ -5,8 +5,8 @@ setwdOS(lin = "~/", win = Sys.getenv("USERPROFILE"))
 # Import SPSS file into R
 library(intsvy)
 finlit <- pisa.select.merge(
-    student.file = "CY07_MSU_FLT_QQQ.SAV", # file ext in capital
-    school.file = "CY07_MSU_SCH_QQQ.sav", # file ext in lower case
+    student.file = "data/CY07_MSU_FLT_QQQ.SAV", # file ext in capital
+    school.file = "data/CY07_MSU_SCH_QQQ.sav", # file ext in lower case
     student = c(
     # Control variables
         "ST004D01T", # Student (Standardized) Gender

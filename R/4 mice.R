@@ -5,7 +5,7 @@ setwdOS(lin = "~/", win = Sys.getenv("USERPROFILE"))
 # Read in financial literacy data
 library(data.table)
 setDTthreads(0)
-finlit <- fread("finlit.csv")
+finlit <- fread("data/finlit.csv")
 head(finlit)
 names(finlit)
 dim(finlit)
